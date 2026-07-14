@@ -1,0 +1,1848 @@
+{
+  "description": "on dt",
+  "movement": {
+    "steps": [
+      {
+        "buttons": {
+          "in_attack": true
+        },
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true
+        },
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true
+        },
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true
+        },
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true
+        },
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true
+        },
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true
+        },
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.4149627685547,
+        "viewangles": [
+          -7.699972629547119,
+          178.4149627685547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.46995544433594,
+        "viewangles": [
+          -7.699972629547119,
+          178.46995544433594
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.46995544433594,
+        "viewangles": [
+          -7.754972457885742,
+          178.46995544433594
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.46995544433594,
+        "viewangles": [
+          -7.754972457885742,
+          178.46995544433594
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.46995544433594,
+        "viewangles": [
+          -7.754972457885742,
+          178.46995544433594
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.46995544433594,
+        "viewangles": [
+          -7.754972457885742,
+          178.46995544433594
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.5249481201172,
+        "viewangles": [
+          -7.754972457885742,
+          178.5249481201172
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.5249481201172,
+        "viewangles": [
+          -7.754972457885742,
+          178.5249481201172
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.5249481201172,
+        "viewangles": [
+          -7.809972286224365,
+          178.5249481201172
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.5249481201172,
+        "viewangles": [
+          -7.809972286224365,
+          178.5249481201172
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.57994079589844,
+        "viewangles": [
+          -7.809972286224365,
+          178.57994079589844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.57994079589844,
+        "viewangles": [
+          -7.809972286224365,
+          178.57994079589844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.6349334716797,
+        "viewangles": [
+          -7.864972114562988,
+          178.6349334716797
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.68992614746094,
+        "viewangles": [
+          -7.864972114562988,
+          178.68992614746094
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.7449188232422,
+        "viewangles": [
+          -7.919971942901611,
+          178.7449188232422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.8549041748047,
+        "viewangles": [
+          -7.919971942901611,
+          178.8549041748047
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 178.90989685058594,
+        "viewangles": [
+          -7.974971771240234,
+          178.90989685058594
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.01988220214844,
+        "viewangles": [
+          -7.974971771240234,
+          179.01988220214844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.12986755371094,
+        "viewangles": [
+          -8.029972076416016,
+          179.12986755371094
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.2948455810547,
+        "viewangles": [
+          -8.084972381591797,
+          179.2948455810547
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.4048309326172,
+        "viewangles": [
+          -8.139972686767578,
+          179.4048309326172
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.56980895996094,
+        "viewangles": [
+          -8.19497299194336,
+          179.56980895996094
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.6248016357422,
+        "viewangles": [
+          -8.19497299194336,
+          179.6248016357422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.67979431152344,
+        "viewangles": [
+          -8.19497299194336,
+          179.67979431152344
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.78977966308594,
+        "viewangles": [
+          -8.19497299194336,
+          179.78977966308594
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.8447723388672,
+        "viewangles": [
+          -8.19497299194336,
+          179.8447723388672
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.8447723388672,
+        "viewangles": [
+          -8.19497299194336,
+          179.8447723388672
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.89976501464844,
+        "viewangles": [
+          -8.19497299194336,
+          179.89976501464844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.89976501464844,
+        "viewangles": [
+          -8.19497299194336,
+          179.89976501464844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.89976501464844,
+        "viewangles": [
+          -8.19497299194336,
+          179.89976501464844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.89976501464844,
+        "viewangles": [
+          -8.19497299194336,
+          179.89976501464844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.89976501464844,
+        "viewangles": [
+          -8.19497299194336,
+          179.89976501464844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.89976501464844,
+        "viewangles": [
+          -8.19497299194336,
+          179.89976501464844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.89976501464844,
+        "viewangles": [
+          -8.19497299194336,
+          179.89976501464844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.89976501464844,
+        "viewangles": [
+          -8.19497299194336,
+          179.89976501464844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.89976501464844,
+        "viewangles": [
+          -8.19497299194336,
+          179.89976501464844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.89976501464844,
+        "viewangles": [
+          -8.19497299194336,
+          179.89976501464844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": 179.89976501464844,
+        "viewangles": [
+          -8.19497299194336,
+          179.89976501464844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -179.99024963378906,
+        "viewangles": [
+          -8.19497299194336,
+          -179.99024963378906
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -179.88026428222656,
+        "viewangles": [
+          -8.304973602294922,
+          -179.88026428222656
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -179.7152862548828,
+        "viewangles": [
+          -8.359973907470703,
+          -179.7152862548828
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -179.6053009033203,
+        "viewangles": [
+          -8.414974212646484,
+          -179.6053009033203
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -179.4953155517578,
+        "viewangles": [
+          -8.469974517822266,
+          -179.4953155517578
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -179.3853302001953,
+        "viewangles": [
+          -8.524974822998047,
+          -179.3853302001953
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -179.2753448486328,
+        "viewangles": [
+          -8.579975128173828,
+          -179.2753448486328
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -179.05535888671875,
+        "viewangles": [
+          -8.68997573852539,
+          -179.05535888671875
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -178.78036499023438,
+        "viewangles": [
+          -8.854976654052734,
+          -178.78036499023438
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -178.39537048339844,
+        "viewangles": [
+          -9.074976921081543,
+          -178.39537048339844
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -177.8453826904297,
+        "viewangles": [
+          -9.404975891113281,
+          -177.8453826904297
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -177.0203857421875,
+        "viewangles": [
+          -9.954976081848145,
+          -177.0203857421875
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -175.92037963867188,
+        "viewangles": [
+          -10.559976577758789,
+          -175.92037963867188
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -174.38038635253906,
+        "viewangles": [
+          -11.274975776672363,
+          -174.38038635253906
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -172.8403778076172,
+        "viewangles": [
+          -11.934976577758789,
+          -172.8403778076172
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -170.75038146972656,
+        "viewangles": [
+          -12.704976081848145,
+          -170.75038146972656
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -168.66038513183594,
+        "viewangles": [
+          -13.364975929260254,
+          -168.66038513183594
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -164.92037963867188,
+        "viewangles": [
+          -14.4099760055542,
+          -164.92037963867188
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -161.6753692626953,
+        "viewangles": [
+          -15.12497615814209,
+          -161.6753692626953
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -158.3753662109375,
+        "viewangles": [
+          -15.83997631072998,
+          -158.3753662109375
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -155.84535217285156,
+        "viewangles": [
+          -16.279977798461914,
+          -155.84535217285156
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -153.8103485107422,
+        "viewangles": [
+          -16.6099796295166,
+          -153.8103485107422
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -152.05035400390625,
+        "viewangles": [
+          -16.884981155395508,
+          -152.05035400390625
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -150.7853546142578,
+        "viewangles": [
+          -17.104982376098633,
+          -150.7853546142578
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -150.2903594970703,
+        "viewangles": [
+          -17.159982681274414,
+          -150.2903594970703
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -149.90536499023438,
+        "viewangles": [
+          -17.214982986450195,
+          -149.90536499023438
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -149.35537719726563,
+        "viewangles": [
+          -17.214982986450195,
+          -149.35537719726563
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -148.75039672851563,
+        "viewangles": [
+          -17.269983291625977,
+          -148.75039672851563
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -148.035400390625,
+        "viewangles": [
+          -17.269983291625977,
+          -148.035400390625
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -147.32041931152344,
+        "viewangles": [
+          -17.269983291625977,
+          -147.32041931152344
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -146.9354248046875,
+        "viewangles": [
+          -17.214982986450195,
+          -146.9354248046875
+        ]
+      },
+      {
+        "buttons": {
+          "in_attack": true,
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -146.4954376220703,
+        "viewangles": [
+          -17.214982986450195,
+          -146.4954376220703
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -146.11044311523438,
+        "viewangles": [
+          -17.214982986450195,
+          -146.11044311523438
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -145.83544921875,
+        "viewangles": [
+          -17.214982986450195,
+          -145.83544921875
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -145.3404541015625,
+        "viewangles": [
+          -17.214982986450195,
+          -145.3404541015625
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -144.95545959472656,
+        "viewangles": [
+          -17.214982986450195,
+          -144.95545959472656
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -144.5154571533203,
+        "viewangles": [
+          -17.214982986450195,
+          -144.5154571533203
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -144.13046264648438,
+        "viewangles": [
+          -17.214982986450195,
+          -144.13046264648438
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true,
+          "in_jump": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -143.96546936035156,
+        "viewangles": [
+          -17.214982986450195,
+          -143.96546936035156
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -143.96546936035156,
+        "viewangles": [
+          -17.269983291625977,
+          -143.96546936035156
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -143.96546936035156,
+        "viewangles": [
+          -17.269983291625977,
+          -143.96546936035156
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -143.96546936035156,
+        "viewangles": [
+          -17.269983291625977,
+          -143.96546936035156
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -143.96546936035156,
+        "viewangles": [
+          -17.269983291625977,
+          -143.96546936035156
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -143.96546936035156,
+        "viewangles": [
+          -17.269983291625977,
+          -143.96546936035156
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -143.96546936035156,
+        "viewangles": [
+          -17.269983291625977,
+          -143.96546936035156
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -143.96546936035156,
+        "viewangles": [
+          -17.269983291625977,
+          -143.96546936035156
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -143.96546936035156,
+        "viewangles": [
+          -17.269983291625977,
+          -143.96546936035156
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -144.0204620361328,
+        "viewangles": [
+          -17.269983291625977,
+          -144.0204620361328
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -144.1304473876953,
+        "viewangles": [
+          -17.269983291625977,
+          -144.1304473876953
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -144.18544006347656,
+        "viewangles": [
+          -17.269983291625977,
+          -144.18544006347656
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -144.2404327392578,
+        "viewangles": [
+          -17.324983596801758,
+          -144.2404327392578
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -144.2404327392578,
+        "viewangles": [
+          -17.324983596801758,
+          -144.2404327392578
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -144.2404327392578,
+        "viewangles": [
+          -17.324983596801758,
+          -144.2404327392578
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -144.2404327392578,
+        "viewangles": [
+          -17.324983596801758,
+          -144.2404327392578
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -144.2404327392578,
+        "viewangles": [
+          -17.324983596801758,
+          -144.2404327392578
+        ]
+      },
+      {
+        "buttons": {
+          "in_forward": true
+        },
+        "forwardmove": 450.0,
+        "move_yaw": -144.2404327392578,
+        "viewangles": [
+          -17.324983596801758,
+          -144.2404327392578
+        ]
+      }
+    ]
+  },
+  "name": "AWP Hold",
+  "position": [
+    1139.705810546875,
+    -1191.7677001953125,
+    -108.96875
+  ],
+  "strafer": {
+    "air_strafe": true,
+    "quick_stop": true,
+    "strafer_smoothing": 30.0,
+    "wasd_strafer": true
+  },
+  "viewangles": [
+    -7.699972629547119,
+    178.4149627685547
+  ],
+  "weapon": "weapon_molotov"
+}
