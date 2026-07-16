@@ -33,6 +33,7 @@
   @see ui#sidebar
        https://docs-csgo.neverlose.cc/documentation/variables/ui#sidebar
 
+  @ref /Neverlose CSGO Lua API
 ]]
 
 ui.sidebar("OT Interface", "expand")
@@ -50,6 +51,7 @@ ui.sidebar("OT Interface", "expand")
   @see MenuGroup#combo
        https://docs-csgo.neverlose.cc/documentation/variables/ui#combo
 
+  @ref /Neverlose CSGO Lua API
 ]]
 
 local main = ui.create("Main", "Customization")
@@ -58,20 +60,27 @@ local enable_ui         = main:switch("Enable UI")
 local mode              = main:combo("Mode", {"Normale", "Customizable"}) 
 local enable_keybinds   = main:switch("Enable Keybinds")                  
 local enable_spectators = main:switch("Enable Spectators")
+local enable_watermark  = main:switch("Enable Watermark")
+local watermark_username = main:input("Watermark Username")
 local enable_line       = main:switch("Enable Line")                      
+local enable_warnings   = main:switch("Enable Warnings")                   
+local warnings_select   = main:selectable("Warning Types", {"velocity", "defensive"})
+local warnings_color    = main:color_picker("Warning Color", color(255, 255, 255, 255))
 
+local visuals_menu      = ui.create("Main", "Onetap Visuals")
+local enable_dm         = visuals_menu:switch("Enable Damage Marker")
+local dm_options        = visuals_menu:selectable("Damage Marker Options", {"Damage", "Hitmarker"})
+
+local hit_font = render.load_font("Verdana", 20, "a")
+local hit_markers = {}
 --[[
 
   SECTION: Rendering Resources.
   Screen dimensions, fonts, and SVG icon assets used for on-screen rendering.
-  
-  @see render#screen_size
-       https://docs-csgo.neverlose.cc/documentation/variables/render#screen_size
-  @see render#load_font
-       https://docs-csgo.neverlose.cc/documentation/variables/render#load_font
-  @see render#load_image
-       https://docs-csgo.neverlose.cc/documentation/variables/render#load_image
 
+
+
+  @ref /Neverlose CSGO Lua API
 ]]
 
 local screen = render.screen_size()
@@ -99,13 +108,45 @@ local spectator_image = render.load_image([[<svg id="svg" version="1.1" xmlns="h
   @see events#set
        https://docs-csgo.neverlose.cc/documentation/variables/events#set
 
+  @ref /Neverlose CSGO Lua API
 ]]
+
+events.player_hurt:set(function(e)
+    if not enable_dm:get() then return end
+
+    local lp = entity.get_local_player()
+    if not lp then return end
+
+    if entity.get(e.attacker, true) ~= lp then return end
+
+    local victim = entity.get(e.userid, true)
+    if not victim then return end
+
+    local hitbox = e.hitgroup == 1 and 0 or 3
+    local pos = victim:get_hitbox_position(hitbox)
+    
+    table.insert(hit_markers, {
+        pos = vector(pos.x, pos.y, pos.z),
+        damage = e.dmg_health,
+        is_headshot = e.hitgroup == 1,
+        time = globals.realtime,
+        alpha = 255
+    })
+end)
 
 element_visibility = function()
     mode:visibility(enable_ui:get())
-    enable_keybinds:visibility(mode:get() == "Customizable" and enable_ui:get())
-    enable_spectators:visibility(mode:get() == "Customizable" and enable_ui:get())
-    enable_line:visibility(mode:get() == "Customizable" and enable_ui:get())
+    local is_ui = enable_ui:get()
+    local is_custom = mode:get() == "Customizable" and is_ui
+    enable_keybinds:visibility(is_custom)
+    enable_spectators:visibility(is_custom)
+    enable_watermark:visibility(is_custom)
+    watermark_username:visibility(is_custom and enable_watermark:get())
+    enable_line:visibility(is_custom)
+    enable_warnings:visibility(is_ui)
+    warnings_select:visibility(is_ui and enable_warnings:get())
+    warnings_color:visibility(is_ui and enable_warnings:get())
+    dm_options:visibility(enable_dm:get())
 end
 
 events.render:set(element_visibility)
@@ -119,47 +160,191 @@ events.render:set(element_visibility)
     2. Spectators panel - spectating players displayed above screen center
     3. Gradient divider - visual separator between the two panels
 
-  @see render#texture
-       https://docs-csgo.neverlose.cc/documentation/variables/render#texture
-  @see render#text
-       https://docs-csgo.neverlose.cc/documentation/variables/render#text
-  @see render#gradient
-       https://docs-csgo.neverlose.cc/documentation/variables/render#gradient
-  @see entity#get_local_player
-       https://docs-csgo.neverlose.cc/documentation/variables/entity#get_local_player
-  @see entity#is_alive
-       https://docs-csgo.neverlose.cc/documentation/variables/entity#is_alive
-  @see entity#get_spectators
-       https://docs-csgo.neverlose.cc/documentation/variables/entity#get_spectators
-  @see entity#get_name
-       https://docs-csgo.neverlose.cc/documentation/variables/entity#get_name
-  @see globals#is_in_game
-       https://docs-csgo.neverlose.cc/documentation/variables/globals#is_in_game
-  @see ui#get_binds
-       https://docs-csgo.neverlose.cc/documentation/variables/ui#get_binds
+
+
+
+
+
+
+
+
+  @ref /Neverlose CSGO Lua API
+]]
+
+--[[
+
+  SECTION: Warning Indicator Systems.
+  Ported from metaset — shows velocity slow % and defensive tickbase status.
+
+  @see entity#m_flVelocityModifier
+  @see entity#m_flSimulationTime
+  @see render#rect   https://docs-csgo.neverlose.cc/documentation/variables/render#rect
+  @see render#text   https://docs-csgo.neverlose.cc/documentation/variables/render#text
+
+  @ref /Neverlose CSGO Lua API
 
 ]]
+
+-- Smooth interpolation helper (frametime-based lerp)
+local function warn_lerp(start_val, end_val, speed)
+    if start_val == end_val then return end_val end
+    local frametime = globals.frametime * 170
+    local t = speed * frametime
+    local val = start_val + (end_val - start_val) * t
+    if math.abs(val - end_val) < 0.01 then return end_val end
+    return val
+end
+
+-- Defensive detection system (tracks sim_time rollback per player)
+local defensive = {
+    db = {},
+    is_active = function(self, player)
+        if player == nil or not player then return {tick = 0, active = false} end
+
+        local idx = player:get_index()
+        local tickcount = globals.tickcount
+        local sim_time = to_ticks(player.m_flSimulationTime or 0)
+
+        self.db[idx] = self.db[idx] or {last_sim_time = 0, defensive_until = 0}
+
+        if self.db[idx].last_sim_time == 0 then
+            self.db[idx].last_sim_time = sim_time
+            return {tick = 0, active = false}
+        end
+
+        local sim_diff = sim_time - self.db[idx].last_sim_time
+
+        if sim_diff < 0 then
+            self.db[idx].defensive_until = tickcount + math.abs(sim_diff)
+        end
+
+        self.db[idx].last_sim_time = sim_time
+
+        return {
+            tick = self.db[idx].defensive_until or 0,
+            active = self.db[idx].defensive_until and (self.db[idx].defensive_until > tickcount) or false,
+        }
+    end
+}
+
+-- Warning font (smaller than the HUD font)
+local warn_font = render.load_font("Verdana", 11, "a")
+
+-- Velocity warning state
+local vel_warn = {
+    anim = {appearing = 0, appearing_alpha = 0},
+    handle = function(self)
+        local use_warnings = enable_warnings:get()
+        local show_velocity = warnings_select:get("velocity")
+        local clr = warnings_color:get()
+
+        if not use_warnings or not show_velocity then return end
+
+        local lplr = entity.get_local_player()
+        if not lplr or not lplr:is_alive() then return end
+
+        local modifier = lplr.m_flVelocityModifier
+        local frametime = globals.frametime
+        local menuopen = ui.get_alpha() > 0.5
+
+        self.anim.appearing = warn_lerp(self.anim.appearing, (modifier < 1 or menuopen) and 230 or 180, 0.06 + math.min(frametime / 10.1, 0.25))
+        self.anim.appearing_alpha = warn_lerp(self.anim.appearing_alpha, (modifier < 1 or menuopen) and 255 or 0, 0.06 + math.min(frametime / 10.1, 0.25))
+
+        render.rect(vector(screen.x / 2 - 60, math.floor(self.anim.appearing)), vector(screen.x / 2 - 60, math.floor(self.anim.appearing)) + vector(120, 6), color(0, 0, 0, math.min(math.floor(self.anim.appearing_alpha), 200)))
+        render.rect(vector(screen.x / 2 - 58, math.floor(self.anim.appearing + 2)), vector(screen.x / 2 - 58, math.floor(self.anim.appearing + 2)) + vector(116 * modifier, 2), color(clr.r, clr.g, clr.b, math.floor(self.anim.appearing_alpha)))
+
+        render.text(warn_font, vector(screen.x / 2, math.floor(self.anim.appearing) - 7), color(255, 255, 255, math.floor(self.anim.appearing_alpha)), "c", string.format("- slow: %i%s -", math.abs(modifier * 100 + 100 * -1), "%%"))
+    end
+}
+
+-- Defensive warning state
+local def_warn = {
+    anim = {appearing_alpha = 0},
+    handle = function(self)
+        local use_warnings = enable_warnings:get()
+        local show_defensive = warnings_select:get("defensive")
+        local clr = warnings_color:get()
+
+        if not use_warnings or not show_defensive then return end
+
+        local lplr = entity.get_local_player()
+        if not lplr or not lplr:is_alive() then return end
+
+        local frametime = globals.frametime
+        local menuopen = ui.get_alpha() > 0.1
+        local defensivetable = defensive:is_active(lplr)
+        local is_defe = defensivetable.tick - globals.tickcount > 1
+
+        self.anim.appearing_alpha = warn_lerp(self.anim.appearing_alpha, (is_defe or menuopen) and 255 or 0, 0.06 + math.min(frametime / 10.1, 0.25))
+
+        render.rect(vector(screen.x / 2 - 60, 249), vector(screen.x / 2 - 60, 249) + vector(120, 6), color(0, 0, 0, math.min(math.floor(self.anim.appearing_alpha), 200)))
+        render.rect(vector(screen.x / 2 - 58, 251), vector(screen.x / 2 - 58, 251) + vector(116 + (defensivetable.tick - globals.tickcount > 1 and ((defensivetable.tick - globals.tickcount) / 12) * -112 or 0), 2), color(clr.r, clr.g, clr.b, math.floor(self.anim.appearing_alpha)), 0, true)
+
+        render.text(warn_font, vector(screen.x / 2, 249 - 7), color(255, 255, 255, math.floor(self.anim.appearing_alpha)), "c", "- defensive -")
+    end
+}
+
+-- Reusable gradient function for UI elements
+local function draw_gradient(x, y, w, h, right_to_left)
+    local c1 = right_to_left and color(0):alpha_modulate(0) or color(0)
+    local c2 = right_to_left and color(0) or color(0):alpha_modulate(0)
+    render.gradient(vector(x, y), vector(x + w, y + h), c1, c2, c1, c2)
+end
 
 local function all()
 
     -- Guard clauses: abort rendering if conditions are not met
     if not enable_ui:get() then return end
-    if not globals.is_in_game then return end
-    if not entity.get_local_player() then return end
-    if not entity.get_local_player():is_alive() then return end
 
     local shoudappear = false                   -- Tracks if any element was drawn (controls divider visibility)
     local w, h = 200, 18                        -- Panel width and row height (pixels)
     local enablement_of_keybinds   = true
     local enablement_of_spectators = true
     local enablement_of_line       = true
+    local enablement_of_watermark  = true
 
     -- In "Customizable" mode, read individual toggle states from the menu
     if mode:get() == "Customizable" then
         enablement_of_keybinds   = enable_keybinds:get()
         enablement_of_spectators = enable_spectators:get()
         enablement_of_line       = enable_line:get()
+        enablement_of_watermark  = enable_watermark:get()
     end
+
+    if enablement_of_watermark then
+        local custom_name = watermark_username:get()
+        local username = (mode:get() == "Customizable" and custom_name and custom_name ~= "") and custom_name or (common.get_username() or "unknown")
+        
+        local text = string.format("onetap [debug] | %s", username)
+        if globals.is_in_game then
+            local net = utils.net_channel()
+            if net then
+                local info = net:get_server_info()
+                local address = (info and info.address) or "unknown"
+                local ping = 0
+                if net and net.avg_latency then
+                    ping = math.max(0, math.floor(net.avg_latency[0] * 1000))
+                end
+                text = string.format("onetap [debug] | %s | %s | ping %dms", username, address, ping)
+            end
+        end
+        local text_size = render.measure_text(font, "s", text)
+        local pad_x, pad_y = 6, 4
+        local bg_w = text_size.x + pad_x * 2
+        local bg_h = text_size.y + pad_y * 2
+        local x = screen.x - bg_w
+        local y = 5
+        
+        -- Gradient background (transparent to translucent dark)
+        render.gradient(vector(x, y), vector(x + bg_w, y + bg_h), color(17, 17, 17, 0), color(17, 17, 17, 200), color(17, 17, 17, 0), color(17, 17, 17, 200))
+        
+        -- Text using the same font as keybinds
+        render.text(font, vector(x + pad_x, y + pad_y), color(255, 255, 255, 255), "s", text)
+    end
+
+    if not globals.is_in_game then return end
+    if not entity.get_local_player() then return end
+    if not entity.get_local_player():is_alive() then return end
 
     --[[ Keybinds Panel
          Iterates over all active keybinds, renames certain entries for a
@@ -167,6 +352,7 @@ local function all()
          @see ui#get_binds   https://docs-csgo.neverlose.cc/documentation/variables/ui#get_binds
          @see render#texture https://docs-csgo.neverlose.cc/documentation/variables/render#texture
          @see render#text    https://docs-csgo.neverlose.cc/documentation/variables/render#text
+         @ref /Neverlose CSGO Lua API
     ]]
     
     if enablement_of_keybinds then
@@ -201,6 +387,7 @@ local function all()
          @see entity#get_name       https://docs-csgo.neverlose.cc/documentation/variables/entity#get_name
          @see render#texture        https://docs-csgo.neverlose.cc/documentation/variables/render#texture
          @see render#text           https://docs-csgo.neverlose.cc/documentation/variables/render#text
+         @ref /Neverlose CSGO Lua API
     ]]
 
     local y_minus = 21
@@ -231,13 +418,96 @@ local function all()
          to visually separate keybinds (below) from spectators (above).
          Only renders if at least one element was drawn.
          @see render#gradient https://docs-csgo.neverlose.cc/documentation/variables/render#gradient
+         @ref /Neverlose CSGO Lua API
     ]]
 
     if enablement_of_line then
         if shoudappear then
-            render.gradient(vector(0, screen.y/2 - h/2), vector(w, screen.y/2 + h/2), color(0), color(0):alpha_modulate(0), color(0) ,color(0):alpha_modulate(0))
+            draw_gradient(0, screen.y/2 - h/2, w, h, false)
         end
     end
+
+    --[[ Warning Indicators
+         Velocity slow bar and defensive tickbase indicator.
+         Rendered near the top-center of the screen with smooth fade animations.
+         @ref /Neverlose CSGO Lua API
+    ]]
+    
+    if enable_dm:get() then
+        local show_dmg = dm_options:get("Damage")
+        local show_hit = dm_options:get("Hitmarker")
+        local current_time = globals.realtime
+        
+        for i = #hit_markers, 1, -1 do
+            local marker = hit_markers[i]
+            local time_elapsed = current_time - marker.time
+            
+            if time_elapsed > 3.5 then
+                table.remove(hit_markers, i)
+            else
+                if time_elapsed > 2.5 then
+                    marker.alpha = marker.alpha + (0 - marker.alpha) * 0.1
+                end
+                if marker.alpha > 0 then
+                    local screen_pos = render.world_to_screen(marker.pos)
+                    if not screen_pos then goto continue end
+                    
+                    if show_hit then
+                        local gap = 3
+                        local length = 4
+                        local alpha = math.floor(marker.alpha)
+                        local clr = color(255, 255, 255, alpha)
+                        
+                        local function d_line(p1, p2)
+                            -- 2px thick main line, no shadow
+                            render.line(p1, p2, clr)
+                            render.line(p1 + vector(1, 0), p2 + vector(1, 0), clr)
+                        end
+                        
+                        d_line(screen_pos + vector(-gap-length, -gap-length), screen_pos + vector(-gap, -gap))
+                        d_line(screen_pos + vector(gap+length, -gap-length), screen_pos + vector(gap, -gap))
+                        d_line(screen_pos + vector(-gap-length, gap+length), screen_pos + vector(-gap, gap))
+                        d_line(screen_pos + vector(gap+length, gap+length), screen_pos + vector(gap, gap))
+                    end
+                    
+                    local draw_dmg = show_dmg
+                    local display_damage = marker.damage
+                    
+                    if draw_dmg then
+                        -- Prevent overlapping: if a newer hit happened recently nearby, hide this older text
+                        for j = i + 1, #hit_markers do
+                            local newer = hit_markers[j]
+                            if (newer.pos - marker.pos):length() < 50 and (newer.time - marker.time) < 0.5 then
+                                draw_dmg = false
+                                break
+                            end
+                        end
+                        
+                        if draw_dmg then
+                            -- Accumulate damage from recent older hits on the same target
+                            for j = 1, i - 1 do
+                                local older = hit_markers[j]
+                                if (older.pos - marker.pos):length() < 50 and (marker.time - older.time) < 0.5 then
+                                    display_damage = display_damage + older.damage
+                                end
+                            end
+                            
+                            local alpha = math.floor(marker.alpha)
+                            local text_color = marker.is_headshot and color(255, 50, 50, alpha) or color(255, 255, 255, alpha)
+                            local text_pos = screen_pos + vector(0, -20)
+                            local txt = tostring(display_damage)
+                            
+                            render.text(hit_font, text_pos, text_color, "c", txt)
+                        end
+                    end
+                end
+                ::continue::
+            end
+        end
+    end
+
+    vel_warn:handle()
+    def_warn:handle()
 
 end
 
