@@ -1,0 +1,4280 @@
+{
+  "cs_office_night": [
+    {
+      "name": [
+        "Unnamed",
+        "Trash + Wall | R"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        736.16455078125,
+        -1434.2506103515625,
+        -279.96875
+      ],
+      "viewangles": [
+        -19.95499038696289,
+        77.5
+      ],
+      "grenade": {
+        "run": 23
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Wall | R"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        736.1654052734375,
+        -1434.1954345703125,
+        -279.96875
+      ],
+      "viewangles": [
+        -18.744882583618164,
+        77.5
+      ],
+      "grenade": {
+        "run": 20
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Trash"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1013.5474853515625,
+        -667.8922119140625,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.7420284748077393,
+        97.74434661865234
+      ],
+      "grenade": {
+        "recovery_yaw": -111,
+        "run": 14
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Trash"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1013.5224609375,
+        -667.9515380859375,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.700000047683716,
+        98.0571517944336
+      ],
+      "grenade": {
+        "run": 13
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Trash"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        974.51904296875,
+        -449.4122619628906,
+        -159.96875
+      ],
+      "viewangles": [
+        -0.540168821811676,
+        79.90545654296875
+      ]
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Trash"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1011.6376342773438,
+        -475.3621520996094,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.5653836727142334,
+        99.6203384399414
+      ],
+      "grenade": {
+        "run": 2
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Clock's Spot"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        940.9613037109375,
+        -295.6695556640625,
+        -159.96875
+      ],
+      "viewangles": [
+        -8.76500129699707,
+        44.654998779296875
+      ],
+      "grenade": {
+        "recovery_yaw": -136,
+        "run": 8
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Clock's Spot"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        940.9595336914062,
+        -295.6713562011719,
+        -159.96875
+      ],
+      "viewangles": [
+        -8.76500129699707,
+        44.654998779296875
+      ],
+      "grenade": {
+        "recovery_yaw": -136,
+        "run": 8
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Boost"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        509.2889404296875,
+        19.32090187072754,
+        -111.96875
+      ],
+      "viewangles": [
+        2.354095458984375,
+        67.9399642944336
+      ],
+      "grenade": {
+        "recovery_yaw": 90,
+        "recovery_jump": true,
+        "run": 2
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Boost"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        509.2896423339844,
+        19.322311401367188,
+        -111.96875
+      ],
+      "viewangles": [
+        2.354095458984375,
+        67.9399642944336
+      ],
+      "grenade": {
+        "recovery_yaw": 90,
+        "recovery_jump": true,
+        "run": 2
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Soda [FD]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        -88.11539459228516,
+        -1061.5240478515625,
+        -223.96875
+      ],
+      "viewangles": [
+        -12.20010757446289,
+        71.15943908691406
+      ],
+      "grenade": {
+        "run": 2
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Soda [FD]"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        -88.16455841064453,
+        -1061.4693603515625,
+        -223.96875
+      ],
+      "viewangles": [
+        -13.355090141296387,
+        71.0999984741211
+      ],
+      "grenade": {
+        "run": 1
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Bathroom"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        -134.8368682861328,
+        -815.1713256835938,
+        -279.96875
+      ],
+      "viewangles": [
+        -22.155195236206055,
+        34.853729248046875
+      ],
+      "grenade": {
+        "run_speed": true,
+        "run": 1
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Sniper's Nest [Up]"
+      ],
+      "description": "bug molly 50/50",
+      "weapon": "weapon_molotov",
+      "position": [
+        -103.43128967285156,
+        -850.6513671875,
+        -279.96875
+      ],
+      "viewangles": [
+        -8.234997749328613,
+        177.8532257080078
+      ],
+      "grenade": {
+        "recovery_yaw": 90,
+        "run": 5
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Back FBI"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        63.75355529785156,
+        -2131.97998046875,
+        -335.9688720703125
+      ],
+      "viewangles": [
+        9.800000190734863,
+        136.7103729248047
+      ],
+      "grenade": {
+        "jump": true,
+        "recovery_yaw": 66,
+        "run": 22
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "up [Bug]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        -744.3408203125,
+        304.6295166015625,
+        -367.96875
+      ],
+      "viewangles": [
+        -25.13590431213379,
+        -178.75938415527344
+      ]
+    },
+    {
+      "name": [
+        "Unnamed",
+        "up [Bug]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        -744.3425903320312,
+        304.6237487792969,
+        -367.96875
+      ],
+      "viewangles": [
+        -14.245855331420898,
+        -126.06939697265625
+      ]
+    },
+    {
+      "name": [
+        "Unnamed",
+        "up [Bug]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        -746.8516845703125,
+        525.06640625,
+        -367.96875
+      ],
+      "viewangles": [
+        -19.196090698242188,
+        -163.93374633789062
+      ]
+    },
+    {
+      "name": [
+        "Unnamed",
+        "up [Bug]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        -746.8453369140625,
+        525.0628051757812,
+        -367.96875
+      ],
+      "viewangles": [
+        -20.406105041503906,
+        160.09652709960938
+      ]
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Back of Window"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        -974.7832641601562,
+        518.05419921875,
+        -175.96875
+      ],
+      "viewangles": [
+        -18.70146942138672,
+        -89.7082290649414
+      ],
+      "grenade": {
+        "jump": true,
+        "strength": 0
+      }
+    },
+    {
+      "name": [
+        "sidehall",
+        "Door"
+      ],
+      "description": "sofa",
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1057.4254150390625,
+        880.0238037109375,
+        -159.96875
+      ],
+      "viewangles": [
+        -8.932296752929688,
+        48.343299865722656
+      ],
+      "grenade": {
+        "recovery_yaw": 180,
+        "run": 10,
+        "delay": 10
+      }
+    },
+    {
+      "name": [
+        "sidehall",
+        "Door"
+      ],
+      "description": "Sofa",
+      "weapon": "weapon_molotov",
+      "position": [
+        1057.460205078125,
+        880.033935546875,
+        -159.96875
+      ],
+      "viewangles": [
+        -8.844287872314453,
+        48.29933547973633
+      ],
+      "grenade": {
+        "recovery_yaw": 180,
+        "run": 10,
+        "delay": 10
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Sofa"
+      ],
+      "description": "broke right + t RIGHT GLASES",
+      "weapon": "weapon_molotov",
+      "position": [
+        1053.18603515625,
+        880.0966796875,
+        -159.96875
+      ],
+      "viewangles": [
+        -8.610604286193848,
+        30.97190284729004
+      ],
+      "grenade": {
+        "run": 22
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Paper"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1277.8714599609375,
+        984.7647705078125,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.5172971487045288,
+        -57.66999053955078
+      ],
+      "grenade": {
+        "recovery_yaw": -90,
+        "run": 13
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Paper"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1277.8717041015625,
+        984.7655029296875,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.4908816814422607,
+        -57.602691650390625
+      ],
+      "grenade": {
+        "recovery_yaw": -90,
+        "run": 13
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Paper"
+      ],
+      "description": "door",
+      "weapon": "weapon_molotov",
+      "position": [
+        1086.550537109375,
+        -942.7086791992188,
+        -159.96875
+      ],
+      "viewangles": [
+        0.2383168637752533,
+        104.6519546508789
+      ],
+      "grenade": {
+        "run": 1
+      }
+    },
+    {
+      "grenade": {
+        "run": 1.0
+      },
+      "name": [
+        "Unnamed",
+        "FD"
+      ],
+      "position": [
+        -88.16455841064453,
+        -1061.4693603515625,
+        -223.96875
+      ],
+      "viewangles": [
+        -13.355090141296387,
+        71.0999984741211
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 20.0
+      },
+      "name": [
+        "Unnamed",
+        "Wall"
+      ],
+      "position": [
+        736.1654052734375,
+        -1434.1954345703125,
+        -279.96875
+      ],
+      "viewangles": [
+        -18.744882583618164,
+        77.5
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": -111.0,
+        "run": 14.0
+      },
+      "name": [
+        "Unnamed",
+        "Trash"
+      ],
+      "position": [
+        1013.5474853515625,
+        -667.8922119140625,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.7420284748077393,
+        97.74434661865234
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": -136.0,
+        "run": 8.0
+      },
+      "name": [
+        "Unnamed",
+        "Clock"
+      ],
+      "position": [
+        940.9595336914062,
+        -295.6713562011719,
+        -159.96875
+      ],
+      "viewangles": [
+        -8.76500129699707,
+        44.654998779296875
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "recovery_jump": true,
+        "recovery_yaw": 90.0,
+        "run": 2.0
+      },
+      "name": [
+        "Unnamed",
+        "Boost"
+      ],
+      "position": [
+        509.2896423339844,
+        19.322311401367188,
+        -111.96875
+      ],
+      "viewangles": [
+        2.354095458984375,
+        67.9399642944336
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "need destroy glasses",
+      "name": [
+        "Unnamed",
+        "Sofa"
+      ],
+      "position": [
+        1534.8599853515625,
+        899.6401977539062,
+        -159.9827423095703
+      ],
+      "viewangles": [
+        -9.28506851196289,
+        37.229366302490234
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 2.0
+      },
+      "name": [
+        "Unnamed",
+        "FD"
+      ],
+      "position": [
+        -88.11539459228516,
+        -1061.5240478515625,
+        -223.96875
+      ],
+      "viewangles": [
+        -12.20010757446289,
+        71.15943908691406
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "bug molly 50/50",
+      "grenade": {
+        "recovery_yaw": 90.0,
+        "run": 5.0
+      },
+      "name": [
+        "Unnamed",
+        "Sniper's Nest [Up]"
+      ],
+      "position": [
+        -103.43128967285156,
+        -850.6513671875,
+        -279.96875
+      ],
+      "viewangles": [
+        -8.234997749328613,
+        177.8532257080078
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 1.0,
+        "run_speed": true
+      },
+      "name": [
+        "Unnamed",
+        "Bathroom"
+      ],
+      "position": [
+        -134.8368682861328,
+        -815.1713256835938,
+        -279.96875
+      ],
+      "viewangles": [
+        -22.155195236206055,
+        34.853729248046875
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 13.0
+      },
+      "name": [
+        "Unnamed",
+        "Trash"
+      ],
+      "position": [
+        1013.5224609375,
+        -667.9515380859375,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.700000047683716,
+        98.0571517944336
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "need destroy glasses",
+      "grenade": {
+        "run": 1.0,
+        "run_speed": true
+      },
+      "name": [
+        "Unnamed",
+        "Sofa"
+      ],
+      "position": [
+        1535.931640625,
+        898.2560424804688,
+        -159.96875
+      ],
+      "viewangles": [
+        -15.719979286193848,
+        38.97589874267578
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 1.0,
+        "run_speed": true
+      },
+      "name": [
+        "Unnamed",
+        "Sofa"
+      ],
+      "position": [
+        1036.0369873046875,
+        1039.9658203125,
+        -159.96875
+      ],
+      "viewangles": [
+        -5.224998474121094,
+        -13.574313163757324
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Up [Bug]"
+      ],
+      "position": [
+        -746.8453369140625,
+        525.0628051757812,
+        -367.96875
+      ],
+      "viewangles": [
+        -20.406105041503906,
+        160.09652709960938
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Up [Bug]"
+      ],
+      "position": [
+        -746.8516845703125,
+        525.06640625,
+        -367.96875
+      ],
+      "viewangles": [
+        -19.196090698242188,
+        -163.93374633789062
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Up [Bug]"
+      ],
+      "position": [
+        -744.3408203125,
+        304.6295166015625,
+        -367.96875
+      ],
+      "viewangles": [
+        -25.13590431213379,
+        -178.75938415527344
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Up [Bug]"
+      ],
+      "position": [
+        -744.3425903320312,
+        304.6237487792969,
+        -367.96875
+      ],
+      "viewangles": [
+        -14.245855331420898,
+        -126.06939697265625
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "jump": true,
+        "recovery_yaw": 66.0,
+        "run": 22.0
+      },
+      "name": [
+        "Unnamed",
+        "Back FBI"
+      ],
+      "position": [
+        63.75355529785156,
+        -2131.97998046875,
+        -335.9688720703125
+      ],
+      "viewangles": [
+        9.800000190734863,
+        136.7103729248047
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "jump": true,
+        "strength": 0.0
+      },
+      "name": [
+        "Unnamed",
+        "Back of Window"
+      ],
+      "position": [
+        -974.7832641601562,
+        518.05419921875,
+        -175.96875
+      ],
+      "viewangles": [
+        -18.70146942138672,
+        -89.7082290649414
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "corner",
+      "grenade": {
+        "fov": 5.119999885559082,
+        "run": 25.0
+      },
+      "name": [
+        "Middle",
+        "Middle"
+      ],
+      "position": [
+        -316.76641845703125,
+        231.1422882080078,
+        -159.96875
+      ],
+      "viewangles": [
+        -5.893730163574219,
+        -24.006732940673828
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": -90.0,
+        "run": 2.0
+      },
+      "name": [
+        "SideHall",
+        "BathRoom"
+      ],
+      "position": [
+        82.93216705322266,
+        -47.61287307739258,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.6633858680725098,
+        38.22016525268555
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "MainHall",
+        "Vending"
+      ],
+      "position": [
+        311.2969665527344,
+        18.017518997192383,
+        -159.96875
+      ],
+      "viewangles": [
+        -7.239999771118164,
+        28.979999542236328
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 4.0
+      },
+      "name": [
+        "here",
+        "Paper"
+      ],
+      "position": [
+        981.7322387695312,
+        -266.8387145996094,
+        -158.96875
+      ],
+      "viewangles": [
+        -6.950443267822266,
+        45.657257080078125
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "UNSAFE",
+      "grenade": {
+        "recovery_jump": true,
+        "recovery_yaw": 90.0,
+        "run": 3.0
+      },
+      "name": [
+        "Unnamed",
+        "Push"
+      ],
+      "position": [
+        1085.1478271484375,
+        -124.0426254272461,
+        -159.96875
+      ],
+      "viewangles": [
+        1.1087801456451416,
+        -115.05120849609375
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "StorageRoom",
+        "Clock"
+      ],
+      "position": [
+        1203.989501953125,
+        -80.03890991210938,
+        -159.96875
+      ],
+      "viewangles": [
+        -0.8804228901863098,
+        -47.736473083496094
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "LegitAA",
+        "Door"
+      ],
+      "position": [
+        1131.1153564453125,
+        103.62297058105469,
+        -159.96875
+      ],
+      "viewangles": [
+        0.591805636882782,
+        -129.42172241210938
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "delay": 2.0,
+        "recovery_yaw": 180.0,
+        "run": 2.0
+      },
+      "name": [
+        "T",
+        "Main door"
+      ],
+      "position": [
+        1351.2513427734375,
+        200.062744140625,
+        -159.96875
+      ],
+      "viewangles": [
+        -5.024656295776367,
+        -167.39962768554688
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "delay": 2.0,
+        "recovery_yaw": 180.0,
+        "run": 2.0
+      },
+      "name": [
+        "T",
+        "Paper door"
+      ],
+      "position": [
+        1351.415283203125,
+        200.07827758789062,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.660407543182373,
+        -153.7202911376953
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": 180.0,
+        "run": 3.0
+      },
+      "name": [
+        "T",
+        "Door"
+      ],
+      "position": [
+        1231.840087890625,
+        364.12786865234375,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.5029181241989136,
+        -122.61701965332031
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 6.0,
+        "run_speed": true
+      },
+      "name": [
+        "noob",
+        "Door"
+      ],
+      "position": [
+        1184.0213623046875,
+        559.9786376953125,
+        -159.96875
+      ],
+      "viewangles": [
+        3.3848092555999756,
+        -56.39649963378906
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "T",
+        "Push"
+      ],
+      "position": [
+        1328.0272216796875,
+        751.9708251953125,
+        -159.96875
+      ],
+      "viewangles": [
+        1.6395177841186523,
+        27.184049606323242
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "UNSAFE",
+      "grenade": {
+        "recovery_yaw": 179.0,
+        "run": 14.0,
+        "run_yaw": -66.0
+      },
+      "name": [
+        "Unnamed",
+        "Long"
+      ],
+      "position": [
+        1423.8890380859375,
+        788.228759765625,
+        -159.96875
+      ],
+      "viewangles": [
+        -7.149999141693115,
+        168.29994201660156
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "delay": 10.0,
+        "recovery_yaw": 180.0,
+        "run": 10.0
+      },
+      "name": [
+        "sidehall",
+        "Door"
+      ],
+      "position": [
+        912.2817993164062,
+        880.1365356445312,
+        -159.96875
+      ],
+      "viewangles": [
+        -13.024290084838867,
+        39.71928787231445
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "delay": 2.0,
+        "recovery_yaw": 180.0,
+        "run": 2.0
+      },
+      "name": [
+        "T",
+        "Paper door"
+      ],
+      "position": [
+        1597.3489990234375,
+        192.23764038085938,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.8842954635620117,
+        -169.43417358398438
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": 180.0,
+        "run": 9.0,
+        "run_yaw": 90.0
+      },
+      "name": [
+        "T",
+        "Door"
+      ],
+      "position": [
+        1597.4178466796875,
+        192.22802734375,
+        -159.96875
+      ],
+      "viewangles": [
+        1.3965314626693726,
+        87.9512939453125
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": 180.0,
+        "run": 9.0
+      },
+      "name": [
+        "b1g",
+        "Paper"
+      ],
+      "position": [
+        2039.1156005859375,
+        -199.35964965820312,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.1272075176239014,
+        -141.32351684570312
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": 180.0,
+        "run": 9.0,
+        "run_yaw": -90.0
+      },
+      "name": [
+        "kitchen",
+        "Room"
+      ],
+      "position": [
+        1617.2420654296875,
+        -489.8400573730469,
+        -159.96875
+      ],
+      "viewangles": [
+        5.464826583862305,
+        51.37957763671875
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": 90.0,
+        "run": 9.0
+      },
+      "name": [
+        "side",
+        "BathRoom"
+      ],
+      "position": [
+        97.4901351928711,
+        -332.74237060546875,
+        -159.96875
+      ],
+      "viewangles": [
+        -7.589832305908203,
+        -40.82109069824219
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 2.0
+      },
+      "name": [
+        "Main",
+        "Fakeduck"
+      ],
+      "position": [
+        565.3442993164062,
+        -444.4552307128906,
+        -159.96875
+      ],
+      "viewangles": [
+        -5.3589324951171875,
+        179.64431762695312
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Fakeduck"
+      ],
+      "position": [
+        730.7908325195312,
+        -418.0490417480469,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.6726837158203125,
+        -51.500606536865234
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 16.0
+      },
+      "name": [
+        "MainHall",
+        "Clock"
+      ],
+      "position": [
+        712.5875854492188,
+        -573.98486328125,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.175130844116211,
+        48.08562088012695
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "delay": 1.0,
+        "recovery_yaw": 180.0,
+        "run": 17.0,
+        "run_yaw": 90.0
+      },
+      "name": [
+        "Middle",
+        "Sanchez"
+      ],
+      "position": [
+        961.6837158203125,
+        -447.103759765625,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.0200374126434326,
+        48.35041427612305
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "main",
+        "Paper door"
+      ],
+      "position": [
+        1053.9686279296875,
+        -443.0107116699219,
+        -159.96875
+      ],
+      "viewangles": [
+        9.836584091186523,
+        136.4064483642578
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "duck": true,
+      "name": [
+        "kitchen",
+        "Paper"
+      ],
+      "position": [
+        1329.6568603515625,
+        -519.0165405273438,
+        -115.96875
+      ],
+      "viewangles": [
+        2.6717047691345215,
+        55.00077438354492
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "kitchen",
+        "Main"
+      ],
+      "position": [
+        1436.3914794921875,
+        -302.28790283203125,
+        -159.96875
+      ],
+      "viewangles": [
+        -6.709609508514404,
+        136.761474609375
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "PICTURE",
+      "name": [
+        "Back Courtyard",
+        "Conner"
+      ],
+      "position": [
+        1271.9500732421875,
+        -1161.751708984375,
+        -255.1698760986328
+      ],
+      "viewangles": [
+        -20.037616729736328,
+        125.26713562011719
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 29.0
+      },
+      "name": [
+        "Unnamed",
+        "Main Hall"
+      ],
+      "position": [
+        -591.0165405273438,
+        -599.427734375,
+        -292.656494140625
+      ],
+      "viewangles": [
+        -21.38397979736328,
+        7.576503276824951
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "lastone",
+        "Ramp"
+      ],
+      "position": [
+        -249.95950317382812,
+        -781.3697509765625,
+        -279.96875
+      ],
+      "viewangles": [
+        -1.1388405561447144,
+        -151.22862243652344
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 1.0
+      },
+      "name": [
+        "Main",
+        "FakeDuck"
+      ],
+      "position": [
+        565.4091186523438,
+        -444.45550537109375,
+        -159.96875
+      ],
+      "viewangles": [
+        -5.358944416046143,
+        179.61355590820312
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": 90.0
+      },
+      "name": [
+        "Molly 1W Left Corner",
+        "Fakeduck"
+      ],
+      "position": [
+        645.409912109375,
+        -310.6034240722656,
+        -158.96875
+      ],
+      "viewangles": [
+        -2.7401323318481445,
+        -50.03606033325195
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "UNSAFE",
+      "grenade": {
+        "delay": 1.0,
+        "recovery_yaw": 180.0,
+        "run": 17.0,
+        "run_yaw": 90.0
+      },
+      "name": [
+        "Middle",
+        "Sanchez"
+      ],
+      "position": [
+        961.72802734375,
+        -447.0731506347656,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.1058382987976074,
+        48.33940505981445
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 6.0
+      },
+      "name": [
+        "main",
+        "Paper door"
+      ],
+      "position": [
+        1053.803955078125,
+        -442.8623352050781,
+        -159.96875
+      ],
+      "viewangles": [
+        -8.65250015258789,
+        136.6280059814453
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "name": [
+        "Bagged1w",
+        "Picture"
+      ],
+      "position": [
+        985.6458129882812,
+        -860.3468017578125,
+        -158.96875
+      ],
+      "viewangles": [
+        2.1217920780181885,
+        113.56776428222656
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 16.0
+      },
+      "name": [
+        "Corner",
+        "Corner"
+      ],
+      "position": [
+        1086.5325927734375,
+        -942.6986694335938,
+        -158.96875
+      ],
+      "viewangles": [
+        -2.4639699459075928,
+        104.29251098632812
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 10.0
+      },
+      "name": [
+        "Molly 1W Paint",
+        "Picture"
+      ],
+      "position": [
+        782.016357421875,
+        -912.2022094726562,
+        -158.96875
+      ],
+      "viewangles": [
+        -8.607072830200195,
+        41.31282424926758
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 4.0,
+        "run_speed": true
+      },
+      "name": [
+        "Unnamed",
+        "AWP hold"
+      ],
+      "position": [
+        767.2484741210938,
+        -1272.107177734375,
+        -290.11669921875
+      ],
+      "viewangles": [
+        -17.650466918945312,
+        76.47933959960938
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "UNSAFE",
+      "grenade": {
+        "recovery_jump": true,
+        "recovery_yaw": 90.0,
+        "run": 3.0
+      },
+      "name": [
+        "Unnamed",
+        "Push"
+      ],
+      "position": [
+        1085.1429443359375,
+        -124.05278015136719,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.488116502761841,
+        -115.12374877929688
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": -90.0,
+        "run": 1.0
+      },
+      "name": [
+        "SideHall",
+        "BathRoom"
+      ],
+      "position": [
+        51.20981216430664,
+        -109.73165130615234,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.926836013793945,
+        39.47201919555664
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 6.0
+      },
+      "name": [
+        "Molly 1W Boost 2",
+        "Long"
+      ],
+      "position": [
+        594.03125,
+        799.5230102539062,
+        -158.96875
+      ],
+      "viewangles": [
+        -2.297855854034424,
+        31.701364517211914
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 22.0
+      },
+      "name": [
+        "Unnamed",
+        "Sofa"
+      ],
+      "position": [
+        1053.18603515625,
+        880.0966796875,
+        -159.96875
+      ],
+      "viewangles": [
+        -8.610604286193848,
+        30.97190284729004
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 11.0
+      },
+      "name": [
+        "hall",
+        "T Start"
+      ],
+      "position": [
+        1277.942138671875,
+        984.7964477539062,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.2698873281478882,
+        -48.251136779785156
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "name": [
+        "T",
+        "Push"
+      ],
+      "position": [
+        1328.022216796875,
+        751.9676513671875,
+        -159.96875
+      ],
+      "viewangles": [
+        -11.415349960327148,
+        27.71346664428711
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "recovery_jump": true,
+        "run": 26.0,
+        "run_yaw": -25.0
+      },
+      "name": [
+        "Unnamed",
+        "Long"
+      ],
+      "position": [
+        1451.8896484375,
+        732.5828247070312,
+        -159.96875
+      ],
+      "viewangles": [
+        -8.447997093200684,
+        144.7160186767578
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "name": [
+        "T",
+        "Door"
+      ],
+      "position": [
+        1721.087646484375,
+        736.8323364257812,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.9034013748168945,
+        173.4586639404297
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 9.0
+      },
+      "name": [
+        "T",
+        "Main door"
+      ],
+      "position": [
+        1317.81884765625,
+        306.8648681640625,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.762775421142578,
+        -131.70480346679688
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Stairs [Near]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        506.49780273438,
+        -1934.2175292969,
+        -335.96875
+      ],
+      "viewangles": [
+        -15.707925796509,
+        102.43449401855
+      ],
+      "grenade": {
+        "run": 6,
+        "recovery_yaw": -90
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Stairs [Far]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        507.64828491211,
+        -1931.9560546875,
+        -335.96875
+      ],
+      "viewangles": [
+        -16.191938400269,
+        83.155426025391
+      ],
+      "grenade": {
+        "run": 17,
+        "run_yaw": 43,
+        "recovery_yaw": -90,
+        "recovery_jump": true
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Stairs"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        487.32696533203,
+        -1943.5350341797,
+        -335.96875
+      ],
+      "viewangles": [
+        9.3720645904541,
+        96.662895202637
+      ],
+      "grenade": {
+        "run": 18,
+        "recovery_yaw": -90,
+        "jump": true
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        842.63171386719,
+        -1580.0740966797,
+        -310.97796630859
+      ],
+      "viewangles": [
+        -21.471996307373,
+        83.603248596191
+      ],
+      "grenade": {
+        "run": 20
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Paper"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        736.00335693359,
+        -1413.5491943359,
+        -279.96875
+      ],
+      "viewangles": [
+        -16.455945968628,
+        76.739074707031
+      ],
+      "grenade": {
+        "run": 4
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1104.6325683594,
+        -1167.9793701172,
+        -231.26593017578
+      ],
+      "viewangles": [
+        -13.991960525513,
+        98.342384338379
+      ],
+      "grenade": {
+        "run": 14
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner [Semi Safe]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        513.00384521484,
+        18.004207611084,
+        -111.96875
+      ],
+      "viewangles": [
+        0.78005003929138,
+        71.883033752441
+      ],
+      "grenade": {
+        "run": 17,
+        "run_yaw": -6,
+        "recovery_yaw": 90,
+        "jump": true
+      }
+    },
+    {
+      "name": "Corner",
+      "weapon": "weapon_hegrenade",
+      "position": [
+        686.98266601563,
+        860.13854980469,
+        -159.96875
+      ],
+      "viewangles": [
+        -7.611891746521,
+        29.89958190918
+      ],
+      "grenade": {
+        "run": 10
+      }
+    },
+    {
+      "name": "Corner",
+      "weapon": "weapon_molotov",
+      "position": [
+        686.99633789063,
+        860.12890625,
+        -159.96875
+      ],
+      "viewangles": [
+        -7.611891746521,
+        29.89958190918
+      ],
+      "grenade": {
+        "run": 6
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Sofa"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1031.1346435547,
+        913.77209472656,
+        -159.96875
+      ],
+      "viewangles": [
+        -9.8560180664063,
+        27.061086654663
+      ],
+      "grenade": {
+        "run": 11
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Sofa"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1535.9924316406,
+        880.0166015625,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.4000654220581,
+        22.272695541382
+      ],
+      "grenade": {
+        "run": 5,
+        "run_yaw": 90,
+        "recovery_yaw": 180,
+        "recovery_jump": true
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Hostage"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1299.9377441406,
+        195.95567321777,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.4520591497421,
+        59.760341644287
+      ],
+      "grenade": {
+        "run": 6
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Hostage"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1616.0052490234,
+        762.52502441406,
+        -159.96875
+      ],
+      "viewangles": [
+        -0.13209691643715,
+        52.588516235352
+      ]
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Hostage"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1616.0078125,
+        762.51916503906,
+        -159.96875
+      ],
+      "viewangles": [
+        -0.13209691643715,
+        52.588516235352
+      ]
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Sofa [High Dmg]"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1535.9854736328,
+        880.01379394531,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.4000654220581,
+        22.272695541382
+      ],
+      "grenade": {
+        "run": 5,
+        "run_yaw": 90,
+        "recovery_yaw": 180,
+        "recovery_jump": true
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Pre-Corner"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1255.1910400391,
+        968.54516601563,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.9600653648376,
+        -43.295722961426
+      ],
+      "grenade": {
+        "run": 7,
+        "run_speed": true
+      }
+    },
+    {
+      "name": "Corner / Door [Semi Safe]",
+      "weapon": "weapon_molotov",
+      "position": [
+        1291.0732421875,
+        950.87628173828,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.0448163747787,
+        -56.884471893311
+      ],
+      "grenade": {
+        "recovery_yaw": -90
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Main Hall"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        -591.01654052734,
+        -599.427734375,
+        -292.65649414063
+      ],
+      "viewangles": [
+        -21.383979797363,
+        7.576503276825
+      ],
+      "grenade": {
+        "run": 29
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Middle"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1265.0446777344,
+        307.04858398438,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.1795959472656,
+        -128.89837646484
+      ],
+      "grenade": {
+        "run": 15
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Middle"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1265.0502929688,
+        307.05541992188,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.1795959472656,
+        -128.89837646484
+      ],
+      "grenade": {
+        "run": 15
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Middle"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1143.0850830078,
+        113.37773895264,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.2675786018372,
+        -132.37507629395
+      ],
+      "grenade": {
+        "run": 3
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Middle"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1142.7814941406,
+        113.04483032227,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.2675786018372,
+        -132.37507629395
+      ],
+      "grenade": {
+        "run": 5
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Middle"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1430.5062255859,
+        -319.97033691406,
+        -159.96875
+      ],
+      "viewangles": [
+        -6.6875715255737,
+        134.66217041016
+      ],
+      "grenade": {
+        "run": 16
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Middle"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1430.4975585938,
+        -319.96157836914,
+        -159.96875
+      ],
+      "viewangles": [
+        -6.6875715255737,
+        134.66217041016
+      ],
+      "grenade": {
+        "run": 16
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Paper"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        994.32696533203,
+        -282.23010253906,
+        -159.96875
+      ],
+      "viewangles": [
+        -6.4675712585449,
+        56.218990325928
+      ]
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Paper"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        994.33947753906,
+        -282.2619934082,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.123565196991,
+        56.130992889404
+      ]
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner [Semi-Safe]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        994.35791015625,
+        -282.21646118164,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.4515830278397,
+        27.847450256348
+      ],
+      "grenade": {
+        "run": 12,
+        "run_yaw": 59,
+        "recovery_yaw": -129,
+        "recovery_jump": true
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner [Far / Semi Safe]"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        994.37371826172,
+        -282.20831298828,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.4515830278397,
+        27.891450881958
+      ],
+      "grenade": {
+        "run": 12,
+        "run_yaw": 59,
+        "recovery_yaw": -129,
+        "recovery_jump": true
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner [Near /Safe]"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        994.33184814453,
+        -282.25552368164,
+        -159.96875
+      ],
+      "viewangles": [
+        -7.3476223945618,
+        35.899421691895
+      ],
+      "grenade": {
+        "run": 8,
+        "run_yaw": 50,
+        "recovery_yaw": 180,
+        "recovery_jump": true
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner [Near / Safe]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        994.33282470703,
+        -282.25482177734,
+        -159.96875
+      ],
+      "viewangles": [
+        -7.3476223945618,
+        35.899421691895
+      ],
+      "grenade": {
+        "run": 8,
+        "run_yaw": 50,
+        "recovery_yaw": 180,
+        "recovery_jump": true
+      }
+    },
+    {
+      "name": "Paper [Near / Unsafe]",
+      "weapon": "weapon_hegrenade",
+      "position": [
+        776.93872070313,
+        -430.27145385742,
+        -159.96875
+      ],
+      "viewangles": [
+        21.340270996094,
+        71.099273681641
+      ],
+      "grenade": {
+        "run": 18,
+        "run_yaw": -90,
+        "recovery_yaw": 180,
+        "jump": true
+      }
+    },
+    {
+      "name": "Paper [Near / Unsafe]",
+      "weapon": "weapon_molotov",
+      "position": [
+        776.94018554688,
+        -430.2673034668,
+        -159.96875
+      ],
+      "viewangles": [
+        21.296270370483,
+        71.099273681641
+      ],
+      "grenade": {
+        "run": 18,
+        "run_yaw": -90,
+        "recovery_yaw": 180,
+        "jump": true
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Trash [Center]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        786.89953613281,
+        -499.68969726563,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.6717314720154,
+        -48.756687164307
+      ]
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Trash [R]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        786.90844726563,
+        -499.69970703125,
+        -159.96875
+      ],
+      "viewangles": [
+        -6.6437377929688,
+        -46.600738525391
+      ],
+      "grenade": {
+        "run": 2
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Trash [Down]"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        786.97448730469,
+        -499.75323486328,
+        -159.96875
+      ],
+      "viewangles": [
+        16.236211776733,
+        -102.56866455078
+      ],
+      "grenade": {
+        "run": 23,
+        "run_yaw": 90,
+        "jump": true
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Trash [Center]"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        786.89001464844,
+        -499.69705200195,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.6717636585236,
+        -48.748931884766
+      ]
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Trash [R]"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        786.90209960938,
+        -499.70727539063,
+        -159.96875
+      ],
+      "viewangles": [
+        -5.9397668838501,
+        -46.989101409912
+      ],
+      "grenade": {
+        "run": 2
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Window"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        157.08218383789,
+        -1784.8563232422,
+        -335.96881103516
+      ],
+      "viewangles": [
+        -12.947961807251,
+        174.78704833984
+      ],
+      "grenade": {
+        "run": 4,
+        "run_speed": true
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Hostage"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1217.2258300781,
+        558.68334960938,
+        -159.96875
+      ],
+      "viewangles": [
+        -13.85994720459,
+        -62.192447662354
+      ],
+      "grenade": {
+        "run": 5
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Hostage"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1217.2547607422,
+        558.62670898438,
+        -159.96875
+      ],
+      "viewangles": [
+        -13.727895736694,
+        -62.016456604004
+      ],
+      "grenade": {
+        "run": 4,
+        "recovery_yaw": 180
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Hostage"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1299.9228515625,
+        195.95516967773,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.464058637619,
+        59.716342926025
+      ],
+      "grenade": {
+        "run": 11
+      }
+    },
+    {
+      "name": "AWP Corner",
+      "weapon": "weapon_molotov",
+      "position": [
+        1272.0767822266,
+        983.19537353516,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.2880072593689,
+        -56.166885375977
+      ],
+      "grenade": {
+        "recovery_yaw": -90
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        1082.5194091797,
+        -960.32421875,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.2998950481415,
+        100.47296905518
+      ],
+      "grenade": {
+        "run": 8,
+        "recovery_yaw": -90,
+        "recovery_jump": true
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1082.5904541016,
+        -960.28643798828,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.5196883678436,
+        100.51754760742
+      ],
+      "grenade": {
+        "run": 15,
+        "recovery_yaw": -90,
+        "recovery_jump": true
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        749.45861816406,
+        -1448.0321044922,
+        -279.96875
+      ],
+      "viewangles": [
+        -20.151725769043,
+        78.376022338867
+      ],
+      "grenade": {
+        "run": 23
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        736.49700927734,
+        -1413.7438964844,
+        -279.96875
+      ],
+      "viewangles": [
+        -20.415781021118,
+        76.81925201416
+      ],
+      "grenade": {
+        "run": 7
+      }
+    },
+    {
+      "name": "Paper [Near]",
+      "weapon": "weapon_hegrenade",
+      "position": [
+        749.44903564453,
+        -1448.0616455078,
+        -279.96875
+      ],
+      "viewangles": [
+        -15.83974647522,
+        78.359214782715
+      ]
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner"
+      ],
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1104.6341552734,
+        -1167.9716796875,
+        -231.26608276367
+      ],
+      "viewangles": [
+        -14.035717010498,
+        98.290817260742
+      ],
+      "grenade": {
+        "run": 24
+      }
+    },
+    {
+      "name": [
+        "Unnamed",
+        "Corner"
+      ],
+      "weapon": "weapon_molotov",
+      "position": [
+        807.97296142578,
+        -1179.0093994141,
+        -258.54983520508
+      ],
+      "viewangles": [
+        -14.651642799377,
+        76.906265258789
+      ],
+      "grenade": {
+        "run": 3
+      }
+    },
+    {
+      "name": "Paper",
+      "weapon": "weapon_molotov",
+      "position": [
+        807.97381591797,
+        -1178.8328857422,
+        -258.48168945313
+      ],
+      "viewangles": [
+        -19.755712509155,
+        78.401977539063
+      ],
+      "grenade": {
+        "run": 1,
+        "run_yaw": 180,
+        "run_speed": true
+      }
+    },
+    {
+      "name": "Corner",
+      "weapon": "weapon_hegrenade",
+      "position": [
+        1031.8901367188,
+        -652.04718017578,
+        -159.96875
+      ],
+      "viewangles": [
+        -0.83607172966003,
+        95.838111877441
+      ],
+      "grenade": {
+        "run": 4
+      }
+    },
+    {
+      "grenade": {
+        "run": 32.0
+      },
+      "name": [
+        "Back Way",
+        "Trash"
+      ],
+      "position": [
+        1013.5485229492188,
+        -667.8995361328125,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.257702827453613,
+        97.96434783935547
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "70HP",
+      "grenade": {
+        "run": 13.0
+      },
+      "name": [
+        "here",
+        "Trash"
+      ],
+      "position": [
+        1013.5485229492188,
+        -667.8995361328125,
+        -158.96875
+      ],
+      "viewangles": [
+        -2.577028274536133,
+        97.96434783935547
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Fakeduck",
+      "grenade": {
+        "run": 22.0
+      },
+      "name": [
+        "1w",
+        "Soda"
+      ],
+      "position": [
+        -134.96875,
+        -1124.96875,
+        -222.96875
+      ],
+      "viewangles": [
+        -11.989991188049316,
+        67.50125122070312
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "Fakeduck",
+      "grenade": {
+        "run": 22.0
+      },
+      "name": [
+        "1w",
+        "Soda"
+      ],
+      "position": [
+        -134.96875,
+        -1124.96875,
+        -222.96875
+      ],
+      "viewangles": [
+        -11.989991188049316,
+        67.50125122070312
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Right",
+      "grenade": {
+        "run": 15.0
+      },
+      "name": [
+        "hall",
+        "T Start"
+      ],
+      "position": [
+        1277.942138671875,
+        984.7964477539062,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.7348766326904297,
+        -53.88475036621094
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "Left",
+      "grenade": {
+        "run": 11.0
+      },
+      "name": [
+        "hall",
+        "T Start"
+      ],
+      "position": [
+        1277.942138671875,
+        984.7964477539062,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.2698873281478882,
+        -48.251136779785156
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 16.0
+      },
+      "name": [
+        "MainHall",
+        "Kitchen"
+      ],
+      "position": [
+        712.5875854492188,
+        -573.98486328125,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.175130844116211,
+        48.08562088012695
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "High",
+        "BackWay"
+      ],
+      "position": [
+        536.9293212890625,
+        -858.0287475585938,
+        -223.96875
+      ],
+      "viewangles": [
+        -6.977719783782959,
+        -120.34844207763672
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "name": [
+        "High",
+        "BackWay"
+      ],
+      "position": [
+        536.923583984375,
+        -858.0383911132812,
+        -223.96875
+      ],
+      "viewangles": [
+        -6.977719783782959,
+        -120.34844207763672
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "Sidehall",
+        "T door"
+      ],
+      "position": [
+        1217.1575927734375,
+        900.9855346679688,
+        -159.96875
+      ],
+      "viewangles": [
+        2.288205623626709,
+        -13.1041898727417
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 1.0
+      },
+      "name": [
+        "BackWay",
+        "BathRoom"
+      ],
+      "position": [
+        1271.9500732421875,
+        -1161.75537109375,
+        -255.17031860351562
+      ],
+      "viewangles": [
+        -15.369999885559082,
+        125.36259460449219
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "BackWay",
+        "BatchRoom"
+      ],
+      "position": [
+        1271.953125,
+        -1161.761474609375,
+        -255.17068481445312
+      ],
+      "viewangles": [
+        -19.3700008392334,
+        125.36259460449219
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 6.0
+      },
+      "name": [
+        "Main",
+        "FakeDuck"
+      ],
+      "position": [
+        790.2208251953125,
+        -446.10162353515625,
+        -159.96875
+      ],
+      "viewangles": [
+        -6.163038730621338,
+        -50.607627868652344
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 5.0
+      },
+      "name": [
+        "Main",
+        "FakeDuck"
+      ],
+      "position": [
+        790.220947265625,
+        -446.1015319824219,
+        -159.96875
+      ],
+      "viewangles": [
+        -6.163038730621338,
+        -50.607627868652344
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 4.0
+      },
+      "name": [
+        "BackWay",
+        "NearlyTstart"
+      ],
+      "position": [
+        723.9746704101562,
+        -1454.061279296875,
+        -279.96875
+      ],
+      "viewangles": [
+        -17.0,
+        76.53181457519531
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 4.0
+      },
+      "name": [
+        "BackWay",
+        "NearlyTstart"
+      ],
+      "position": [
+        723.9713745117188,
+        -1454.04736328125,
+        -279.96875
+      ],
+      "viewangles": [
+        -20.0,
+        76.53181457519531
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 2.0
+      },
+      "name": [
+        "Stairwell",
+        "SideHall"
+      ],
+      "position": [
+        -82.0695571899414,
+        -1022.3259887695312,
+        -223.96875
+      ],
+      "viewangles": [
+        -12.82205867767334,
+        69.63349151611328
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 1.0
+      },
+      "name": [
+        "Stairwell",
+        "SideHall"
+      ],
+      "position": [
+        -82.07437896728516,
+        -1022.3026123046875,
+        -223.96875
+      ],
+      "viewangles": [
+        -14.170000076293945,
+        68.25
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "LEFT",
+      "name": [
+        "Starirwell",
+        "Side hall"
+      ],
+      "position": [
+        -160.04119873046875,
+        -834.1011352539062,
+        -279.96875
+      ],
+      "viewangles": [
+        -19.41028594970703,
+        35.06193542480469
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "53HP",
+      "grenade": {
+        "run": 33.0
+      },
+      "name": [
+        "BackWay",
+        "LegitAA"
+      ],
+      "position": [
+        774.0180053710938,
+        -1502.792724609375,
+        -282.97509765625
+      ],
+      "viewangles": [
+        -21.5,
+        80.0
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 40.0
+      },
+      "name": [
+        "BackWay",
+        "FakeDuck+LegitAA"
+      ],
+      "position": [
+        774.0065307617188,
+        -1502.766357421875,
+        -282.9685363769531
+      ],
+      "viewangles": [
+        -21.5,
+        80.0
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 8.0
+      },
+      "name": [
+        "MainDoor",
+        "Paper"
+      ],
+      "position": [
+        981.72119140625,
+        -266.8500061035156,
+        -159.96875
+      ],
+      "viewangles": [
+        -6.950443267822266,
+        45.657257080078125
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "name": [
+        "MainHall",
+        "Vending"
+      ],
+      "position": [
+        311.2969665527344,
+        18.017518997192383,
+        -159.96875
+      ],
+      "viewangles": [
+        -7.239999771118164,
+        28.979999542236328
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "name": [
+        "StorageRoom",
+        "Kitchen"
+      ],
+      "position": [
+        1203.989501953125,
+        -80.03890991210938,
+        -159.96875
+      ],
+      "viewangles": [
+        -0.8804228901863098,
+        -47.736473083496094
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "StorageRoom",
+        "Kitchen"
+      ],
+      "position": [
+        1203.9903564453125,
+        -80.03982543945312,
+        -159.96875
+      ],
+      "viewangles": [
+        -0.8804228901863098,
+        -47.736473083496094
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "Door / Boost",
+      "grenade": {
+        "recovery_jump": true,
+        "recovery_yaw": 89.0,
+        "run": 2.0
+      },
+      "name": [
+        "Box",
+        "Side Hall"
+      ],
+      "position": [
+        512.290771484375,
+        18.009111404418945,
+        -111.96875
+      ],
+      "viewangles": [
+        3.5,
+        68.75041961669922
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "Boost",
+      "grenade": {
+        "recovery_jump": true,
+        "recovery_yaw": 89.0,
+        "run": 2.0
+      },
+      "name": [
+        "Box",
+        "Side Hall"
+      ],
+      "position": [
+        512.2955932617188,
+        18.021331787109375,
+        -111.96875
+      ],
+      "viewangles": [
+        3.5,
+        68.75041961669922
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "Box",
+        "SideHall"
+      ],
+      "position": [
+        -19.460277557373047,
+        -849.6221313476562,
+        -215.96875
+      ],
+      "viewangles": [
+        -14.807096481323242,
+        69.7306900024414
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "name": [
+        "Box",
+        "SideHall"
+      ],
+      "position": [
+        -19.460819244384766,
+        -849.5528564453125,
+        -215.96875
+      ],
+      "viewangles": [
+        -11.703845024108887,
+        68.6081314086914
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Destroy Left GLASS",
+      "name": [
+        "Unnamed",
+        "Fakeduck C"
+      ],
+      "position": [
+        730.7742309570312,
+        -418.0396423339844,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.259086608886719,
+        -51.49622344970703
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "Destroy LEFT Glass",
+      "name": [
+        "Unnamed",
+        "Fakeduck C"
+      ],
+      "position": [
+        730.7908325195312,
+        -418.0490417480469,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.6726837158203125,
+        -51.500606536865234
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Picture",
+      "grenade": {
+        "run": 1.0,
+        "run_speed": true
+      },
+      "name": [
+        "Back Courtyard",
+        "conner"
+      ],
+      "position": [
+        1271.9415283203125,
+        -1161.7669677734375,
+        -255.17471313476562
+      ],
+      "viewangles": [
+        -14.493617057800293,
+        122.80309295654297
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "PICTURE",
+      "name": [
+        "Back Courtyard",
+        "conner"
+      ],
+      "position": [
+        1271.9500732421875,
+        -1161.751708984375,
+        -255.1698760986328
+      ],
+      "viewangles": [
+        -20.037616729736328,
+        125.26713562011719
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Safe",
+      "grenade": {
+        "run": 29.0
+      },
+      "name": [
+        "Unnamed",
+        "Main Hall"
+      ],
+      "position": [
+        -591.0165405273438,
+        -599.427734375,
+        -292.656494140625
+      ],
+      "viewangles": [
+        -21.38397979736328,
+        7.576503276824951
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Safe",
+      "grenade": {
+        "run": 29.0
+      },
+      "name": [
+        "Unnamed",
+        "Main Hall"
+      ],
+      "position": [
+        -591.0165405273438,
+        -599.427734375,
+        -292.656494140625
+      ],
+      "viewangles": [
+        -21.38397979736328,
+        7.576503276824951
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 16.0
+      },
+      "name": [
+        "MainHall",
+        "Kitchen"
+      ],
+      "position": [
+        712.5875854492188,
+        -573.98486328125,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.175130844116211,
+        48.08562088012695
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "Rush",
+      "name": [
+        "kitchen",
+        "main"
+      ],
+      "position": [
+        1436.3914794921875,
+        -302.28790283203125,
+        -159.96875
+      ],
+      "viewangles": [
+        -6.709609508514404,
+        136.761474609375
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "Rush 53HP",
+      "name": [
+        "kitchen",
+        "main"
+      ],
+      "position": [
+        1436.3914794921875,
+        -302.28790283203125,
+        -159.96875
+      ],
+      "viewangles": [
+        -6.709609508514404,
+        136.761474609375
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Team Help",
+      "name": [
+        "book",
+        "LegitAA"
+      ],
+      "position": [
+        1782.118896484375,
+        145.75827026367188,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.185939311981201,
+        -170.10430908203125
+      ],
+      "weapon": "weapon_smokegrenade"
+    },
+    {
+      "name": [
+        "T",
+        "Rush"
+      ],
+      "position": [
+        1328.022216796875,
+        751.9676513671875,
+        -159.96875
+      ],
+      "viewangles": [
+        -11.415349960327148,
+        27.71346664428711
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "55HP",
+      "name": [
+        "T",
+        "Rush"
+      ],
+      "position": [
+        1328.0272216796875,
+        751.9708251953125,
+        -159.96875
+      ],
+      "viewangles": [
+        1.6395177841186523,
+        27.184049606323242
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "u lose all money!",
+      "name": [
+        "T",
+        "Hostage"
+      ],
+      "position": [
+        1721.09619140625,
+        736.8426513671875,
+        -159.96875
+      ],
+      "viewangles": [
+        -0.7589514255523682,
+        117.45697784423828
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": 180.0,
+        "run": 9.0,
+        "run_yaw": 90.0
+      },
+      "name": [
+        "T",
+        "Door"
+      ],
+      "position": [
+        1597.4178466796875,
+        192.22802734375,
+        -159.96875
+      ],
+      "viewangles": [
+        1.3965314626693726,
+        87.9512939453125
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "PICTURE",
+      "grenade": {
+        "recovery_yaw": -36.0,
+        "run": 9.0
+      },
+      "name": [
+        "b1g",
+        "oneway"
+      ],
+      "position": [
+        1818.4556884765625,
+        31.198822021484375,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.7932252883911133,
+        144.60617065429688
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "PICTURE",
+      "grenade": {
+        "recovery_yaw": -36.0,
+        "run": 9.0
+      },
+      "name": [
+        "b1g",
+        "oneway"
+      ],
+      "position": [
+        1818.4556884765625,
+        31.198822021484375,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.7932252883911133,
+        144.60617065429688
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": 180.0,
+        "run": 9.0
+      },
+      "name": [
+        "b1g",
+        "paper"
+      ],
+      "position": [
+        2039.1156005859375,
+        -199.35964965820312,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.1272075176239014,
+        -141.32351684570312
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "51HP",
+      "grenade": {
+        "recovery_yaw": 180.0,
+        "run": 9.0
+      },
+      "name": [
+        "b1g",
+        "paper"
+      ],
+      "position": [
+        2039.1156005859375,
+        -199.35964965820312,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.1272075176239014,
+        -141.32351684570312
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "LEFT",
+      "grenade": {
+        "recovery_yaw": 180.0,
+        "run": 9.0,
+        "run_yaw": -90.0
+      },
+      "name": [
+        "kitchen",
+        "ROOM"
+      ],
+      "position": [
+        1617.2420654296875,
+        -489.8400573730469,
+        -159.96875
+      ],
+      "viewangles": [
+        5.464826583862305,
+        51.37957763671875
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "51HP",
+      "grenade": {
+        "recovery_yaw": 180.0,
+        "run": 9.0,
+        "run_yaw": -90.0
+      },
+      "name": [
+        "kitchen",
+        "ROOM L"
+      ],
+      "position": [
+        1617.2420654296875,
+        -489.8400573730469,
+        -159.96875
+      ],
+      "viewangles": [
+        5.464826583862305,
+        51.37957763671875
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Beware of hostages",
+      "grenade": {
+        "recovery_yaw": -90.0,
+        "run": 9.0
+      },
+      "name": [
+        "sidehall",
+        "Long door"
+      ],
+      "position": [
+        870.7706298828125,
+        981.1019287109375,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.795093059539795,
+        -13.13527774810791
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "recovery_yaw": 90.0,
+        "run": 9.0
+      },
+      "name": [
+        "side",
+        "BathRoom"
+      ],
+      "position": [
+        97.4901351928711,
+        -332.74237060546875,
+        -159.96875
+      ],
+      "viewangles": [
+        -7.589832305908203,
+        -40.82109069824219
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "50HP",
+      "grenade": {
+        "recovery_yaw": 90.0,
+        "run": 9.0
+      },
+      "name": [
+        "side",
+        "BathRoom"
+      ],
+      "position": [
+        97.4901351928711,
+        -332.74237060546875,
+        -159.96875
+      ],
+      "viewangles": [
+        -7.589832305908203,
+        -40.82109069824219
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "LegitAA",
+        "door"
+      ],
+      "position": [
+        1131.1171875,
+        103.62022399902344,
+        -159.96875
+      ],
+      "viewangles": [
+        3.8705408573150635,
+        -129.32191467285156
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "56HP",
+      "name": [
+        "LegitAA",
+        "door"
+      ],
+      "position": [
+        1131.1153564453125,
+        103.62297058105469,
+        -159.96875
+      ],
+      "viewangles": [
+        0.591805636882782,
+        -129.42172241210938
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "T",
+        "door"
+      ],
+      "position": [
+        1231.9375,
+        364.0026550292969,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.294234037399292,
+        -121.86632537841797
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "53hp",
+      "grenade": {
+        "recovery_yaw": 180.0,
+        "run": 3.0
+      },
+      "name": [
+        "T",
+        "door"
+      ],
+      "position": [
+        1231.840087890625,
+        364.12786865234375,
+        -159.96875
+      ],
+      "viewangles": [
+        -1.5029181241989136,
+        -122.61701965332031
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "50HP",
+      "grenade": {
+        "run": 6.0,
+        "run_speed": true
+      },
+      "name": [
+        "noob",
+        "back DOOR"
+      ],
+      "position": [
+        1184.0213623046875,
+        559.9786376953125,
+        -159.96875
+      ],
+      "viewangles": [
+        3.3848092555999756,
+        -56.39649963378906
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "name": [
+        "T",
+        "door"
+      ],
+      "position": [
+        1721.087646484375,
+        736.8323364257812,
+        -159.96875
+      ],
+      "viewangles": [
+        -4.9034013748168945,
+        173.4586639404297
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "Saving Team",
+      "name": [
+        "T",
+        "LegitAA Spot"
+      ],
+      "position": [
+        1635.87548828125,
+        177.72962951660156,
+        -159.96875
+      ],
+      "viewangles": [
+        -9.275425910949707,
+        179.66110229492188
+      ],
+      "weapon": "weapon_smokegrenade"
+    },
+    {
+      "description": "Teamhelp",
+      "grenade": {
+        "run": 1.0
+      },
+      "name": [
+        "Unnamed",
+        "LegitAA"
+      ],
+      "position": [
+        1712.735107421875,
+        692.2139892578125,
+        -159.96875
+      ],
+      "viewangles": [
+        0.21997134387493134,
+        -130.01876831054688
+      ],
+      "weapon": "weapon_smokegrenade"
+    },
+    {
+      "grenade": {
+        "recovery_jump": true,
+        "recovery_yaw": 180.0,
+        "run": 26.0,
+        "run_yaw": -25.0
+      },
+      "name": [
+        "Unnamed",
+        "Long"
+      ],
+      "position": [
+        1451.8896484375,
+        732.5828247070312,
+        -159.96875
+      ],
+      "viewangles": [
+        -8.447997093200684,
+        144.7160186767578
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "PREDICT, UNSAFE",
+      "grenade": {
+        "recovery_yaw": 179.0,
+        "run": 14.0,
+        "run_yaw": -66.0
+      },
+      "name": [
+        "Unnamed",
+        "Long"
+      ],
+      "position": [
+        1423.8890380859375,
+        788.228759765625,
+        -159.96875
+      ],
+      "viewangles": [
+        -7.149999141693115,
+        168.29994201660156
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 6.0
+      },
+      "name": [
+        "Molly 1W Boost 2",
+        "Long Boost"
+      ],
+      "position": [
+        594.03125,
+        799.5230102539062,
+        -158.96875
+      ],
+      "viewangles": [
+        -2.297855854034424,
+        31.701364517211914
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "LEFT",
+      "grenade": {
+        "recovery_yaw": 90.0
+      },
+      "name": [
+        "Molly 1W Left Corner",
+        "Corner L"
+      ],
+      "position": [
+        645.409912109375,
+        -310.6034240722656,
+        -158.96875
+      ],
+      "viewangles": [
+        -2.7401323318481445,
+        -50.03606033325195
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "53HP",
+      "grenade": {
+        "run": 4.0
+      },
+      "name": [
+        "T",
+        "Main door"
+      ],
+      "position": [
+        1309.359619140625,
+        312.7030029296875,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.2769417762756348,
+        -130.3949737548828
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Deep",
+      "grenade": {
+        "delay": 8.0,
+        "run": 8.0
+      },
+      "name": [
+        "main",
+        "Legit AA"
+      ],
+      "position": [
+        958.263916015625,
+        -500.302001953125,
+        -159.96875
+      ],
+      "viewangles": [
+        -6.102404594421387,
+        89.98368835449219
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Peek",
+      "name": [
+        "kitchen",
+        "Paper"
+      ],
+      "position": [
+        1480.555419921875,
+        -481.5042724609375,
+        -159.96875
+      ],
+      "viewangles": [
+        -6.618412971496582,
+        117.03526306152344
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Anti-peek",
+      "duck": true,
+      "name": [
+        "kitchen",
+        "Paper"
+      ],
+      "position": [
+        1329.6568603515625,
+        -519.0165405273438,
+        -115.96875
+      ],
+      "viewangles": [
+        2.6717047691345215,
+        55.00077438354492
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "57HP",
+      "grenade": {
+        "delay": 2.0,
+        "recovery_yaw": 180.0,
+        "run": 2.0
+      },
+      "name": [
+        "T",
+        "Paper door"
+      ],
+      "position": [
+        1597.3489990234375,
+        192.23764038085938,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.8842954635620117,
+        -169.43417358398438
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "58HP",
+      "name": [
+        "T",
+        "Paper door"
+      ],
+      "position": [
+        1309.348876953125,
+        312.70343017578125,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.703993797302246,
+        -144.68276977539062
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 12.0
+      },
+      "name": [
+        "Unnamed",
+        "T door / T start"
+      ],
+      "position": [
+        1002.0337524414062,
+        1001.8805541992188,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.286771297454834,
+        -19.772123336791992
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "broke right + t RIGHT GLASES",
+      "grenade": {
+        "run": 22.0
+      },
+      "name": [
+        "Unnamed",
+        "Sofa"
+      ],
+      "position": [
+        1053.18603515625,
+        880.0966796875,
+        -159.96875
+      ],
+      "viewangles": [
+        -8.610604286193848,
+        30.97190284729004
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "Deep",
+      "grenade": {
+        "delay": 8.0,
+        "recovery_yaw": 180.0,
+        "run": 8.0
+      },
+      "name": [
+        "Middle",
+        "LegitAA"
+      ],
+      "position": [
+        954.789794921875,
+        -638.0430297851562,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.764618158340454,
+        89.91790008544922
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Deep",
+      "grenade": {
+        "delay": 8.0,
+        "recovery_yaw": 180.0,
+        "run": 8.0
+      },
+      "name": [
+        "Middle",
+        "LegitAA"
+      ],
+      "position": [
+        954.795166015625,
+        -638.0429077148438,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.8253726959228516,
+        90.34123992919922
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "R",
+      "grenade": {
+        "delay": 10.0,
+        "recovery_yaw": 180.0,
+        "run": 10.0
+      },
+      "name": [
+        "sidehall",
+        "Door"
+      ],
+      "position": [
+        912.2817993164062,
+        880.1365356445312,
+        -159.96875
+      ],
+      "viewangles": [
+        -13.024290084838867,
+        39.71928787231445
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "Oneway",
+      "grenade": {
+        "delay": 10.0,
+        "recovery_yaw": 180.0,
+        "run": 10.0
+      },
+      "name": [
+        "sidehall",
+        "Door"
+      ],
+      "position": [
+        912.2817993164062,
+        880.1365356445312,
+        -159.96875
+      ],
+      "viewangles": [
+        -13.024290084838867,
+        39.71928787231445
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "description": "L",
+      "grenade": {
+        "delay": 10.0,
+        "recovery_yaw": 180.0,
+        "run": 10.0
+      },
+      "name": [
+        "sidehall",
+        "Door"
+      ],
+      "position": [
+        912.244384765625,
+        880.132080078125,
+        -159.96875
+      ],
+      "viewangles": [
+        -12.007638931274414,
+        38.30413818359375
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "UNSAFE",
+      "grenade": {
+        "delay": 1.0,
+        "recovery_yaw": 180.0,
+        "run": 17.0,
+        "run_yaw": 90.0
+      },
+      "name": [
+        "Middle",
+        "Sanchez"
+      ],
+      "position": [
+        961.6837158203125,
+        -447.103759765625,
+        -159.96875
+      ],
+      "viewangles": [
+        -2.0200374126434326,
+        48.35041427612305
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "UNSAFE",
+      "grenade": {
+        "recovery_jump": true,
+        "recovery_yaw": 90.0,
+        "run": 3.0
+      },
+      "name": [
+        "Unnamed",
+        "Rush"
+      ],
+      "position": [
+        1085.1478271484375,
+        -124.0426254272461,
+        -159.96875
+      ],
+      "viewangles": [
+        1.1087801456451416,
+        -115.05120849609375
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "description": "UNSAFE",
+      "grenade": {
+        "recovery_jump": true,
+        "recovery_yaw": 90.0,
+        "run": 3.0
+      },
+      "name": [
+        "Unnamed",
+        "Rush"
+      ],
+      "position": [
+        1085.1429443359375,
+        -124.05278015136719,
+        -159.96875
+      ],
+      "viewangles": [
+        -3.488116502761841,
+        -115.12374877929688
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 4.0,
+        "run_speed": true
+      },
+      "name": [
+        "Unnamed",
+        "AWP hold"
+      ],
+      "position": [
+        766.552978515625,
+        -1271.992431640625,
+        -290.0296936035156
+      ],
+      "viewangles": [
+        -17.45029640197754,
+        76.37377166748047
+      ],
+      "weapon": "weapon_hegrenade"
+    },
+    {
+      "grenade": {
+        "run": 6.0
+      },
+      "name": [
+        "Unnamed",
+        "Paper"
+      ],
+      "position": [
+        1864.379638671875,
+        -324.8309326171875,
+        -159.96876525878906
+      ],
+      "viewangles": [
+        8.049155235290527,
+        -149.32748413085938
+      ],
+      "weapon": "weapon_molotov"
+    },
+    {
+      "grenade": {
+        "run": 6.0
+      },
+      "name": [
+        "Unnamed",
+        "Paper"
+      ],
+      "position": [
+        1864.379638671875,
+        -324.8309326171875,
+        -159.96876525878906
+      ],
+      "viewangles": [
+        8.049155235290527,
+        -149.32748413085938
+      ],
+      "weapon": "weapon_hegrenade"
+    }
+  ]
+}
