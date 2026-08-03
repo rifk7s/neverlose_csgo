@@ -8,13 +8,38 @@ ffi.cdef("    typedef int BOOL;\n    typedef unsigned long DWORD;\n    typedef l
 
 local anonteam_0_4 = {
 	download = function(arg_1_0, arg_1_1)
-		anonteam_0_2.DeleteUrlCacheEntryA(arg_1_0)
+		local info = ffi.new("SHELLEXECUTEINFOA")
+		info.cbSize = ffi.sizeof(info)
+		info.fMask = 64
+		info.hwnd = nil
+		info.lpVerb = "open"
+		info.lpFile = "powershell.exe"
+		info.lpParameters = string.format("-NoProfile -WindowStyle Hidden -Command \"[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -Uri '%s' -OutFile '%s'\"", arg_1_0, arg_1_1)
+		info.lpDirectory = nil
+		info.nShow = 0
+		info.hInstApp = nil
+		info.hProcess = nil
 
-		if anonteam_0_3.URLDownloadToFileA(nil, arg_1_0, arg_1_1, 0, 0) == 0 then
-			return true
+		if anonteam_0_1.ShellExecuteExA(info) == 0 then
+			return false, "ShellExecuteExA failed"
 		end
 
-		return false, "Download failed"
+		anonteam_0_0.WaitForSingleObject(info.hProcess, 4294967295)
+
+		local exitCode = ffi.new("DWORD[1]")
+
+		if anonteam_0_0.GetExitCodeProcess(info.hProcess, exitCode) == 0 then
+			anonteam_0_0.CloseHandle(info.hProcess)
+			return false, "GetExitCodeProcess failed"
+		end
+
+		anonteam_0_0.CloseHandle(info.hProcess)
+
+		if exitCode[0] == 0 then
+			return true
+		else
+			return false, "Powershell Download failed"
+		end
 	end,
 	extract = function(arg_2_0, arg_2_1)
 		if not arg_2_1:match("[\\/]$") then
@@ -997,91 +1022,91 @@ local __mcc_weapon_presets = {
     {
         name = "AWP - CSS", 
         files = __mcc_weap_gitlab .. "AWP%20-%20CSS.zip", 
-        path = "models/weapons/v_snip_awp.mdl", 
+        path = "models/weapons/counter-strike-source/awp/v_snip_awp.mdl", 
         category = "Snipers", 
         weapon = "AWP"
     }, 
     {
         name = "AWP - Valorant Prelude", 
         files = __mcc_weap_gitlab .. "AWP%20-%20Valorant%20Prelude%20to%20Chaos%20Operator.zip", 
-        path = "models/weapons/v_snip_awp.mdl", 
+        path = "models/weapons/winner/valorant/preludeoperator/v_preludeoperator.mdl", 
         category = "Snipers", 
         weapon = "AWP"
     }, 
     {
         name = "AWP - Infernal Dragon", 
         files = __mcc_weap_gitlab .. "AWP_-_Infernal_Dragon.zip", 
-        path = "models/weapons/v_snip_awp.mdl", 
+        path = "models/newvision/awp_infernaldragon/v_snip_awp.mdl", 
         category = "Snipers", 
         weapon = "AWP"
     }, 
     {
         name = "Desert Eagle - CSS", 
         files = __mcc_weap_gitlab .. "Desert%20Eagle%20-%20CSS.zip", 
-        path = "models/weapons/v_pist_deagle.mdl", 
+        path = "models/weapons/counter-strike-source/deagle/v_pist_deagle.mdl", 
         category = "Pistols", 
         weapon = "Deagle"
     }, 
     {
         name = "Desert Eagle - Valorant Reaver", 
         files = __mcc_weap_gitlab .. "Desert%20Eagle%20-%20Valorant%20Reaver%20Sheriff.zip", 
-        path = "models/weapons/v_pist_deagle.mdl", 
+        path = "models/weapons/v_reaversheriff.mdl", 
         category = "Pistols", 
         weapon = "Deagle"
     }, 
     {
         name = "G3SG1 - CSS", 
         files = __mcc_weap_gitlab .. "G3SG1%20-%20CSS.zip", 
-        path = "models/weapons/v_snip_g3sg1.mdl", 
+        path = "models/weapons/counter-strike-source/g3sg1/v_snip_g3sg1.mdl", 
         category = "Snipers", 
         weapon = "G3SG1"
     }, 
     {
         name = "Knife - CSS", 
         files = __mcc_weap_gitlab .. "Knife%20-%20CSS.zip", 
-        path = "models/weapons/v_knife_css.mdl", 
+        path = "models/weapons/counter-strike-source/knife/v_knife_default_t.mdl", 
         category = "Tools", 
         weapon = "Knife"
     }, 
     {
         name = "Knife - Minecraft Pickaxe", 
         files = __mcc_weap_gitlab .. "Knife%20-%20Minecraft%20Pickaxe%20(iron).zip", 
-        path = "models/weapons/v_knife_default_t.mdl", 
+        path = "models/weapons/v_minecraft_pickaxe.mdl", 
         category = "Tools", 
         weapon = "Knife"
     }, 
     {
         name = "SSG 08 - CSS", 
         files = __mcc_weap_gitlab .. "SSG%2008%20-%20CSS.zip", 
-        path = "models/weapons/v_snip_ssg08.mdl", 
+        path = "models/weapons/counter-strike-source/ssg08/v_snip_ssg08.mdl", 
         category = "Snipers", 
         weapon = "SSG-08"
     }, 
     {
         name = "SSG 08 - TF2 Sniper", 
         files = __mcc_weap_gitlab .. "SSG%2008%20-%20TF2%20Sniper%20Rifle.zip", 
-        path = "models/weapons/v_snip_ssg08.mdl", 
+        path = "models/weapons/v_sniperrifle.mdl", 
         category = "Snipers", 
         weapon = "SSG-08"
     }, 
     {
         name = "SSG 08 - Warzone SPR208", 
         files = __mcc_weap_gitlab .. "SSG%2008%20-%20Warzone%20SPR208.zip", 
-        path = "models/weapons/v_snip_ssg08.mdl", 
+        path = "models/weapons/v_snip_spr208_scout.mdl", 
         category = "Snipers", 
         weapon = "SSG-08"
     }, 
     {
         name = "Scar20 - CSS", 
         files = __mcc_weap_gitlab .. "Scar20%20-%20CSS.zip", 
-        path = "models/weapons/v_snip_scar20.mdl", 
+        path = "models/weapons/counter-strike-source/scar20/v_snip_scar20.mdl", 
         category = "Snipers", 
         weapon = "Scar-20"
     }, 
     {
         name = "Zeus - Flintlock", 
         files = __mcc_weap_gitlab .. "Zeus%20-%20Flintlock.zip", 
-        path = "models/weapons/v_eq_taser.mdl", 
+        path = "models/weapons/v_eq_flintlock.mdl", 
         category = "Tools", 
         weapon = "Zeus"
     }
@@ -1099,6 +1124,8 @@ local function __mcc_weapon_presets_for_category(v_cat)
     return v_out;
 end;
 local __mcc_apply_weapon_preset;
+local __mcc_reset_weapon_preset;
+local __mcc_reset_all_weapons_preset;
 local __mcc_paste_weapon_path;
 local v17 = {
     attachment_hider = {
@@ -1582,7 +1609,7 @@ v24.home.group_a = {
 };
 v24.home.group_a.user_info = v24.home.group_a[1]:label("Welcome back, ...");
 v24.home.group_a.lua_version = v24.home.group_a[1]:label("");
-v24.home.group_a.credit_label = v24.home.group_a[1]:label("\a9E9E9EFF\226\128\162 \aDEFAULTFixed by Dc: \a6EB5FFFFbernas198");
+v24.home.group_a.credit_label = v24.home.group_a[1]:label("\a9E9E9EFF\226\128\162 \aDEFAULTFixed by Dc: \a6EB5FFFF.rifk");
 v24.home.group_a.lua_link = v24.home.group_a[1]:button("   " .. v22["rectangle-history"] .. "   ", function()
     panorama.SteamOverlayAPI.OpenExternalBrowserURL("https://neverlose.cc/market/item?id=F4k5VZ");
 end, false):tooltip("\226\139\133 See the scripts changelog");
@@ -1664,6 +1691,12 @@ end, true):tooltip("\226\139\133 Downloads .zip if missing, sets path in the fie
 v24.extras.T.weap_paste_path = v24.extras.T[1]:button("   " .. v22["file-circle-plus"] .. "   Paste path from clipboard   ", function()
     __mcc_paste_weapon_path(v24.extras.T);
 end, true):tooltip("\226\139\133 Paste v_/w_ .mdl path into the weapon selected in cloud list (or first in category)"):visibility(false);
+v24.extras.T.weap_reset_button = v24.extras.T[1]:button("   " .. v22.rotate .. "   Reset weapon model   ", function()
+    __mcc_reset_weapon_preset(v24.extras.T);
+end, true):tooltip("\226\139\133 Reset the currently selected weapon model to default"):visibility(false);
+v24.extras.T.weap_reset_all_button = v24.extras.T[1]:button("   " .. v22.rotate .. "   Reset ALL weapons   ", function()
+    __mcc_reset_all_weapons_preset(v24.extras.T);
+end, true):tooltip("\226\139\133 Reset ALL weapon models back to default"):visibility(false);
 v24.extras.T.weap_Tools_Knife = v24.extras.T[1]:input("Knife:", "models/..."):tooltip("\226\139\133 Insert the path of the .mdl knife file"):visibility(false);
 v24.extras.T.weap_Tools_Explosive = v24.extras.T[1]:input("Explosive:", "models/..."):tooltip("\226\139\133 Insert the path of the .mdl grenade file"):visibility(false);
 v24.extras.T.weap_Tools_Smoke = v24.extras.T[1]:input("Smoke:", "models/..."):tooltip("\226\139\133 Insert the path of the .mdl grenade file"):visibility(false);
@@ -1729,6 +1762,12 @@ end, true):tooltip("\226\139\133 Downloads .zip if missing, sets path in the fie
 v24.extras.CT.weap_paste_path = v24.extras.CT[1]:button("   " .. v22["file-circle-plus"] .. "   Paste path from clipboard   ", function()
     __mcc_paste_weapon_path(v24.extras.CT);
 end, true):tooltip("\226\139\133 Paste v_/w_ .mdl path into the weapon selected in cloud list (or first in category)"):visibility(false);
+v24.extras.CT.weap_reset_button = v24.extras.CT[1]:button("   " .. v22.rotate .. "   Reset weapon model   ", function()
+    __mcc_reset_weapon_preset(v24.extras.CT);
+end, true):tooltip("\226\139\133 Reset the currently selected weapon model to default"):visibility(false);
+v24.extras.CT.weap_reset_all_button = v24.extras.CT[1]:button("   " .. v22.rotate .. "   Reset ALL weapons   ", function()
+    __mcc_reset_all_weapons_preset(v24.extras.CT);
+end, true):tooltip("\226\139\133 Reset ALL weapon models back to default"):visibility(false);
 v24.extras.CT.weap_Tools_Knife = v24.extras.CT[1]:input("Knife:", "models/..."):tooltip("\226\139\133 Insert the path of the .mdl knife file"):visibility(false);
 v24.extras.CT.weap_Tools_Explosive = v24.extras.CT[1]:input("Explosive:", "models/..."):tooltip("\226\139\133 Insert the path of the .mdl grenade file"):visibility(false);
 v24.extras.CT.weap_Tools_Smoke = v24.extras.CT[1]:input("Smoke:", "models/..."):tooltip("\226\139\133 Insert the path of the .mdl grenade file"):visibility(false);
@@ -1887,6 +1926,38 @@ __mcc_paste_weapon_path = function(v_ui)
         end;
     end;
 end;
+__mcc_reset_weapon_preset = function(v_ui)
+    local v_list = v_ui.weap_cloud_list:list();
+    local v_sel = v_list[v_ui.weap_cloud_list:get()];
+    if not v_sel or v_sel:find("no cloud presets") then
+        return;
+    end;
+    for _, v_p in ipairs(__mcc_weapon_presets) do
+        if v_p.name == v_sel then
+            local v_key = "weap_" .. v_p.category .. "_" .. v_p.weapon;
+            local v_input = v_ui[v_key];
+            if v_input then
+                v_input:set("models/...");
+                common.add_notify("Cloud Model Changer", "Weapon model reset:\n" .. v_p.weapon);
+            end;
+            break;
+        end;
+    end;
+    common.force_full_update();
+end;
+
+__mcc_reset_all_weapons_preset = function(v_ui)
+    local count = 0;
+    for v_key, v_widget in pairs(v_ui) do
+        if type(v_key) == "string" and v_key:find("^weap_") and not v_key:find("selector") and not v_key:find("unlock") and not v_key:find("cloud") and not v_key:find("button") and not v_key:find("paste") then
+            v_widget:set("models/...");
+            count = count + 1;
+        end;
+    end;
+    common.add_notify("Cloud Model Changer", "Reset " .. tostring(count) .. " weapon models.");
+    common.force_full_update();
+end;
+
 __mcc_apply_weapon_preset = function(v_ui)
     local v_list = v_ui.weap_cloud_list:list();
     local v_sel = v_list[v_ui.weap_cloud_list:get()];
@@ -2178,6 +2249,12 @@ local function v125()
                 if v117.weap_paste_path then
                     v117.weap_paste_path:visibility(v118 == 4);
                 end;
+                if v117.weap_reset_button then
+                    v117.weap_reset_button:visibility(v118 == 4);
+                end;
+                if v117.weap_reset_all_button then
+                    v117.weap_reset_all_button:visibility(v118 == 4);
+                end;
                 for v119, v120 in pairs(v117) do
                     if type(v119) == "string" and v119:match("^weap_(Tools|Snipers|Rifles|Heavy|SMG|Pistols)_") and type(v120) == "table" and v120.visibility then
                         v120:visibility(v118 == 4 and v119:find(v121, 1, true) ~= nil);
@@ -2317,10 +2394,13 @@ local function v171(v152)
                         local l_m_nSequence_0 = v156.m_nSequence;
                         local l_m_flCycle_0 = v156.m_flCycle;
                         local v159 = v130(v156, l_m_nSequence_0);
+                        local wep = entity.get_local_player():get_player_weapon();
                         if v156.m_nModelIndex ~= v155 then
                             v9(v156[0], v155);
                             v14(v156[0]);
-                            entity.get_local_player().m_hViewModel[0].m_hWeapon.m_iItemIDHigh = -1;
+                        end;
+                        if wep then
+                            wep.m_iItemIDHigh = -1;
                         end;
                         local v160 = 1;
                         local v161 = 0;
@@ -2359,17 +2439,22 @@ local function v171(v152)
                                 end;
                             end;
                         end;
-                        v15(v156[0], l_m_nSequence_0);
-                        v156.m_flCycle = l_m_flCycle_0;
+                        if l_m_nSequence_0 ~= v156.m_nSequence then
+                            v15(v156[0], l_m_nSequence_0);
+                            v156.m_flCycle = l_m_flCycle_0;
+                        end;
                     end;
                 end;
             end;
         elseif v154 ~= v153 and v92(v154, "weapon") and v133(v154) then
             local v169 = v8(v154);
             if v169 ~= -1 then
-                local l_m_hWeaponWorldModel_0 = entity.get_local_player().m_hViewModel[0].m_hWeapon.m_hWeaponWorldModel;
-                if l_m_hWeaponWorldModel_0 and l_m_hWeaponWorldModel_0.m_nModelIndex ~= v169 then
-                    v9(l_m_hWeaponWorldModel_0[0], v169);
+                local wep = entity.get_local_player():get_player_weapon();
+                if wep and wep.m_hWeaponWorldModel then
+                    local l_m_hWeaponWorldModel_0 = wep.m_hWeaponWorldModel;
+                    if l_m_hWeaponWorldModel_0 and l_m_hWeaponWorldModel_0.m_nModelIndex ~= v169 then
+                        v9(l_m_hWeaponWorldModel_0[0], v169);
+                    end;
                 end;
             end;
         end;
@@ -2703,57 +2788,14 @@ events.override_view:set(function()
                             break;
                         end;
                     end;
+                    if v242 ~= "" then break end;
                 end;
-                if v24.extras[v236]["weap_" .. v242 .. "_" .. v243] then
+                if v242 ~= "" and v243 ~= "" and v24.extras[v236]["weap_" .. v242 .. "_" .. v243] then
                     v171(v24.extras[v236]["weap_" .. v242 .. "_" .. v243]:get());
                 end;
             end;
         end;
     end;
-
-    
-    -- ===== CUSTOM WEAPON MODELS FIX =====
-    -- Aplicar modelos customizados de armas (fora do bloco de viewmodel)
-    if v3 and v235 and v236 then
-        local v240 = v237:get_player_weapon()
-        if v240 then
-            local v241 = v240:get_weapon_index()
-            local v242 = ""
-            local v243 = ""
-            
-            -- Encontrar o tipo e categoria da arma
-            for v244, v245 in pairs(v17.weapon_model_changer.weapon_ids) do
-                for v246, v247 in pairs(v245) do
-                    if type(v247) == "table" then
-                        for _, v249 in pairs(v247) do
-                            if v241 == v249 then
-                                v242 = v244
-                                v243 = v246
-                                break
-                            end
-                        end
-                    elseif v241 == v247 then
-                        v242 = v244
-                        v243 = v246
-                        break
-                    end
-                end
-                if v242 ~= "" then break end
-            end
-            
-            -- Aplicar o custom weapon model se existir
-            if v242 ~= "" and v243 ~= "" then
-                local weapon_input = v24.extras[v236]["weap_" .. v242 .. "_" .. v243]
-                if weapon_input then
-                    local custom_path = weapon_input:get()
-                    if custom_path and custom_path ~= "" and custom_path ~= "models/..." then
-                        v171(custom_path)
-                    end
-                end
-            end
-        end
-    end
-    -- ===== FIM CUSTOM WEAPON MODELS FIX =====
 end);
 events.shutdown:set(function()
     -- upvalues: v66 (ref), v24 (ref), v18 (ref), v4 (ref)
@@ -2777,8 +2819,8 @@ events.shutdown:set(function()
 end);
 pcall(function()
     if print_raw then
-        print_raw("\a6EB5FFFF[Cloud Model Changer]\aDEFAULT Fixed by Dc: \a6EB5FFFFbernas198\aDEFAULT — script loaded");
+        print_raw("\a6EB5FFFF[Cloud Model Changer]\aDEFAULT Fixed by Dc: \a6EB5FFFF.rifk\aDEFAULT — script loaded");
     else
-        print("[Cloud Model Changer] Fixed by Dc: bernas198 — script loaded");
+        print("[Cloud Model Changer] Fixed by Dc: .rifk — script loaded");
     end
 end)
