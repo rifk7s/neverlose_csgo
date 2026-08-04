@@ -21,7 +21,7 @@ A personal collection of Lua scripts, presets, and grenade location packs for **
 
 ## Platform
 
-<table>
+<table width="100%">
 <tr>
 <td width="80" align="center" valign="middle">
 <img src="https://docs-csgo.neverlose.cc/~gitbook/image?url=https%3A%2F%2F3594665820-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F37PG3extaxoGL9yvcP52%252Ficon%252FgagqH1SZSihxzt0KJuvs%252Fneverlose_black.png%3Falt%3Dmedia%26token%3Dd25e919b-cb37-4a9e-84ac-6080f45827d5&width=32&dpr=1&quality=100&sign=688f41f1&sv=2" width="64" alt="NL" />
@@ -38,7 +38,7 @@ A personal collection of Lua scripts, presets, and grenade location packs for **
 
 ### API Modules
 
-<table>
+<table width="100%">
 <thead>
 <tr>
 <th>Module</th>
@@ -85,7 +85,7 @@ A personal collection of Lua scripts, presets, and grenade location packs for **
 
 Advanced resolver support script for Neverlose ragebot. Reads animation state memory directly via FFI and feeds evidence-based overrides into the ragebot on each tick. Forked from ImSynZx's original with a full resolver core rewrite, prediction system, and new ring-buffer shot tracking.
 
-<table>
+<table width="100%">
 <tr>
 <td valign="top" width="50%">
 
@@ -126,7 +126,7 @@ Advanced resolver support script for Neverlose ragebot. Reads animation state me
 
 Full-featured anti-aim and yaw configuration script. Includes builder-based AA presets, visual customization, ragebot extensions, and miscellaneous utilities. Originally by Kizaru.
 
-<table>
+<table width="100%">
 <tr>
 <td valign="top" width="50%">
 
@@ -167,7 +167,7 @@ Full-featured anti-aim and yaw configuration script. Includes builder-based AA p
 
 Early access branch of Chimera.lua. Comprehensive multi-feature script covering ragebot enhancements, full anti-aim builder, visual indicators, and miscellaneous utilities. Features per-condition AA presets, dormant aimbot, AI peek simulation, and more.
 
-<table>
+<table width="100%">
 <tr>
 <td valign="top" width="33%">
 
@@ -225,7 +225,7 @@ Early access branch of Chimera.lua. Comprehensive multi-feature script covering 
 
 Feature-rich visuals and movement enhancement script. Provides functionality and performance improvements across movement mechanics, world rendering, and weapon visuals.
 
-<table>
+<table width="100%">
 <tr>
 <td valign="top" width="50%">
 
@@ -273,7 +273,7 @@ Feature-rich visuals and movement enhancement script. Provides functionality and
 
 Custom Onetap-inspired HUD overlay rendering keybinds, spectator list, watermark, warnings, and hit markers on screen. SVG assets are loaded via `render.load_image` at startup for zero-overhead rendering.
 
-<table>
+<table width="100%">
 <tr>
 <td valign="top" width="50%">
 
@@ -311,7 +311,7 @@ Custom Onetap-inspired HUD overlay rendering keybinds, spectator list, watermark
 
 Most advanced model changer on the market. Dynamically changes player and weapon models in-game with preset models, active crash protection, and a robust PowerShell-based downloader for reliable custom model retrieval.
 
-<table>
+<table width="100%">
 <tr>
 <td valign="top" width="50%">
 
@@ -349,7 +349,7 @@ Most advanced model changer on the market. Dynamically changes player and weapon
 
 Custom weapon sounds that replace the normal sounds with no overlap or delay. Supports preset sound packs and a per-weapon custom builder.
 
-<table>
+<table width="100%">
 <tr>
 <td valign="top" width="50%">
 
@@ -409,7 +409,7 @@ Raises the engine sound channel limit via FFI to prevent hitsounds from being dr
 
 Neverlose config presets for use with `Config Import_7076547.lua`. Place these files in `<CS:GO Install>/nl/configs/` and use the Config Import script to load them.
 
-<table>
+<table width="100%">
 <thead>
 <tr><th>File</th><th>Size</th><th>Description</th></tr>
 </thead>
@@ -426,7 +426,7 @@ Neverlose config presets for use with `Config Import_7076547.lua`. Place these f
 
 Exported Neverlose config presets. Import via the Neverlose settings panel.
 
-<table>
+<table width="100%">
 <thead>
 <tr><th>File</th><th>Size</th><th>Description</th></tr>
 </thead>
@@ -443,7 +443,7 @@ Exported Neverlose config presets. Import via the Neverlose settings panel.
 
 JSON location packs for use with Neverlose's built-in nade helper. Each file contains named throw positions, view angles, grenade types, and throw instructions. Load via the Neverlose nade helper interface.
 
-<table>
+<table width="100%">
 <thead>
 <tr><th>File</th><th>Size</th><th>Coverage</th></tr>
 </thead>
@@ -464,7 +464,7 @@ JSON location packs for use with Neverlose's built-in nade helper. Each file con
 
 ## Notes
 
-<table>
+<table width="100%">
 <tr>
 <td width="80"><img src="https://img.shields.io/badge/-LuaJIT-7c3aed?style=flat-square&logo=lua&logoColor=white" alt="lua" /></td>
 <td>Scripts use <strong>LuaJIT 2.1</strong>, the JIT compiler bundled with Neverlose. Standard Lua 5.1 syntax applies with JIT extensions.</td>
