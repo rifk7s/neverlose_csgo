@@ -1,4 +1,4 @@
--- Hitsound Fix Lua for Neverlose CS:GO (increase sound limit)
+-- Hitsound Fix Lua for Neverlose CS:GO (Highly Optimized)
 local ffi = require("ffi")
 
 ffi.cdef[[
@@ -101,7 +101,7 @@ local default_volume_slider = find_menu_item("Visuals", "World", "Other", "Hit M
 
 if default_volume_slider then default_volume_slider:visibility(false) end
 
-local volume_slider = hit_marker_sound:create():slider("Volume", 0, 200, 100)
+local volume_slider = hit_marker_sound:create():slider("Volume", 0, 500, 100)
 local headshot_cache, bodyshot_cache, kill_cache
 
 local function update_sound_caches()

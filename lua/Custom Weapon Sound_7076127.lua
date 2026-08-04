@@ -580,41 +580,40 @@ local function v64(v52, v53, v54, v55)
     end;
 end;
 local function v65(v66)
-    -- upvalues: v4 (ref), v5 (ref), v0 (ref), v10 (ref), v14 (ref), v65 (ref)
     if not v66 then
         v66 = 1;
-    end;
-    v4 = v66;
-    if v66 == 1 then
-        common.add_notify("Custom Weapon Sounds", "Download started");
-    end;
-    if v66 == 91 then
         fs.create_directory(v5);
-        fs_download("https://gitlab.com/luascript/csgo/-/raw/main/misc/weapon-sounds.zip", v5 .. "temp.zip");
-        fs_extract(v5 .. "temp.zip", v5);
-        fs.remove(v5 .. "temp.zip");
-        v66 = 100;
-        v4 = 100;
-        cvar.snd_restart:call();
+        fs.remove(v5 .. "download_complete.txt");
+        local cmd = '/c cd /d "' .. v5 .. '" && curl -s -L "https://gitlab.com/luascript/csgo/-/raw/main/misc/weapon-sounds.zip" -o temp.zip && tar -xf temp.zip && del temp.zip && echo done > download_complete.txt';
+        shell32.ShellExecuteA(nil, "open", "cmd.exe", cmd, nil, 0);
+        common.add_notify("Custom Weapon Sounds", "Download started in background...");
     end;
-    if v66 == 100 then
-        if not fs.exists(v5 .. "cs2/ak47.wav") and not fs.exists(v5 .. "legacy/ak47.wav") and not fs.exists(v5 .. "css/ak47.wav") then
-            common.add_notify("Custom Weapon Sounds", v10.red .. v14["triangle-exclamation"] .. v10.default .. "  Download failed, try using a VPN");
-        else
-            common.add_notify("Custom Weapon Sounds", v10.primary .. v14["badge-check"] .. v10.default .. "  Download completed");
-        end;
+    v4 = math.min(99, math.floor(v66 / 8));
+    if fs.exists(v5 .. "download_complete.txt") then
+        fs.remove(v5 .. "download_complete.txt");
+        v4 = 100;
+        common.add_notify("Custom Weapon Sounds", v10.primary .. v14["badge-check"] .. v10.default .. "  Download completed");
+        cvar.snd_restart:call();
         utils.execute_after(3.25, function()
-            -- upvalues: v4 (ref)
             v4 = 0;
         end);
         return;
-    else
-        utils.execute_after(0.15, function()
-            -- upvalues: v65 (ref), v66 (ref)
-            v65(v66 + 1);
+    end;
+    if v66 >= 800 then
+        v4 = 100;
+        if not fs.exists(v5 .. "cs2/ak47.wav") and not fs.exists(v5 .. "legacy/ak47.wav") and not fs.exists(v5 .. "css/ak47.wav") then
+            common.add_notify("Custom Weapon Sounds", v10.red .. v14["triangle-exclamation"] .. v10.default .. "  Download failed, try using a VPN");
+        else
+            common.add_notify("Custom Weapon Sounds", v10.primary .. v14["badge-check"] .. v10.default .. "  Download completed (Timeout reached)");
+        end;
+        utils.execute_after(3.25, function()
+            v4 = 0;
         end);
         return;
     end;
+    utils.execute_after(0.15, function()
+        v65(v66 + 1);
+    end);
 end;
 local function v74()
     -- upvalues: v15 (ref), v7 (ref), v8 (ref)
