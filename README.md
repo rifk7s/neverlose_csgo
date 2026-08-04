@@ -411,7 +411,7 @@ Neverlose config presets for use with `Config Import_7076547.lua`. Place these f
 
 <table width="100%">
 <thead>
-<tr><th>File</th><th>Size</th><th>Description</th></tr>
+<tr><th>File</th><th width="120">Size</th><th>Description</th></tr>
 </thead>
 <tbody>
 <tr><td><code>Kucjlota.txt</code></td><td>156 KB</td><td>Kucjlota config preset</td></tr>
@@ -428,7 +428,7 @@ Exported Neverlose config presets. Import via the Neverlose settings panel.
 
 <table width="100%">
 <thead>
-<tr><th>File</th><th>Size</th><th>Description</th></tr>
+<tr><th>File</th><th width="120">Size</th><th>Description</th></tr>
 </thead>
 <tbody>
 <tr><td><code>chimera-preset.txt</code></td><td>15 KB</td><td>Chimera AlphaS config preset</td></tr>
@@ -445,7 +445,7 @@ JSON location packs for use with Neverlose's built-in nade helper. Each file con
 
 <table width="100%">
 <thead>
-<tr><th>File</th><th>Size</th><th>Coverage</th></tr>
+<tr><th>File</th><th width="120">Size</th><th>Coverage</th></tr>
 </thead>
 <tbody>
 <tr><td><code>nadehelper_all_maps_primary.txt</code></td><td>3.4 MB</td><td>All maps: primary location pack</td></tr>
