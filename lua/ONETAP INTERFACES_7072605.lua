@@ -69,7 +69,14 @@ local warnings_color    = main:color_picker("Warning Color", color(255, 255, 255
 
 local visuals_menu      = ui.create("Main", "Onetap Visuals")
 local enable_dm         = visuals_menu:switch("Enable Damage Marker")
+local dm_style          = visuals_menu:combo("Hitmarker Style", {"Onetap Default", "Signal Hitmarkers"})
 local dm_options        = visuals_menu:selectable("Damage Marker Options", {"Damage", "Hitmarker"})
+
+local signal_impacts = visuals_menu:selectable("Signal Features", {"3D hitmarker", "3D hitmarker (ragebot)", "3D damage indicator", "2D hitmarker"})
+local signal_color_3d = visuals_menu:color_picker("3D Hitmarker Color", color(255, 255, 255, 255)):tooltip("Cross that stays at the exact position the enemy was hit")
+local signal_color_3d_rage = visuals_menu:color_picker("3D Hitmarker Color (Ragebot)", color(255, 255, 255, 255)):tooltip("Cross that appears exactly where the aimbot fired")
+local signal_color_damage = visuals_menu:color_picker("3D Damage Color", color(255, 255, 255, 255)):tooltip("Floating damage numbers showing damage dealt")
+local signal_color_2d = visuals_menu:color_picker("2D Hitmarker Color", color(255, 255, 255, 255)):tooltip("Standard hitmarker drawn in the center of your screen")
 
 local hit_font = render.load_font("Verdana", 20, "a")
 local hit_markers = {}
@@ -115,7 +122,7 @@ local spectator_image = render.load_image([[<svg id="svg" version="1.1" xmlns="h
 ]]
 
 events.player_hurt:set(function(e)
-    if not enable_dm:get() then return end
+    if not (enable_dm:get() and dm_style:get() == "Onetap Default") then return end
 
     local lp = entity.get_local_player()
     if not lp then return end
@@ -149,7 +156,18 @@ element_visibility = function()
     enable_warnings:visibility(is_ui)
     warnings_select:visibility(is_ui and enable_warnings:get())
     warnings_color:visibility(is_ui and enable_warnings:get())
-    dm_options:visibility(enable_dm:get())
+    local is_dm = enable_dm:get()
+    local is_onetap = dm_style:get() == "Onetap Default"
+    local is_signal = dm_style:get() == "Signal Hitmarkers"
+    
+    dm_style:visibility(is_dm)
+    dm_options:visibility(is_dm and is_onetap)
+    
+    signal_impacts:visibility(is_dm and is_signal)
+    signal_color_3d:visibility(is_dm and is_signal and signal_impacts:get("3D hitmarker"))
+    signal_color_3d_rage:visibility(is_dm and is_signal and signal_impacts:get("3D hitmarker (ragebot)"))
+    signal_color_damage:visibility(is_dm and is_signal and signal_impacts:get("3D damage indicator"))
+    signal_color_2d:visibility(is_dm and is_signal and signal_impacts:get("2D hitmarker"))
 end
 
 events.render:set(element_visibility)
@@ -344,7 +362,7 @@ local function all()
         local y = 5
         
         -- Gradient background (transparent to translucent dark)
-        render.gradient(vector(x, y), vector(x + bg_w, y + bg_h), color(17, 17, 17, 0), color(17, 17, 17, 200), color(17, 17, 17, 0), color(17, 17, 17, 200))
+        render.gradient(vector(x, y), vector(x + bg_w, y + bg_h), color(0, 0, 0, 0), color(0, 0, 0, 200), color(0, 0, 0, 0), color(0, 0, 0, 200))
         
         -- Text using the same font as keybinds
         render.text(font, vector(x + pad_x, y + pad_y), color(255, 255, 255, 255), "s", text)
@@ -442,8 +460,7 @@ local function all()
          Rendered near the top-center of the screen with smooth fade animations.
          @ref /Neverlose CSGO Lua API
     ]]
-    
-    if enable_dm:get() then
+    if enable_dm:get() and dm_style:get() == "Onetap Default" then
         local show_dmg = dm_options:get("Damage")
         local show_hit = dm_options:get("Hitmarker")
         local current_time = globals.realtime
@@ -515,4 +532,245 @@ local function all()
 
 end
 
-events.render:set(all)
+events.render:set(all)-- =========================================================================
+-- SIGNAL HITMARKERS (Ported from Primordial)
+-- =========================================================================
+
+local signal_damage_font = render.load_font("Segoe UI Black", 12, "a")
+
+local hitgroup_to_hitboxes = {
+    [1] = { 0, 1 },          -- HEAD -> Head, Neck
+    [2] = { 4, 5, 6 },       -- CHEST -> Thorax, Chest, Upper Chest
+    [3] = { 2, 3 },          -- STOMACH -> Pelvis, Body
+    [4] = { 17, 18, 14 },    -- LEFT_ARM -> Left Upper Arm, Left Forearm, Left Hand
+    [5] = { 15, 16, 13 },    -- RIGHT_ARM -> Right Upper Arm, Right Forearm, Right Hand
+    [6] = { 8, 10, 12 },     -- LEFT_LEG -> Left Thigh, Left Calf, Left Foot
+    [7] = { 7, 9, 11 }       -- RIGHT_LEG -> Right Thigh, Right Calf, Right Foot
+}
+
+local impacts = {}
+local pending_impacts = {}
+local last_impact_tick = 0
+local screen_marker_weight = 0
+
+local function clamp(value, minimum, maximum)
+    return math.min(math.max(value, minimum), maximum)
+end
+
+local function update_weight(weight, active, duration)
+    local direction = active and 1 or -1
+    return clamp(weight + direction * globals.frametime / duration, 0, 1)
+end
+
+local function eased(weight)
+    return weight * weight * weight
+end
+
+local function add_impact(position, duration, damage, impact_type)
+    table.insert(impacts, 1, {
+        position = position,
+        duration = duration,
+        damage = damage or 0,
+        type = impact_type or "default",
+        begin_weight = 0,
+        roundup_weight = 0,
+        life_weight = 1
+    })
+end
+
+local function update_impact(impact)
+    impact.life_weight = update_weight(impact.life_weight, false, impact.duration)
+    impact.roundup_weight = update_weight(impact.roundup_weight, true, 0.5)
+    impact.begin_weight = update_weight(
+        impact.begin_weight,
+        impact.life_weight > 0,
+        0.1
+    )
+end
+
+local function draw_cross(position, outer_offset, inner_offset, col, alpha_mult)
+    local x, y = position.x, position.y
+    local final_col = color(col.r, col.g, col.b, math.floor(col.a * alpha_mult))
+
+    render.line(vector(x - outer_offset, y - outer_offset), vector(x - inner_offset, y - inner_offset), final_col)
+    render.line(vector(x - outer_offset, y + outer_offset), vector(x - inner_offset, y + inner_offset), final_col)
+    render.line(vector(x + inner_offset, y - inner_offset), vector(x + outer_offset, y - outer_offset), final_col)
+    render.line(vector(x + inner_offset, y + inner_offset), vector(x + outer_offset, y + outer_offset), final_col)
+end
+
+local function draw_centered_damage(text, position, col, alpha_mult)
+    local text_size = render.measure_text(signal_damage_font, "", text)
+    local draw_position = vector(position.x, position.y - text_size.y / 2)
+    local shadow_alpha = math.floor(125 * (col.a / 255) * alpha_mult)
+    local final_col = color(col.r, col.g, col.b, math.floor(col.a * alpha_mult))
+
+    render.text(signal_damage_font, vector(draw_position.x, draw_position.y + 1), color(25, 25, 25, shadow_alpha), "c", text)
+    render.text(signal_damage_font, draw_position, final_col, "c", text)
+end
+
+local function get_damage_color()
+    return signal_color_damage:get()
+end
+
+local function render_screen_hitmarker()
+    if not signal_impacts:get("2D hitmarker") then return end
+
+    local alpha = eased(screen_marker_weight)
+    if alpha <= 0 then return end
+
+    local position = vector(screen.x / 2, screen.y / 2)
+    local outer_offset = 10 + alpha * 10
+    local inner_offset = 5 + alpha * 10
+
+    draw_cross(position, outer_offset, inner_offset, signal_color_2d:get(), alpha)
+end
+
+local function update_impacts()
+    for index = #impacts, 1, -1 do
+        local impact = impacts[index]
+        update_impact(impact)
+
+        if impact.life_weight == 0 and impact.begin_weight == 0 then
+            table.remove(impacts, index)
+        end
+    end
+end
+
+local function render_impacts()
+    local show_world = signal_impacts:get("3D hitmarker")
+    local show_rage = signal_impacts:get("3D hitmarker (ragebot)")
+    local show_damage = signal_impacts:get("3D damage indicator")
+
+    if not show_world and not show_rage and not show_damage then return end
+
+    local world_color = signal_color_3d:get()
+    local rage_color = signal_color_3d_rage:get()
+    local current_damage_color = get_damage_color()
+    local current_time = globals.curtime
+
+    for index, impact in ipairs(impacts) do
+        local should_draw = (impact.type == "default" and (show_world or show_damage))
+            or (impact.type == "ragebot" and show_rage)
+
+        if should_draw then
+            local screen_position = render.world_to_screen(impact.position)
+
+            if screen_position ~= nil then
+                local time_left = eased(impact.life_weight)
+                local alpha = time_left * eased(impact.begin_weight)
+
+                if alpha > 0 then
+                    if impact.type == "default" then
+                        if show_world then
+                            draw_cross(screen_position, 10, 5, world_color, alpha)
+                        end
+
+                        if show_damage then
+                            local damage = math.floor(impact.damage * eased(impact.roundup_weight))
+                            local damage_position = vector(
+                                screen_position.x + math.cos(current_time * 2 + index - 1) * 5,
+                                screen_position.y - 25 - (1 - time_left) * 50
+                            )
+
+                            draw_centered_damage(tostring(damage), damage_position, current_damage_color, alpha)
+                        end
+                    elseif impact.type == "ragebot" then
+                        draw_cross(screen_position, 8, 4, rage_color, alpha)
+                    end
+                end
+            end
+        end
+    end
+end
+
+local function signal_on_paint()
+    if not (enable_dm:get() and dm_style:get() == "Signal Hitmarkers") then return end
+    
+    render_screen_hitmarker()
+    update_impacts()
+    render_impacts()
+
+    screen_marker_weight = update_weight(screen_marker_weight, false, 3.5)
+end
+events.render:set(signal_on_paint)
+
+local function signal_on_bullet_impact(event)
+    if not (enable_dm:get() and dm_style:get() == "Signal Hitmarkers") then return end
+    
+    local local_player = entity.get_local_player()
+    local shooter = entity.get(event.userid, true)
+
+    if local_player == nil or shooter ~= local_player then return end
+
+    local tick = globals.tickcount
+    if tick ~= last_impact_tick then
+        last_impact_tick = tick
+        pending_impacts = {}
+    end
+
+    table.insert(pending_impacts, vector(event.x, event.y, event.z))
+end
+events.bullet_impact:set(signal_on_bullet_impact)
+
+local function signal_on_player_hurt(event)
+    if not (enable_dm:get() and dm_style:get() == "Signal Hitmarkers") then return end
+    
+    local local_player = entity.get_local_player()
+    local attacker = entity.get(event.attacker, true)
+    local victim = entity.get(event.userid, true)
+
+    if local_player == nil or attacker ~= local_player or victim == local_player then return end
+
+    screen_marker_weight = 1
+
+    if victim == nil or #pending_impacts == 0 then return end
+
+    local hitboxes = hitgroup_to_hitboxes[event.hitgroup]
+    if hitboxes == nil then return end
+
+    local closest_position = nil
+    local closest_distance = 8192
+
+    for _, hitbox in ipairs(hitboxes) do
+        local hitbox_position = victim:get_hitbox_position(hitbox)
+
+        if hitbox_position ~= nil then
+            for _, impact_position in ipairs(pending_impacts) do
+                local distance = hitbox_position:dist(impact_position)
+
+                if distance < closest_distance then
+                    closest_distance = distance
+                    closest_position = impact_position
+                end
+            end
+        end
+    end
+
+    if closest_position ~= nil then
+        add_impact(closest_position, 10, event.dmg_health, "default")
+    end
+end
+events.player_hurt:set(signal_on_player_hurt)
+
+local function signal_on_aimbot_shoot(shot)
+    if not (enable_dm:get() and dm_style:get() == "Signal Hitmarkers") then return end
+    
+    if shot.target == nil then return end
+
+    local position = nil
+    if shot.x and shot.y and shot.z then
+        position = vector(shot.x, shot.y, shot.z)
+    elseif shot.hitbox ~= nil then
+        position = shot.target:get_hitbox_position(shot.hitbox)
+    elseif shot.hitgroup ~= nil then
+        local hitboxes = hitgroup_to_hitboxes[shot.hitgroup]
+        if hitboxes and #hitboxes > 0 then
+            position = shot.target:get_hitbox_position(hitboxes[1])
+        end
+    end
+
+    if position ~= nil then
+        add_impact(position, 5, 0, "ragebot")
+    end
+end
+events.aim_fire:set(signal_on_aimbot_shoot)

@@ -42,7 +42,8 @@ events.render:set(function()
     local current_frame = math.floor(curtime * 3.3) % #clantag_anim + 1
     
     if current_frame ~= old_frame then
-        common.set_clan_tag(clantag_anim[current_frame])
+        local tag = clantag_anim[current_frame]:match("^%s*(.-)%s*$")
+        common.set_clan_tag(tag)
         old_frame = current_frame
     end
 end)
