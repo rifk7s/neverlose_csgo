@@ -5,11 +5,13 @@
 <br/>
 <br/>
 
-[![Platform](https://img.shields.io/badge/Platform-Neverlose%20CSGO-0a84ff?style=flat-square)](https://neverlose.cc)
-[![Language](https://img.shields.io/badge/Language-Lua%20%28LuaJIT%202.1%29-7c3aed?style=flat-square&logo=lua&logoColor=white)](https://docs-csgo.neverlose.cc)
-[![Docs](https://img.shields.io/badge/API%20Docs-docs--csgo.neverlose.cc-16a34a?style=flat-square)](https://docs-csgo.neverlose.cc)
-![Scripts](https://img.shields.io/github/directory-file-count/rifk7s/neverlose_csgo/lua?type=file&label=Scripts&color=orange&style=flat-square)
-![Nade Packs](https://img.shields.io/github/directory-file-count/rifk7s/neverlose_csgo/nade_helper_locations?type=file&label=Nade%20Packs&color=red&style=flat-square)
+[![Platform](https://img.shields.io/badge/Platform-Neverlose%20CSGO-0a84ff?style=flat&logoWidth=16&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd%2BUAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJlSURBVEhLvZZPaBNBGMWfWhRREqkFaVOtyUFBLSn2EJU0abYn61mJBz0oiAfRSu2lFsUmUMW7hzYiCiIaD7GVGMGqd%2F%2BBeNAqhmotYk6KoFLlyTfZXdppSlyc9MELnc03%2B5ud%2FdJ5QGXVAfABqAew1qNljsyVe1RVE4AhAM8ATAL4DOCLR8scmfsUwHkAzTrEUQTAewA07KJ97zmSVcgXerEpy4PI7rm6UKHItOVVKS2z91svMG3pC9VI0lHykvUC0xaGsFQbS2fpBaYtDGGp3460s15g2sIQ1gLAjWGGD59msvccI5Ed5Wv%2BdWzZ18NkX4rxWAexppGh5EnuPzXIaDSqA3RXAYZ38%2FLET4pKpRI3BJoIX4BHC0V17UHhHlEfZM%2F4BzXO5XI6QHcVYFs3hyd%2BqZuJrmRGiNWNPFKYVOP82KgCHn%2F0SY2z2awO0F0FGO7m8JvyE%2F5WHzPctfcQD%2BZe28A7ZeDDKfPAsWnyD8nHL9%2FxmL2lNQX25V7w6tsf6u%2FC1ExF4G2TwP6zg1w%2FcItf1agsHXj9pgNcqoP%2BEdi2hyN206TODBANm9n%2F5NssoDRNyG2aV8Vppq6NcuhGnhcvZRgKBj0Ct1jM2MB0Oq2urTyQ5vPvZeD9%2FF3C18wT4x%2FdRcyWZVkegXUruKl9J7ssi0FntctXsaW9g12JBFtbtxFYwsDW7Ux0djIWiynH43Flv9%2FvEWjeLnDR%2F3kv%2BvEkh6IcjnqBacsh7yY5Of71AtOWGONKAk4tEptjCWjz4qJEuVokN3mQeTHRkaxCwqvs9%2F8GYekLeVVz4uFCkiRXk6j%2FFw5Idngt%2BxwLAAAAAElFTkSuQmCC)](https://neverlose.cc)
+[![Language](https://img.shields.io/badge/Language-Lua%20%28LuaJIT%202.1%29-7c3aed?style=flat&logo=lua&logoColor=white)](https://docs-csgo.neverlose.cc)
+[![Docs](https://img.shields.io/badge/API%20Docs-docs--csgo.neverlose.cc-16a34a?style=flat)](https://docs-csgo.neverlose.cc)
+![Scripts (GitLab)](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2Frifk7s%252Fneverlose_csgo%2Frepository%2Ftree%3Fpath%3Dlua%26per_page%3D100&query=$.length&label=Scripts%20%28GitLab%29&color=orange&style=flat&logo=gitlab)
+![Scripts (GitHub)](https://img.shields.io/github/directory-file-count/rifk7s/neverlose_csgo/lua?type=file&label=Scripts%20%28GitHub%29&color=orange&style=flat&logo=github)
+![Nade Packs (GitLab)](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fgitlab.com%2Fapi%2Fv4%2Fprojects%2Frifk7s%252Fneverlose_csgo%2Frepository%2Ftree%3Fpath%3Dnade_helper_locations%26per_page%3D100&query=$.length&label=Nade%20Packs%20%28GitLab%29&color=red&style=flat&logo=gitlab)
+![Nade Packs (GitHub)](https://img.shields.io/github/directory-file-count/rifk7s/neverlose_csgo/nade_helper_locations?type=file&label=Nade%20Packs%20%28GitHub%29&color=red&style=flat&logo=github)
 
 <br/>
 
@@ -79,9 +81,9 @@ A personal collection of Lua scripts, presets, and grenade location packs for **
 
 ### `nightsense.lua`
 
-[![Type](https://img.shields.io/badge/Type-Resolver%20%2F%20Ragebot-dc2626?style=flat-square)](lua/nightsense.lua)
-[![FFI](https://img.shields.io/badge/Uses-FFI-ea580c?style=flat-square)](https://docs-csgo.neverlose.cc/documentation/variables/ffi)
-[![Size](https://img.shields.io/badge/Size-76%20KB-555?style=flat-square)](lua/nightsense.lua)
+[![Type](https://img.shields.io/badge/Type-Resolver%20%2F%20Ragebot-dc2626?style=flat)](lua/nightsense.lua)
+[![FFI](https://img.shields.io/badge/Uses-FFI-ea580c?style=flat)](https://docs-csgo.neverlose.cc/documentation/variables/ffi)
+[![Size](https://img.shields.io/badge/Size-76%20KB-555?style=flat)](lua/nightsense.lua)
 
 Advanced resolver support script for Neverlose ragebot. Reads animation state memory directly via FFI and feeds evidence-based overrides into the ragebot on each tick. Forked from ImSynZx's original with a full resolver core rewrite, prediction system, and new ring-buffer shot tracking.
 
@@ -121,8 +123,8 @@ Advanced resolver support script for Neverlose ragebot. Reads animation state me
 
 ### `ideal_yaw.lua`
 
-[![Type](https://img.shields.io/badge/Type-Anti--Aim-dc2626?style=flat-square)](lua/ideal_yaw.lua)
-[![Size](https://img.shields.io/badge/Size-234%20KB-555?style=flat-square)](lua/ideal_yaw.lua)
+[![Type](https://img.shields.io/badge/Type-Anti--Aim-dc2626?style=flat)](lua/ideal_yaw.lua)
+[![Size](https://img.shields.io/badge/Size-234%20KB-555?style=flat)](lua/ideal_yaw.lua)
 
 Full-featured anti-aim and yaw configuration script. Includes builder-based AA presets, visual customization, ragebot extensions, and miscellaneous utilities. Originally by Kizaru.
 
@@ -159,11 +161,26 @@ Full-featured anti-aim and yaw configuration script. Includes builder-based AA p
 
 ---
 
+### `Chimera Alpha Better_7082800.lua`
+
+[![Type](https://img.shields.io/badge/Type-Multi--feature-dc2626?style=flat)](<lua/Chimera%20Alpha%20Better_7082800.lua>)
+[![FFI](https://img.shields.io/badge/Uses-FFI-ea580c?style=flat)](https://docs-csgo.neverlose.cc/documentation/variables/ffi)
+[![Size](https://img.shields.io/badge/Size-446%20KB-555?style=flat)](<lua/Chimera%20Alpha%20Better_7082800.lua>)
+
+An upgraded, standalone version of Chimera AlphaS. Includes a custom configuration manager, enhanced stability against reload crashes, and fully inlined dependencies.
+
+**Key Improvements over AlphaS:**
+* **Standalone:** Inlines the complete `lagrecord` API to protect against engine updates and removes external module dependencies.
+* **Stability:** Protects all `ffi.metatype()` calls with a `pcall()` wrapper to prevent protected metatable crashes when reloading the script.
+* **Configuration Manager:** Built-in UI to save, load, and revert settings presets directly in-game via the database and `configs.json`.
+
+---
+
 ### `Chimera AlphaS_7076881.lua`
 
-[![Type](https://img.shields.io/badge/Type-Multi--feature-dc2626?style=flat-square)](<lua/Chimera%20AlphaS_7076881.lua>)
-[![FFI](https://img.shields.io/badge/Uses-FFI-ea580c?style=flat-square)](https://docs-csgo.neverlose.cc/documentation/variables/ffi)
-[![Size](https://img.shields.io/badge/Size-415%20KB-555?style=flat-square)](<lua/Chimera%20AlphaS_7076881.lua>)
+[![Type](https://img.shields.io/badge/Type-Multi--feature-dc2626?style=flat)](<lua/Chimera%20AlphaS_7076881.lua>)
+[![FFI](https://img.shields.io/badge/Uses-FFI-ea580c?style=flat)](https://docs-csgo.neverlose.cc/documentation/variables/ffi)
+[![Size](https://img.shields.io/badge/Size-415%20KB-555?style=flat)](<lua/Chimera%20AlphaS_7076881.lua>)
 
 Early access branch of Chimera.lua. Comprehensive multi-feature script covering ragebot enhancements, full anti-aim builder, visual indicators, and miscellaneous utilities. Features per-condition AA presets, dormant aimbot, AI peek simulation, and more.
 
@@ -220,8 +237,8 @@ Early access branch of Chimera.lua. Comprehensive multi-feature script covering 
 
 ### `Arc_7075732.lua`
 
-[![Type](https://img.shields.io/badge/Type-Visuals%20%2F%20Movement-2563eb?style=flat-square)](lua/Arc_7075732.lua)
-[![Size](https://img.shields.io/badge/Size-287%20KB-555?style=flat-square)](lua/Arc_7075732.lua)
+[![Type](https://img.shields.io/badge/Type-Visuals%20%2F%20Movement-2563eb?style=flat)](lua/Arc_7075732.lua)
+[![Size](https://img.shields.io/badge/Size-287%20KB-555?style=flat)](lua/Arc_7075732.lua)
 
 Feature-rich visuals and movement enhancement script. Provides functionality and performance improvements across movement mechanics, world rendering, and weapon visuals.
 
@@ -268,10 +285,10 @@ Feature-rich visuals and movement enhancement script. Provides functionality and
 
 ### `ONETAP INTERFACES_7072605.lua`
 
-[![Type](https://img.shields.io/badge/Type-HUD%20Overlay-2563eb?style=flat-square)](lua/ONETAP%20INTERFACES_7072605.lua)
-[![Size](https://img.shields.io/badge/Size-523%20KB-555?style=flat-square)](lua/ONETAP%20INTERFACES_7072605.lua)
+[![Type](https://img.shields.io/badge/Type-HUD%20Overlay-2563eb?style=flat)](lua/ONETAP%20INTERFACES_7072605.lua)
+[![Size](https://img.shields.io/badge/Size-533%20KB-555?style=flat)](lua/ONETAP%20INTERFACES_7072605.lua)
 
-Custom Onetap-inspired HUD overlay rendering keybinds, spectator list, watermark, warnings, and hit markers on screen. SVG assets are loaded via `render.load_image` at startup for zero-overhead rendering.
+Custom Onetap-inspired HUD overlay rendering keybinds, spectator list, watermark, and warnings on screen. SVG assets are loaded via `render.load_image` at startup for zero-overhead rendering.
 
 <table width="100%">
 <tr>
@@ -281,9 +298,8 @@ Custom Onetap-inspired HUD overlay rendering keybinds, spectator list, watermark
 - Watermark: username, server address, ping via `cvar.cl_updaterate` + `avg_latency`
 - Keybind list: toggle mode shows filled icon, hold mode shows `hold_icon` (keyboard SVG)
 - Spectator list: names of players spectating you
-- Velocity warning indicator
-- Defensive tickbase warning indicator
-- Hit markers: damage display with fading alpha and overlap deduplication
+- Hit markers: animated 3D/2D hitmarkers with floating damage numbers (ported from Primordial)
+- Warning indicators: centered display for high velocity and defensive anti-aim states
 
 </td>
 <td valign="top" width="50%">
@@ -306,8 +322,8 @@ Custom Onetap-inspired HUD overlay rendering keybinds, spectator list, watermark
 
 ### `Cloud Model Changer_7073630.lua`
 
-[![Type](https://img.shields.io/badge/Type-Visuals-2563eb?style=flat-square)](<lua/Cloud%20Model%20Changer_7073630.lua>)
-[![Size](https://img.shields.io/badge/Size-126%20KB-555?style=flat-square)](<lua/Cloud%20Model%20Changer_7073630.lua>)
+[![Type](https://img.shields.io/badge/Type-Visuals-2563eb?style=flat)](<lua/Cloud%20Model%20Changer_7073630.lua>)
+[![Size](https://img.shields.io/badge/Size-126%20KB-555?style=flat)](<lua/Cloud%20Model%20Changer_7073630.lua>)
 
 Most advanced model changer on the market. Dynamically changes player and weapon models in-game with preset models, active crash protection, and a robust PowerShell-based downloader for reliable custom model retrieval.
 
@@ -344,8 +360,8 @@ Most advanced model changer on the market. Dynamically changes player and weapon
 
 ### `Custom Weapon Sound_7076127.lua`
 
-[![Type](https://img.shields.io/badge/Type-Audio-2563eb?style=flat-square)](<lua/Custom%20Weapon%20Sound_7076127.lua>)
-[![Size](https://img.shields.io/badge/Size-27%20KB-555?style=flat-square)](<lua/Custom%20Weapon%20Sound_7076127.lua>)
+[![Type](https://img.shields.io/badge/Type-Audio-2563eb?style=flat)](<lua/Custom%20Weapon%20Sound_7076127.lua>)
+[![Size](https://img.shields.io/badge/Size-27%20KB-555?style=flat)](<lua/Custom%20Weapon%20Sound_7076127.lua>)
 
 Custom weapon sounds that replace the normal sounds with no overlap or delay. Supports preset sound packs and a per-weapon custom builder.
 
@@ -384,8 +400,8 @@ Custom weapon sounds that replace the normal sounds with no overlap or delay. Su
 
 ### `Config Import_7076547.lua`
 
-[![Type](https://img.shields.io/badge/Type-Utility-2563eb?style=flat-square)](<lua/Config%20Import_7076547.lua>)
-[![Size](https://img.shields.io/badge/Size-8%20KB-555?style=flat-square)](<lua/Config%20Import_7076547.lua>)
+[![Type](https://img.shields.io/badge/Type-Utility-2563eb?style=flat)](<lua/Config%20Import_7076547.lua>)
+[![Size](https://img.shields.io/badge/Size-8%20KB-555?style=flat)](<lua/Config%20Import_7076547.lua>)
 
 Utility script to import and parse configuration strings (e.g., from clipboard or base64). Requires `.txt` config files to be placed in `nl/configs/` to function correctly.
 
@@ -395,13 +411,46 @@ Utility script to import and parse configuration strings (e.g., from clipboard o
 
 ### `HitsoundFix_7074789.lua`
 
-[![Type](https://img.shields.io/badge/Type-Audio%20Fix-2563eb?style=flat-square)](lua/HitsoundFix_7074789.lua)
-[![FFI](https://img.shields.io/badge/Uses-FFI-ea580c?style=flat-square)](https://docs-csgo.neverlose.cc/documentation/variables/ffi)
-[![Size](https://img.shields.io/badge/Size-6%20KB-555?style=flat-square)](lua/HitsoundFix_7074789.lua)
+[![Type](https://img.shields.io/badge/Type-Audio%20Fix-2563eb?style=flat)](lua/HitsoundFix_7074789.lua)
+[![FFI](https://img.shields.io/badge/Uses-FFI-ea580c?style=flat)](https://docs-csgo.neverlose.cc/documentation/variables/ffi)
+[![Size](https://img.shields.io/badge/Size-6%20KB-555?style=flat)](lua/HitsoundFix_7074789.lua)
 
 Raises the engine sound channel limit via FFI to prevent hitsounds from being dropped under rapid fire rates. Patches the limit value directly in memory at load. Volume slider supports up to 500%.
 
 **APIs used:** `ui` · `entity` · `events` · `ffi`
+
+---
+
+### `Bebralose Clantag_7082248.lua`
+
+[![Type](https://img.shields.io/badge/Type-Misc-2563eb?style=flat)](<lua/Bebralose%20Clantag_7082248.lua>)
+[![Size](https://img.shields.io/badge/Size-1%20KB-555?style=flat)](<lua/Bebralose%20Clantag_7082248.lua>)
+
+A synced clan tag spammer featuring the classic "bebralose" scrolling animation (Gamesense animation style). 
+
+**APIs used:** `globals` · `utils`
+
+---
+
+### `Cumshotted_7082239.lua`
+
+[![Type](https://img.shields.io/badge/Type-Misc-2563eb?style=flat)](lua/Cumshotted_7082239.lua)
+[![Size](https://img.shields.io/badge/Size-1%20KB-555?style=flat)](lua/Cumshotted_7082239.lua)
+
+Simple event-based kill message script. Automatically outputs `#cumshotted` to the global chat server via `console_exec('say')` whenever you score a headshot kill.
+
+**APIs used:** `entity` · `events` · `utils`
+
+---
+
+### `Standalone SuperToss_7082238.lua`
+
+[![Type](https://img.shields.io/badge/Type-Misc-2563eb?style=flat)](<lua/Standalone%20SuperToss_7082238.lua>)
+[![Size](https://img.shields.io/badge/Size-3%20KB-555?style=flat)](<lua/Standalone%20SuperToss_7082238.lua>)
+
+A standalone, lightweight implementation of the gamesense Super Toss feature. Extends grenade throw distances dynamically based on velocity, angles, and throw strength.
+
+**APIs used:** `ui` · `events` · `entity` · `vector`
 
 ---
 
@@ -466,23 +515,23 @@ JSON location packs for use with Neverlose's built-in nade helper. Each file con
 
 <table width="100%">
 <tr>
-<td width="80"><img src="https://img.shields.io/badge/-LuaJIT-7c3aed?style=flat-square&logo=lua&logoColor=white" alt="lua" /></td>
+<td width="80"><img src="https://img.shields.io/badge/-LuaJIT-7c3aed?style=flat&logo=lua&logoColor=white" alt="lua" /></td>
 <td>Scripts use <strong>LuaJIT 2.1</strong>, the JIT compiler bundled with Neverlose. Standard Lua 5.1 syntax applies with JIT extensions.</td>
 </tr>
 <tr>
-<td><img src="https://img.shields.io/badge/-FFI-ea580c?style=flat-square&logo=c&logoColor=white" alt="ffi" /></td>
+<td><img src="https://img.shields.io/badge/-FFI-ea580c?style=flat&logo=c&logoColor=white" alt="ffi" /></td>
 <td><strong><a href="https://docs-csgo.neverlose.cc/documentation/variables/ffi">FFI</a></strong> is used for direct memory access: reading animation state structs, patching sound limits, casting pointers. Define structs with <code>ffi.cdef</code> and cast with <code>ffi.cast</code>.</td>
 </tr>
 <tr>
-<td><img src="https://img.shields.io/badge/-BitOp-555?style=flat-square&logo=buffer&logoColor=white" alt="bit" /></td>
+<td><img src="https://img.shields.io/badge/-BitOp-555?style=flat&logo=buffer&logoColor=white" alt="bit" /></td>
 <td><strong><a href="https://docs-csgo.neverlose.cc/documentation/variables/bit">BitOp (<code>bit</code>)</a></strong> provides bitwise operations on numbers: <code>bit.band</code>, <code>bit.bor</code>, <code>bit.bxor</code>, <code>bit.bnot</code>, <code>bit.lshift</code>, <code>bit.rshift</code>.</td>
 </tr>
 <tr>
-<td><img src="https://img.shields.io/badge/-Docs-16a34a?style=flat-square&logo=gitbook&logoColor=white" alt="docs" /></td>
+<td><img src="https://img.shields.io/badge/-Docs-16a34a?style=flat&logo=gitbook&logoColor=white" alt="docs" /></td>
 <td>Arguments shown in <code>[square brackets]</code> in the Neverlose API docs are optional.</td>
 </tr>
 <tr>
-<td><img src="https://img.shields.io/badge/-Note-dc2626?style=flat-square&logo=shieldsdotio&logoColor=white" alt="note" /></td>
+<td><img src="https://img.shields.io/badge/-Note-dc2626?style=flat&logo=shieldsdotio&logoColor=white" alt="note" /></td>
 <td>These scripts are for personal use on the Neverlose platform only.</td>
 </tr>
 </table>
