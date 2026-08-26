@@ -17,9 +17,10 @@
 
 A personal collection of Lua scripts, presets, and grenade location packs for **[Neverlose](https://neverlose.cc)**, the CSGO scripting platform powered by LuaJIT 2.1.
 
-> **Note:** **[GitHub](https://github.com/rifk7s/neverlose_csgo)** is the primary repository. **[GitLab](https://gitlab.com/rifk7s/neverlose_csgo)** serves as an identical backup mirror that syncs directly from the primary.
-
 </div>
+
+> [!NOTE]
+> **[GitHub](https://github.com/rifk7s/neverlose_csgo)** is the primary repository. I mirrored all work to **[GitLab](https://gitlab.com/rifk7s/neverlose_csgo)** as a backup just in case I got banned again. It was used as the primary working repo during the August 2026 suspension and manually synced back afterward.
 
 ---
 
@@ -340,7 +341,8 @@ Feature-rich visuals and movement enhancement script. Provides functionality and
 </tr>
 </table>
 
-> **Note:** Weather Controller is not compatible with Force Game Interpolation and some other features, may cause crashes due to Source engine issues.
+> [!NOTE]
+> Weather Controller is not compatible with Force Game Interpolation and some other features, may cause crashes due to Source engine issues.
 
 **APIs used:** `ui` · `render` · `entity` · `events` · `globals` · `rage` · `utils` · `color` · `vector` · `cvar` · `common` · `json` · `materials` · `panorama` · `ffi` · `bit`
 
