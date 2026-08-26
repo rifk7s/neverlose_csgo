@@ -1,30 +1,32 @@
 --[[
-  [SCRIPT REQUIREMENTS]
+  [CREDITS & ACKNOWLEDGEMENTS]
   
-  NOTE: This script relies on Neverlose's internal built-in modules:
-  - `require("neverlose/events")`
-  - `require("neverlose/lagrecord")`
-  (These are loaded natively by the cheat engine. No downloads required).
-
-  [Changes vs Alpha Better]
+  Special thanks to @tickcount for open-sourcing their lagrecord library!
+  - Source: https://github.com/tickcount/lagrecord-csgo.lua
+  - Description: An essential HvH lagrecord library released for educational 
+    purposes. Note from the author: some implementations may be outdated, and 
+    the `get_dead_time` function needs corrections.
+        
+  [Changes vs AlphaS]
   
-  1. DEPENDENCIES
-     - Relies on Neverlose's internal `require` modules to load its features, 
-       rather than inlining the source code. 
+  1. DEPENDENCIES (Standalone)
+     - Inlines the complete `lagrecord` API directly into the script instead
+       of relying on Neverlose's internal module loader. This protects against
+       future game/cheat updates that might remove the built-in module.
   2. STABILITY
-     - Lacks the `pcall()` wrapper for FFI calls, making it prone to "cannot 
-       change protected metatable" crashes if reloaded frequently.
+     - Protects all `ffi.metatype()` calls with a `pcall()` wrapper. This 
+       prevents the script from crashing when you reload it in the cheat menu.
   3. CONFIGURATION MANAGER
-     - No custom config manager. If you mess up your script settings, you 
-       must manually copy and import configuration text strings to restore 
-       them, as there are no saved in-game presets to revert to.
+     - Adds a custom UI manager to save/load/revert settings presets directly 
+       in-game. This avoids the hassle of manually copying and importing text 
+       strings if you mess up your settings. Saves to DB and `configs.json`.
   4. DORMANT AIMBOT LOGGING
-     - Identical to the Better version. Silently logs all shots fired at 
-       dormant players to a physical `nl/chimera.txt` file.
+     - Identical to AlphaS. Silently logs all shots fired at dormant players 
+       to a physical `nl/chimera.txt` file when the script is unloaded.
 ]]
-  
+
 local v0 = true;
-local l_events_0 = require("neverlose/events");
+local l_events_0 = events;
 local v2 = common.get_username();
 local _ = ui.find("Visuals", "World", "Main", "Force Thirdperson");
 local v4 = nil;
@@ -38,7 +40,7 @@ local v4 = nil;
     v5.__tostring = function(v6)
         return string.format("%f %f %f", v6.x, v6.y, v6.z);
     end;
-    ffi.metatype(v4, v5);
+    pcall(ffi.metatype, v4, v5);
 end)();
 local v7 = nil;
 (function()
@@ -48,7 +50,7 @@ local v7 = nil;
         __index = {}
     };
     v8.__newindex = v8.__index;
-    ffi.metatype(v7, v8);
+    pcall(ffi.metatype, v7, v8);
 end)();
 local v9 = nil;
 (function()
@@ -63,7 +65,7 @@ local v9 = nil;
         __index = {}
     };
     v11.__newindex = v11.__index;
-    ffi.metatype(v9, v11);
+    pcall(ffi.metatype, v9, v11);
 end)();
 local v12 = nil;
 (function()
@@ -73,7 +75,7 @@ local v12 = nil;
         __index = {}
     };
     v13.__newindex = v13.__index;
-    ffi.metatype(v12, v13);
+    pcall(ffi.metatype, v12, v13);
 end)();
 local v14 = nil;
 (function()
@@ -94,7 +96,7 @@ local v17 = nil;
         __index = {}
     };
     v18.__newindex = v18.__index;
-    ffi.metatype(v17, v18);
+    pcall(ffi.metatype, v17, v18);
 end)();
 v7.get_player_anim_state_csgo = function(v19)
     -- upvalues: v17 (ref)
@@ -150,8 +152,481 @@ local v39 = {
     entindex = -1
 };
 local v40 = nil;
-v40 = require("neverlose/lagrecord");
-v40 = v40 ^ v40.SIGNED;
+v40 = (function()
+-- Variables
+local sv_maxunlag = cvar.sv_maxunlag
+
+local host_frameticks = ffi.cast('uint32_t*', utils.opcode_scan('engine.dll', '03 05 ? ? ? ? 83 CF 10', 0x2))
+local host_currentframetick = ffi.cast('uint32_t*', utils.opcode_scan('engine.dll', '2B 05 ? ? ? ? 03 05 ? ? ? ? 83 CF 10', 0x2))
+
+-- Functions
+local new_class = function()
+    local mt, mt_data, this_mt = { }, { }
+
+    mt.__metatable = false
+    mt_data.struct = function(self, name)
+        assert(type(name) == 'string', 'invalid class name')
+        assert(rawget(self, name) == nil, 'cannot overwrite subclass')
+
+        return function(data)
+            assert(type(data) == 'table', 'invalid class data')
+            rawset(self, name, setmetatable(data, {
+                __metatable = false,
+                __index = function(self, key)
+                    return
+                        rawget(mt, key) or
+                        rawget(this_mt, key)
+                end
+            }))
+
+            return this_mt
+        end
+    end
+
+    this_mt = setmetatable(mt_data, mt)
+
+    return this_mt
+end
+
+local insert = function(tbl, new_value)
+    local new_tbl = {}
+
+    new_tbl[#new_tbl+1] = new_value
+
+    for _, value in pairs(tbl) do
+        if value ~= nil then
+            new_tbl[#new_tbl+1] = value
+        end
+    end
+
+    return new_tbl
+end
+
+local evnt do (function()
+    local c_list = { }
+
+    local function register_callback(fn)
+        assert(type(fn) == 'function', 'callback has to be a function')
+
+        local already_exists = false
+
+        for _, this in pairs(c_list) do
+            if this == fn then
+                already_exists = true
+                break
+            end
+        end
+
+        if already_exists then
+            error('the function callback is already registered', 3)
+        end
+
+        table.insert(c_list, fn)
+    end
+
+    local function unregister_callback(fn)
+        assert(type(fn) == 'function', 'callback has to be a function')
+
+        for index, this in pairs(c_list) do
+            if this == fn then
+                table.remove(c_list, index)
+
+                return true
+            end
+        end
+
+        return false
+    end
+
+    local function get_list()
+        return c_list
+    end
+
+    local function fire_callback(...)
+        local output = false
+
+        for idx, callback in ipairs(c_list) do
+            local success, result = pcall(callback, ...)
+
+            if success == true and result == true then
+                output = true
+                break
+            end
+        end
+
+        return output
+    end
+
+    evnt = {
+        register = register_callback,
+        unregister = unregister_callback,
+        fire_callback = fire_callback,
+        get_list = get_list
+    }
+end)() end
+
+-- Global Class
+local ctx = new_class()
+    :struct 'lagrecord' {
+        data = { },
+
+        estimated_tickbase = 0,
+        local_player_tickbase = 0,
+
+        purge = function(self, player)
+            if player == nil then
+                self.estimated_tickbase = 0
+                self.local_player_tickbase = 0
+                self.data = { }
+
+                return
+            end
+
+            self.data[player:get_index()] = { }
+        end,
+
+        track_time = function(self, cmd)
+            self.estimated_tickbase = globals.estimated_tickbase
+
+            if cmd.choked_commands == 0 then
+                self.local_player_tickbase = entity.get_local_player().m_nTickBase
+            end
+        end,
+
+        get_server_time = function(self, as_ticks)
+            local predicted_server_tick = globals.client_tick + globals.clock_offset
+
+            if host_frameticks ~= nil and host_currentframetick ~= nil then
+                local delta = host_frameticks[0] - host_currentframetick[0]
+                local max_delta_for_tick_rate = math.floor(1 / globals.tickinterval) / 8
+
+                if delta > 0 and delta < max_delta_for_tick_rate then
+                    predicted_server_tick = predicted_server_tick + delta
+                end
+            end
+
+            return as_ticks ~= true and to_time(predicted_server_tick) or predicted_server_tick
+        end,
+
+        get_player_time = function(self, player, as_tick)
+            assert(player ~= nil and player.get_simulation_time ~= nil, 'invalid player')
+
+            if player == entity.get_local_player() then
+                local m_nTickBase = self.local_player_tickbase -- player.m_nTickBase
+
+                return as_tick ~= true and to_time(m_nTickBase) or m_nTickBase
+            end
+
+            local simulation_time = player:get_simulation_time().current
+
+            return as_tick == true and
+                self:to_ticks(simulation_time) or simulation_time
+        end,
+
+        get_dead_time = function(self, as_tick)
+            local sv_maxunlag = sv_maxunlag:float()
+            local outgoing_latency = utils.net_channel().latency[0]
+            local dead_time = to_time(self.estimated_tickbase) - outgoing_latency - sv_maxunlag
+
+            return as_tick == true and to_ticks(dead_time) or dead_time
+        end,
+
+        verify_records = function(self, userptr, dead_time, is_alive)
+            if  userptr == nil or
+                userptr.records == nil or userptr.localdata == nil then
+                return
+            end
+
+            -- make sure we dont keep old records if those become invalid
+            local records, localdata = userptr.records, userptr.localdata
+            local first_rec_origin = records[1] and records[1].origin
+            local allow_updates = localdata.allow_updates
+
+            for idx, this in ipairs(records) do
+                local c_idx = idx ~= 1
+
+                if allow_updates == false then
+                    c_idx = true
+                end
+
+                if is_alive == false then
+                    rawset(records, idx, nil)
+                elseif c_idx == true and first_rec_origin then
+                    if this.simulation_time <= dead_time then
+                        -- purge current record if simulation time is too old
+                        rawset(records, idx, nil)
+                    elseif first_rec_origin:distsqr(this.origin) > 4096 then
+                        -- purge records if teleport distance is too big
+                        for i=2, #records do
+                            rawset(records, i, nil)
+                        end
+
+                        break
+                    end
+                end
+            end
+        end,
+
+        on_net_update = function(self, player, tick, dead_time)
+            assert(player ~= nil and player.get_simulation_time ~= nil, 'invalid player')
+
+            local index = player:get_index()
+            local origin = player:get_origin()
+            local is_alive = player:is_alive()
+
+            self.data[index] = self.data[index] or new_class()
+                :struct 'records' { }
+                :struct 'localdata' {
+                    allow_updates = false,
+                    updated_this_frame = false,
+                    last_animated_simulation = 0,
+                    no_entry = vector(),
+                    cycle = 0
+                }
+
+            -- preserve data
+            local user = self.data[index]
+            local records, localdata = user.records, user.localdata
+            local simulation_time = self:get_player_time(player)
+
+            -- set update state to false
+            localdata.allow_updates = evnt.fire_callback(player)
+            localdata.updated_this_frame = false
+
+            if  localdata.allow_updates == false or
+                is_alive == false or player:is_dormant() == true then
+                goto verify_records
+            end
+
+            do
+                local shifted_forwards = records[1] and
+                    math.max(0, to_ticks(records[1].simulation_time - simulation_time)) or 0
+
+                if shifted_forwards > 0 and localdata.no_entry.x == 0 then
+                    localdata.no_entry.y = shifted_forwards
+                elseif shifted_forwards <= 0 then
+                    localdata.no_entry.y = 0
+                end
+
+                localdata.cycle = records[1] and math.max(0, tick - records[1].tick - 1) or 0
+                localdata.no_entry.x = shifted_forwards
+                localdata.last_animated_simulation = simulation_time
+
+                if records[1] and simulation_time <= records[1].simulation_time then
+                    goto verify_records
+                end
+
+                -- STAGE: PLAYER_UPDATE
+                localdata.updated_this_frame = true
+
+                rawset(user, 'records', insert(records, {
+                    tick = tick,
+                    shifting = to_ticks(simulation_time) - tick - 1,
+                    elapsed = math.clamp(records[1] and (tick - records[1].tick - 1) or 0, 0, 72),
+                    choked = math.clamp(records[1] and (to_ticks(simulation_time - records[1].simulation_time) - 1) or 0, 0, 72),
+
+                    origin = origin,
+                    origin_old = records[1] and records[1].origin or origin,
+                    simulation_time = simulation_time,
+                    simulation_time_old = records[1] and records[1].simulation_time or simulation_time,
+
+                    angles = player:get_angles(),
+                    eye_position = player:get_eye_position(),
+                    volume = { player.m_vecMins, player.m_vecMaxs }
+                }))
+
+                -- invoke entity update callback
+                events.entity_update:call {
+                    tick = tick,
+                    index = index,
+                    entity = player
+                }
+            end
+
+            ::verify_records::
+
+            self:verify_records(user, dead_time, is_alive)
+        end
+    }
+
+    :struct 'output' {
+        get_player_idx = function(self, ...)
+            local va = { ... }
+
+            if #va == 0 then
+                local me = entity.get_local_player()
+
+                if me == nil then
+                    return
+                end
+
+                return me:get_index()
+            end
+
+            local va = va[1]
+            local va_type = type(va)
+
+            if va == nil or va_type == 'nil' then
+                return
+            end
+
+            if va_type == 'userdata' and va.get_index then
+                return va:get_index()
+            end
+
+            if va_type == 'userdata' or va_type == 'cdata' or va_type == 'number' then
+                local player = entity.get(va)
+
+                if player == nil then
+                    return
+                end
+
+                return player:get_index()
+            end
+
+            return nil
+        end,
+
+        get_player_data = function(self, ...)
+            local index = self:get_player_idx(...)
+
+            if index == nil then
+                return
+            end
+
+            local data = self.lagrecord.data[index]
+
+            if data == nil or data.localdata == nil or data.records == nil then
+                return
+            end
+
+            return data
+        end,
+
+        get_all = function(self, ...)
+            local data = self:get_player_data(...)
+
+            if data == nil then
+                return
+            end
+
+            return data.records
+        end,
+
+        get_record = function(self, ...)
+            local data = self:get_player_data(...)
+
+            if data == nil then
+                return
+            end
+
+            return data.records[({ ... })[2] or 1]
+        end,
+
+        get_snapshot = function(self, ...)
+            local data = self:get_player_data(...)
+
+            if data == nil then
+                return
+            end
+
+            local record_at = ({ ... })[2] or 1
+            local record = data.records[record_at]
+
+            if record == nil then
+                return
+            end
+
+            return {
+                id = record_at,
+                tick = record.tick,
+                updated_this_frame = data.localdata.updated_this_frame,
+
+                origin = {
+                    angles = record.angles,
+                    volume = record.volume,
+                    current = record.origin,
+                    previous = record.origin_old,
+                    change = record.origin:distsqr(record.origin_old)
+                },
+
+                simulation_time = {
+                    animated = data.localdata.last_animated_simulation,
+                    current = record.simulation_time,
+                    previous = record.simulation_time_old,
+                    change = record.simulation_time - record.simulation_time_old
+                },
+
+                command = {
+                    elapsed = record.elapsed,
+                    choke = record.choked,
+                    cycle = data.localdata.cycle,
+                    shifting = record.shifting,
+                    no_entry = data.localdata.no_entry,
+                }
+            }, record
+        end,
+
+        get_server_time = function(self, ...)
+            return self.lagrecord:get_server_time(...)
+        end
+    }
+
+-- Callbacks
+events.level_init:set(function() ctx.lagrecord:purge() end)
+events.createmove:set(function(cmd) ctx.lagrecord:track_time(cmd) end)
+events.net_update_end:set(function()
+    local lagrecord = ctx.lagrecord
+
+    local me = entity.get_local_player()
+    local tick = lagrecord:get_server_time(true)
+    local dead_time = lagrecord:get_dead_time(false)
+
+    if me == nil or globals.is_in_game == false then
+        lagrecord:purge()
+        return
+    end
+
+    if me:is_alive() == false then
+        lagrecord.estimated_tickbase = globals.client_tick + globals.clock_offset
+    end
+
+    entity.get_players(false, true, function(player)
+        lagrecord:on_net_update(player, tick, dead_time)
+    end)
+end)
+
+return {
+    set_update_callback = function(...)
+        return evnt.register(...)
+    end,
+
+    unset_update_callback = function(...)
+        return evnt.unregister(...)
+    end,
+
+    get_player_data = function(...)
+        return ctx.output:get_player_data(...)
+    end,
+
+    get_all = function(...)
+        return ctx.output:get_all(...)
+    end,
+
+    get_record = function(...)
+        return ctx.output:get_record(...)
+    end,
+
+    get_snapshot = function(...)
+        return ctx.output:get_snapshot(...)
+    end,
+
+    get_server_time = function(...)
+        return ctx.output:get_server_time(...)
+    end
+}
+
+end)();
 v40.set_update_callback(function(v41)
     -- upvalues: v39 (ref)
     if v41 == entity.get_local_player() or v41:get_index() == v39.entindex then
@@ -160,7 +635,132 @@ v40.set_update_callback(function(v41)
         return;
     end;
 end);
-local l_base64_0 = require("neverlose/base64");
+local l_base64_0 = (function()
+local shl, shr, band = bit.lshift, bit.rshift, bit.band
+local char, byte, gsub, sub, format, concat, tostring, error, pairs = string.char, string.byte, string.gsub, string.sub, string.format, table.concat, tostring, error, pairs
+
+local extract = function(v, from, width)
+	return band(shr(v, from), shl(1, width) - 1)
+end
+
+local function makeencoder(alphabet)
+	local encoder, decoder = {}, {}
+	for i=1, 65 do
+		local chr = byte(sub(alphabet, i, i)) or 32
+		if decoder[chr] ~= nil then
+			error('invalid alphabet: duplicate character ' .. tostring(chr), 3)
+		end
+		encoder[i-1] = chr
+		decoder[chr] = i-1
+	end
+	return encoder, decoder
+end
+
+local encoders, decoders = {}, {}
+
+encoders['base64'], decoders['base64'] = makeencoder('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=')
+encoders['base64url'], decoders['base64url'] = makeencoder('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_')
+
+local alphabet_mt = {
+	__index = function(tbl, key)
+		if type(key) == 'string' and key:len() == 64 or key:len() == 65 then
+			encoders[key], decoders[key] = makeencoder(key)
+			return tbl[key]
+		end
+	end
+}
+
+setmetatable(encoders, alphabet_mt)
+setmetatable(decoders, alphabet_mt)
+
+local function encode(str, encoder)
+	encoder = encoders[encoder or 'base64'] or error('invalid alphabet specified', 2)
+
+	str = tostring(str)
+
+	local t, k, n = {}, 1, #str
+	local lastn = n % 3
+	local cache = {}
+
+	for i = 1, n-lastn, 3 do
+		local a, b, c = byte(str, i, i+2)
+		local v = a*0x10000 + b*0x100 + c
+		local s = cache[v]
+
+		if not s then
+			s = char(encoder[extract(v,18,6)], encoder[extract(v,12,6)], encoder[extract(v,6,6)], encoder[extract(v,0,6)])
+			cache[v] = s
+		end
+
+		t[k] = s
+		k = k + 1
+	end
+
+	if lastn == 2 then
+		local a, b = byte(str, n-1, n)
+		local v = a*0x10000 + b*0x100
+		t[k] = char(encoder[extract(v,18,6)], encoder[extract(v,12,6)], encoder[extract(v,6,6)], encoder[64])
+	elseif lastn == 1 then
+		local v = byte(str, n)*0x10000
+		t[k] = char(encoder[extract(v,18,6)], encoder[extract(v,12,6)], encoder[64], encoder[64])
+	end
+
+	return concat(t)
+end
+
+local function decode(b64, decoder)
+	decoder = decoders[decoder or 'base64'] or error('invalid alphabet specified', 2)
+
+	local pattern = '[^%w%+%/%=]'
+	if decoder then
+		local s62, s63
+		for charcode, b64code in pairs(decoder) do
+			if b64code == 62 then s62 = charcode
+			elseif b64code == 63 then s63 = charcode
+			end
+		end
+		pattern = format('[^%%w%%%s%%%s%%=]', char(s62), char(s63))
+	end
+
+	b64 = gsub(tostring(b64), pattern, '')
+
+	local cache = {}
+	local t, k = {}, 1
+	local n = #b64
+	local padding = sub(b64, -2) == '==' and 2 or sub(b64, -1) == '=' and 1 or 0
+
+	for i = 1, padding > 0 and n-4 or n, 4 do
+		local a, b, c, d = byte(b64, i, i+3)
+
+		local v0 = a*0x1000000 + b*0x10000 + c*0x100 + d
+		local s = cache[v0]
+		if not s then
+			local v = decoder[a]*0x40000 + decoder[b]*0x1000 + decoder[c]*0x40 + decoder[d]
+			s = char(extract(v,16,8), extract(v,8,8), extract(v,0,8))
+			cache[v0] = s
+		end
+
+		t[k] = s
+		k = k + 1
+	end
+
+	if padding == 1 then
+		local a, b, c = byte(b64, n-3, n-1)
+		local v = decoder[a]*0x40000 + decoder[b]*0x1000 + decoder[c]*0x40
+		t[k] = char(extract(v,16,8), extract(v,8,8))
+	elseif padding == 2 then
+		local a, b = byte(b64, n-3, n-2)
+		local v = decoder[a]*0x40000 + decoder[b]*0x1000
+		t[k] = char(extract(v,16,8))
+	end
+	return concat(t)
+end
+
+return {
+	encode = encode,
+	decode = decode
+}
+end)();
 local v43 = nil;
 (function()
     -- upvalues: v43 (ref)
@@ -1941,7 +2541,7 @@ local v455 = nil;
         end;
     end;
     v646 = nil;
-    v647 = require("table.clear");
+    v647 = table.clear;
     v648 = {};
     v649 = 1;
     v650 = 3;
@@ -6779,23 +7379,23 @@ local v1244 = nil;
         end):set_callback(function(v1756)
             -- upvalues: l_v1666_1 (ref)
             if v1756:get() == 79 then
-                return cvar.r_aspectratio:float(l_v1666_1, true);
+                return pcall(cvar.r_aspectratio.float, cvar.r_aspectratio, l_v1666_1);
             else
-                cvar.r_aspectratio:float(v1756:get() * 0.01, true);
+                pcall(cvar.r_aspectratio.float, cvar.r_aspectratio, v1756:get() * 0.01);
                 return;
             end;
         end, true);
         v1244.enabled_ref:set_callback(function(v1757)
             -- upvalues: l_v1667_1 (ref), l_v1666_1 (ref)
             if v1757:get() and l_v1667_1:get() > 79 then
-                cvar.r_aspectratio:float(l_v1667_1:get() * 0.01, true);
+                pcall(cvar.r_aspectratio.float, cvar.r_aspectratio, l_v1667_1:get() * 0.01);
             else
-                cvar.r_aspectratio:float(l_v1666_1, true);
+                pcall(cvar.r_aspectratio.float, cvar.r_aspectratio, l_v1666_1);
             end;
         end);
         l_events_0.shutdown:set(function()
             -- upvalues: l_v1666_1 (ref)
-            cvar.r_aspectratio:float(l_v1666_1, true);
+            pcall(cvar.r_aspectratio.float, cvar.r_aspectratio, l_v1666_1);
         end);
     end;
     v1666 = nil;
@@ -7001,24 +7601,24 @@ local v1244 = nil;
         end;
     end;
     v1668 = nil;
-    v1758 = tonumber(cvar.viewmodel_fov:string());
-    v1759 = tonumber(cvar.viewmodel_offset_x:string());
-    v1760 = tonumber(cvar.viewmodel_offset_y:string());
-    v1761 = tonumber(cvar.viewmodel_offset_z:string());
+    v1758 = tonumber(cvar.viewmodel_fov:string()) or 0;
+    v1759 = tonumber(cvar.viewmodel_offset_x:string()) or 0;
+    v1760 = tonumber(cvar.viewmodel_offset_y:string()) or 0;
+    v1761 = tonumber(cvar.viewmodel_offset_z:string()) or 0;
     do
         local l_v1758_2, l_v1759_2, l_v1760_1, l_v1761_1, l_v1762_1 = v1758, v1759, v1760, v1761, v1762;
         l_v1762_1 = function()
             -- upvalues: v1668 (ref), l_v1758_2 (ref), l_v1759_2 (ref), l_v1760_1 (ref), l_v1761_1 (ref)
             if v1668 then
-                cvar.viewmodel_fov:float(l_v1758_2, true);
-                cvar.viewmodel_offset_x:float(l_v1759_2, true);
-                cvar.viewmodel_offset_y:float(l_v1760_1, true);
-                cvar.viewmodel_offset_z:float(l_v1761_1, true);
+                pcall(cvar.viewmodel_fov.float, cvar.viewmodel_fov, l_v1758_2);
+                pcall(cvar.viewmodel_offset_x.float, cvar.viewmodel_offset_x, l_v1759_2);
+                pcall(cvar.viewmodel_offset_y.float, cvar.viewmodel_offset_y, l_v1760_1);
+                pcall(cvar.viewmodel_offset_z.float, cvar.viewmodel_offset_z, l_v1761_1);
             else
-                cvar.viewmodel_fov:float(tonumber(cvar.viewmodel_fov:string()));
-                cvar.viewmodel_offset_x:float(tonumber(cvar.viewmodel_offset_x:string()));
-                cvar.viewmodel_offset_y:float(tonumber(cvar.viewmodel_offset_y:string()));
-                cvar.viewmodel_offset_z:float(tonumber(cvar.viewmodel_offset_z:string()));
+                pcall(cvar.viewmodel_fov.float, cvar.viewmodel_fov, tonumber(cvar.viewmodel_fov:string()));
+                pcall(cvar.viewmodel_offset_x.float, cvar.viewmodel_offset_x, tonumber(cvar.viewmodel_offset_x:string()));
+                pcall(cvar.viewmodel_offset_y.float, cvar.viewmodel_offset_y, tonumber(cvar.viewmodel_offset_y:string()));
+                pcall(cvar.viewmodel_offset_z.float, cvar.viewmodel_offset_z, tonumber(cvar.viewmodel_offset_z:string()));
             end;
         end;
         cvar.viewmodel_fov:set_callback(l_v1762_1);
@@ -8024,18 +8624,24 @@ local v2032 = nil;
     local function v2037(v2033)
         -- upvalues: l_base64_0 (ref), v280 (ref)
         local _ = nil;
+        v2033 = v2033:gsub("%s", "")
         local l_status_3, l_result_3 = pcall(l_base64_0.decode, v2033);
+        if not l_status_3 then v280.log("couldn't decode the config") return end
         v2033 = l_result_3;
-        assert(l_status_3, "couldn't decode the config");
         l_status_3, l_result_3 = pcall(json.parse, v2033);
+        if not l_status_3 then v280.log("couldn't parse the config") return end
         v2033 = l_result_3;
-        assert(l_status_3, "couldn't parse the config");
         v280.import(v2033);
     end;
     local function v2038()
         -- upvalues: v2037 (ref), v272 (ref), v280 (ref)
-        v2037(v272.get():sub(1, v272.get():find("_chimera")));
-        v280.log("Imported from clipboard");
+        local clip = v272.get()
+        if clip and #clip > 0 then
+            local suffix_pos = clip:find("_chimera")
+            local data = suffix_pos and clip:sub(1, suffix_pos) or clip
+            local ok = pcall(v2037, data)
+            if ok then v280.log("Imported from clipboard") end
+        end
     end;
     local function v2043()
         -- upvalues: v280 (ref), l_base64_0 (ref)
@@ -8064,6 +8670,70 @@ local v2032 = nil;
     end);
     local v2047 = nil;
     v2047 = v280.button("config", "main", "manager", "Export to Clipboard", nil, v2044);
+    local l_db_key = "chimera::configs";
+    local l_file_path = "chimera/configs.json";
+    local l_configs = (function()
+        local data = db[l_db_key];
+        if not data then
+            local str = files.read(l_file_path);
+            if str then
+                local ok, t = pcall(json.parse, str);
+                if ok then data = t end;
+            end;
+        end;
+        return data or {};
+    end)();
+    local l_name_input = v280.input("config", "main", "manager", "Config Name");
+    local l_config_list = v280.list("config", "main", "manager", "Saved Configs", {});
+    local function l_update_list()
+        local names = {};
+        for name, _ in pairs(l_configs) do
+            names[#names + 1] = name;
+        end;
+        if #names == 0 then names[1] = "No configs" end;
+        l_config_list:update(names);
+    end;
+    local function l_persist()
+        db[l_db_key] = l_configs;
+        local ok, str = pcall(json.stringify, l_configs);
+        if ok then pcall(files.create_folder, "chimera"); pcall(files.write, l_file_path, str) end;
+    end;
+    local function l_save_config()
+        local name = l_name_input:get();
+        if name == nil or name:gsub(" ", "") == "" then v280.log("Enter a config name"); return end;
+        local data = v280.export();
+        if data == nil then v280.log("Save failed"); return end;
+        l_configs[name] = data;
+        l_persist();
+        l_update_list();
+        v280.log("Config '" .. name .. "' saved");
+    end;
+    local function l_load_config()
+        local name = l_name_input:get();
+        if name == nil or l_configs[name] == nil then v280.log("Config not found"); return end;
+        v280.import(l_configs[name]);
+        v280.log("Config '" .. name .. "' loaded");
+    end;
+    local function l_delete_config()
+        local name = l_name_input:get();
+        if name == nil or l_configs[name] == nil then v280.log("Config not found"); return end;
+        l_configs[name] = nil;
+        l_persist();
+        l_update_list();
+        v280.log("Config '" .. name .. "' deleted");
+    end;
+    v280.button("config", "main", "manager", "Save", nil, l_save_config);
+    v280.button("config", "main", "manager", "Load", nil, l_load_config);
+    v280.button("config", "main", "manager", "Delete", nil, l_delete_config);
+    l_config_list:set_callback(function()
+        local idx = l_config_list:get();
+        local names = {};
+        for n, _ in pairs(l_configs) do names[#names + 1] = n end;
+        if idx and idx > 0 and idx <= #names then
+            l_name_input:set(names[idx]);
+        end;
+    end);
+    l_update_list();
     v2032.on_console_input = function(v2048)
         -- upvalues: v2038 (ref), v2044 (ref)
         if v2048 == "//import" then
@@ -8367,5 +9037,13 @@ end)();
         end;
     end);
 end)();
+
+
+
+
+
+
+
+
 
 
