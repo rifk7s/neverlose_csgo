@@ -205,8 +205,8 @@ sw_dt_recharge:tooltip("\aFF3333FF[Unstable]\aFFFFFFFF Triggers instant exploit 
 local gear_dt_recharge = sw_dt_recharge:create()
 local cb_dt_recharge_mode = gear_dt_recharge:combo("Mode", {"Instant", "Faster"})
 
-local sw_ambatukam_exploit = ui_dt:switch(icon_zap .. "  Ambatukam Exploit", false)
-sw_ambatukam_exploit:tooltip("\a88CCFFFF[Exploit]\aFFFFFFFF u know what it is")
+local sw_antichoke_exploit = ui_dt:switch(icon_zap .. "  Antichoke Exploit", false)
+sw_antichoke_exploit:tooltip("\a88CCFFFF[Exploit]\aFFFFFFFF u know what it is")
 
 local ax_send_packet = false
 local ax_fire_time = -1
@@ -226,7 +226,7 @@ sw_mindam_exploit_state:tooltip("\a88CCFFFF[Visuals]\aFFFFFFFF Toggles the explo
 local user_name = common.get_username() or "Player"
 local lbl_welcome = ui_info:label("Welcome back, \aA4E61EFF" .. user_name)
 local lbl_dev = ui_info:label(icon_user .. "  Developer: \a7FFF7FFF.rifk  \aC8C8C8FFat \aB266FFFF" .. icon_discord)
-local lbl_ver = ui_info:label(icon_fork .. "  Version: \aFFFF7FFF9.0.0 feat. Ambatukam Exploits")
+local lbl_ver = ui_info:label(icon_fork .. "  Version: \aFFFF7FFF9.0.0 feat. Antichoke Exploits")
 local lbl_tip = ui_info:label(icon_info .. "  \aAAAAAAFFTip: Hover features to read their tooltips")
 
 -- ====================================================================
@@ -2179,7 +2179,7 @@ register_event("render", function()
         local function draw_exploit_state(center_x, y_offset, anim_a)
             if not sw_mindam_exploit_state:get() then return y_offset end
             
-            if sw_ambatukam_exploit:get() then
+            if sw_antichoke_exploit:get() then
                 local elapsed = (ax_fire_time >= 0) and (globals.realtime - ax_fire_time) or math.huge
                 local fired = elapsed <= 0.6
                 local text_no_choke = "no_choke: " .. (fired and "FIRED" or "idle")
@@ -2217,7 +2217,7 @@ register_event("render", function()
                 end
             end
             
-            if sw_ambatukam_exploit:get() then
+            if sw_antichoke_exploit:get() then
                 exploits[#exploits+1] = {text="AX", color=color(200, 100, 255, anim_a)}
             end
             
@@ -2507,7 +2507,7 @@ end)
 register_event("aim_fire", function(e)
     if not e then return end
     
-    if sw_ambatukam_exploit:get() then
+    if sw_antichoke_exploit:get() then
         ax_send_packet = true
         ax_fire_time = globals.realtime
     end
@@ -2618,7 +2618,7 @@ end)
 
 -- Unified Centralized Createmove Handler (Eliminates callback overwrite conflicts)
 register_event("createmove", function(cmd)
-    if sw_ambatukam_exploit:get() and ax_send_packet then
+    if sw_antichoke_exploit:get() and ax_send_packet then
         cmd.no_choke = true
         ax_send_packet = false
     end
