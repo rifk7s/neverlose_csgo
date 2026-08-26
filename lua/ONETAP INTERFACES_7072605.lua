@@ -7,9 +7,29 @@
   @docs     https://docs-csgo.neverlose.cc
 ]]
 
-ui.sidebar("OT Interface", "expand")
+ui.sidebar("OT Interface", ui.get_icon("expand"))
+local _icon = ui.get_icon
 
-local main = ui.create("Main", "Customization")
+local weapon_type_map = {
+	[1] = "Desert Eagle", [2] = "Pistol", [3] = "Pistol", [4] = "Pistol", [7] = "Rifle",
+	[8] = "Rifle", [9] = "AWP", [10] = "Rifle", [11] = "Autosniper", [13] = "Rifle",
+	[14] = "Machine Gun", [16] = "Rifle", [17] = "SMG", [19] = "SMG", [23] = "SMG",
+	[24] = "SMG", [25] = "Shotgun", [26] = "SMG", [27] = "Shotgun", [28] = "Machine Gun",
+	[29] = "Shotgun", [30] = "Pistol", [31] = "Zeus x27", [32] = "Pistol", [33] = "SMG",
+	[34] = "SMG", [35] = "Shotgun", [36] = "Pistol", [38] = "Autosniper", [39] = "Rifle",
+	[40] = "SSG 08", [43] = "Nades", [44] = "Nades", [45] = "Nades", [46] = "Nades",
+	[47] = "Nades", [48] = "Nades", [60] = "Rifle", [61] = "Pistol", [63] = "Pistol",
+	[64] = "R8 Revolver"
+}
+
+local function get_weapon_type(weapon)
+	if not weapon then return "Other" end
+	local idx = weapon:get_weapon_index()
+	return weapon_type_map[idx] or "Other"
+end
+
+-- Cloud tab groups created first → they become Tab 1
+local main = ui.create(_icon("eye"), "Customization", 2)
 
 local enable_ui = main:switch("Enable UI")
 local mode = main:combo("Mode", { "Normale", "Customizable" })
@@ -21,10 +41,72 @@ local enable_line = main:switch("Enable Line")
 local enable_warnings = main:switch("Enable Warnings")
 local warnings_select = main:selectable("Warning Types", { "velocity", "defensive" })
 local warnings_color = main:color_picker("Warning Color", color(255, 255, 255, 255))
+local warnings_y_offset = main:slider("Warnings Y Offset", -500, 500, 0)
+warnings_y_offset:tooltip("Moves the warnings up/down from the default position (below crosshair)")
+local reset_warnings_btn = main:button("Reset Warnings Position", function()
+	warnings_y_offset:set(0)
+end)
 
-local visuals_menu = ui.create("Main", "Onetap Visuals")
+enable_warnings:set_callback(function(ref)
+	local state = ref:get()
+	warnings_select:visibility(state)
+	warnings_color:visibility(state)
+	warnings_y_offset:visibility(state)
+	reset_warnings_btn:visibility(state)
+end, true)
+
+local add_impact
+
+-- Gear tab (created after cloud → becomes Tab 2)
+local general_menu = ui.create(_icon("crosshairs"), "General", 1)
+local enable_general = general_menu:switch("Enable General")
+
+local noscope_mode = general_menu:switch("Noscope Mode")
+local noscope_gear = noscope_mode:create()
+local noscope_hc = noscope_gear:slider("Hit Chance", 0, 100, 40)
+local noscope_dist = noscope_gear:slider("Distance", 40, 201, 115, 0.1, function(v)
+	if v == 201 then return "inf" end
+	return string.format("%.1fm", v * 0.1)
+end)
+local noscope_weapons = noscope_gear:selectable("Weapons", {"Autosniper", "AWP", "SSG 08", "Pistol", "Desert Eagle", "R8 Revolver", "SMG", "Shotgun", "Rifle", "Machine Gun"})
+noscope_weapons:set("Autosniper", "AWP", "SSG 08")
+
+local inair_mode = general_menu:switch("In Air Mode")
+local inair_gear = inair_mode:create()
+local inair_hc = inair_gear:slider("Hit Chance", 0, 100, 40)
+local inair_weapons = inair_gear:selectable("Weapons", {"Autosniper", "AWP", "SSG 08", "Pistol", "Desert Eagle", "R8 Revolver", "SMG", "Shotgun", "Rifle", "Machine Gun"})
+inair_weapons:set("Pistol", "SSG 08", "R8 Revolver")
+local inair_disable_strafe = inair_gear:switch("Disable Air Strafe")
+
+-- Ideal Tick: peek mode for scouting, bind-activated
+local ideal_tick = general_menu:switch("Ideal Tick")
+ideal_tick:tooltip("A peek mode that is mainly for scouting people\n\n\aB6B665FF\194\183 Use this on bind")
+local ideal_tick_gear = ideal_tick:create()
+local ideal_tick_opts = ideal_tick_gear:selectable("Options", {"Double Tap", "Freestanding", "Jump Scout", "Auto Peek"})
+
+-- Magic Key: headshot-only hitbox override
+local magic_key_enabled = false
+local magic_key = general_menu:switch("Magic Key")
+magic_key:tooltip("HS only mode, basically")
+magic_key:set_callback(function(ref)
+	magic_key_enabled = ref:get()
+end, true)
+
+local function handle_general_visibility()
+	local is_enabled = enable_general:get()
+	noscope_mode:visibility(is_enabled)
+	inair_mode:visibility(is_enabled)
+	ideal_tick:visibility(is_enabled)
+	magic_key:visibility(is_enabled)
+end
+enable_general:set_callback(handle_general_visibility)
+handle_general_visibility()
+
+
+local visuals_menu = ui.create(_icon("eye"), "Onetap Visuals", 1)
 local enable_dm = visuals_menu:switch("Enable Damage Marker")
-local dm_style = visuals_menu:combo("Hitmarker Style", { "Onetap Default", "Signal Hitmarkers" })
+local enable_miss = visuals_menu:switch("Enable Miss Marker")
+local dm_style = visuals_menu:combo("Hitmarker Style", { "Onetap Default", "Signal Hitmarkers", "Minimalist" })
 local dm_options = visuals_menu:selectable("Damage Marker Options", { "Damage", "Hitmarker" })
 
 local signal_impacts = visuals_menu:selectable(
@@ -46,7 +128,8 @@ local signal_colors_label = visuals_menu:label("3D Marker Colors")
 local signal_colors_gear = signal_colors_label:create()
 local signal_color_damage = signal_colors_gear:color_picker("Damage", color(221, 229, 253, 255))
 local signal_color_nade = signal_colors_gear:color_picker("Nade", color(236, 255, 167, 255))
-local signal_color_miss = signal_colors_gear:color_picker("Miss", color(255, 0, 0, 255))
+local signal_color_miss = signal_colors_gear:color_picker("Miss", color(249, 93, 117, 255))
+local signal_color_miss_hitbox = signal_colors_gear:color_picker("Miss Hitbox", color(173, 203, 233, 255))
 local signal_color_bt = signal_colors_gear:color_picker("BT / History", color(107, 232, 255, 255))
 
 local signal_debug =
@@ -66,6 +149,35 @@ local signal_test_btn = visuals_menu:button("Print Example Miss", function()
 		print(console_text)
 	end
 end)
+
+local signal_draw_test_btn = visuals_menu:button("Draw Example Miss", function()
+	local full_text = nil
+	local bt_text = nil
+
+	if miss_style:get() == "Default" then
+		full_text = "Miss"
+	else
+		full_text = {
+			{ text = "Miss", type = "base" },
+			{ text = " head", type = "hitbox" },
+			{ text = " (spread)", type = "base" }
+		}
+		bt_text = " [0t]"
+	end
+
+	local scr = render.screen_size()
+	add_impact(vector(scr.x / 2, scr.y / 2), 3.5, 0, "miss", full_text, bt_text, true)
+end)
+
+local min_screen = visuals_menu:switch("Screen Marker")
+local min_screen_color = min_screen:color_picker(color(255, 255, 255, 255))
+local min_world = visuals_menu:switch("World Marker")
+local min_world_color = min_world:color_picker(color(255, 255, 255, 255))
+local min_damage = visuals_menu:switch("Damage Marker")
+local min_damage_color = min_damage:color_picker(color(255, 255, 255, 255))
+local min_hs_label = visuals_menu:label("Headshot")
+local min_hs_color = min_hs_label:color_picker(color(173, 255, 47, 255))
+local min_duration = visuals_menu:slider("Duration", 1, 10, 4)
 
 local hit_font = render.load_font("Verdana", 20, "a")
 local hit_markers = {}
@@ -143,6 +255,7 @@ element_visibility = function()
 	local is_dm = enable_dm:get()
 	local is_onetap = dm_style:get() == "Onetap Default"
 	local is_signal = dm_style:get() == "Signal Hitmarkers"
+	local is_minimalist = dm_style:get() == "Minimalist"
 
 	dm_style:visibility(is_dm)
 	dm_options:visibility(is_dm and is_onetap)
@@ -161,11 +274,20 @@ element_visibility = function()
 			or signal_impacts:get("3D damage indicator")
 		)
 	local show_damage = is_signal and signal_impacts:get("3D damage indicator")
+	local is_miss = enable_miss:get()
 
-	miss_style:visibility(is_dm and show_damage)
-	signal_colors_label:visibility(is_dm and has_3d)
-	signal_debug:visibility(is_dm and is_signal)
-	signal_test_btn:visibility(is_dm and is_signal and signal_debug:get())
+	miss_style:visibility(is_miss)
+	signal_colors_label:visibility((is_dm and has_3d) or is_miss)
+	signal_debug:visibility(is_miss)
+	signal_test_btn:visibility(is_miss and signal_debug:get())
+	signal_draw_test_btn:visibility(is_miss)
+
+	local show_min = is_dm and is_minimalist
+	min_screen:visibility(show_min)
+	min_world:visibility(show_min)
+	min_damage:visibility(show_min)
+	min_hs_label:visibility(show_min)
+	min_duration:visibility(show_min)
 end
 
 events.render:set(element_visibility)
@@ -250,10 +372,14 @@ local vel_warn = {
 		local modifier = lplr.m_flVelocityModifier
 		local frametime = globals.frametime
 		local menuopen = ui.get_alpha() > 0.5
+		local current_screen = render.screen_size()
+		local base_y = current_screen.y * 0.62 + warnings_y_offset:get()
+
+		if self.anim.appearing == 0 then self.anim.appearing = base_y - 50 end
 
 		self.anim.appearing = warn_lerp(
 			self.anim.appearing,
-			(modifier < 1 or menuopen) and 230 or 180,
+			(modifier < 1 or menuopen) and base_y or (base_y - 50),
 			0.06 + math.min(frametime / 10.1, 0.25)
 		)
 		self.anim.appearing_alpha = warn_lerp(
@@ -263,19 +389,19 @@ local vel_warn = {
 		)
 
 		render.rect(
-			vector(screen.x / 2 - 60, math.floor(self.anim.appearing)),
-			vector(screen.x / 2 - 60, math.floor(self.anim.appearing)) + vector(120, 6),
+			vector(current_screen.x / 2 - 60, math.floor(self.anim.appearing)),
+			vector(current_screen.x / 2 - 60, math.floor(self.anim.appearing)) + vector(120, 6),
 			color(0, 0, 0, math.min(math.floor(self.anim.appearing_alpha), 200))
 		)
 		render.rect(
-			vector(screen.x / 2 - 58, math.floor(self.anim.appearing + 2)),
-			vector(screen.x / 2 - 58, math.floor(self.anim.appearing + 2)) + vector(116 * modifier, 2),
+			vector(current_screen.x / 2 - 58, math.floor(self.anim.appearing + 2)),
+			vector(current_screen.x / 2 - 58, math.floor(self.anim.appearing + 2)) + vector(116 * modifier, 2),
 			color(clr.r, clr.g, clr.b, math.floor(self.anim.appearing_alpha))
 		)
 
 		render.text(
 			warn_font,
-			vector(screen.x / 2, math.floor(self.anim.appearing) - 7),
+			vector(current_screen.x / 2, math.floor(self.anim.appearing) - 7),
 			color(255, 255, 255, math.floor(self.anim.appearing_alpha)),
 			"c",
 			string.format("- slow: %i%s -", math.abs(modifier * 100 + 100 * -1), "%%")
@@ -305,6 +431,9 @@ local def_warn = {
 		local defensivetable = defensive:is_active(lplr)
 		local is_defe = defensivetable.tick - globals.tickcount > 1
 
+		local current_screen = render.screen_size()
+		local base_y = current_screen.y * 0.62 + 19 + warnings_y_offset:get()
+
 		self.anim.appearing_alpha = warn_lerp(
 			self.anim.appearing_alpha,
 			(is_defe or menuopen) and 255 or 0,
@@ -312,13 +441,13 @@ local def_warn = {
 		)
 
 		render.rect(
-			vector(screen.x / 2 - 60, 249),
-			vector(screen.x / 2 - 60, 249) + vector(120, 6),
+			vector(current_screen.x / 2 - 60, base_y),
+			vector(current_screen.x / 2 - 60, base_y) + vector(120, 6),
 			color(0, 0, 0, math.min(math.floor(self.anim.appearing_alpha), 200))
 		)
 		render.rect(
-			vector(screen.x / 2 - 58, 251),
-			vector(screen.x / 2 - 58, 251)
+			vector(current_screen.x / 2 - 58, base_y + 2),
+			vector(current_screen.x / 2 - 58, base_y + 2)
 				+ vector(
 					116
 						+ (
@@ -335,7 +464,7 @@ local def_warn = {
 
 		render.text(
 			warn_font,
-			vector(screen.x / 2, 249 - 7),
+			vector(current_screen.x / 2, base_y - 7),
 			color(255, 255, 255, math.floor(self.anim.appearing_alpha)),
 			"c",
 			"- defensive -"
@@ -623,7 +752,7 @@ local function eased(weight)
 	return weight * weight * weight
 end
 
-local function add_impact(position, duration, damage, impact_type, reason, bt_text)
+add_impact = function(position, duration, damage, impact_type, reason, bt_text, screen_only)
 	table.insert(impacts, 1, {
 		position = position,
 		duration = duration,
@@ -631,6 +760,7 @@ local function add_impact(position, duration, damage, impact_type, reason, bt_te
 		type = impact_type or "default",
 		reason = reason,
 		bt_text = bt_text,
+		screen_only = screen_only,
 		begin_weight = 0,
 		roundup_weight = 0,
 		life_weight = 1,
@@ -653,39 +783,81 @@ local function draw_cross(position, outer_offset, inner_offset, col, alpha_mult)
 	render.line(vector(x + inner_offset, y + inner_offset), vector(x + outer_offset, y + outer_offset), final_col)
 end
 
-local function draw_centered_damage(text, position, col, alpha_mult, bt_text, bt_col)
-	local text_size = render.measure_text(signal_damage_font, "", text)
-	local total_width = text_size.x
-	local bt_size = nil
-	if bt_text then
-		bt_size = render.measure_text(signal_damage_font, "", bt_text)
-		total_width = total_width + bt_size.x
+local function draw_centered_damage(text, position, col, alpha_mult, bt_text, bt_col, font)
+	local total_width = 0
+	local text_h = 0
+
+	local active_font = font or signal_damage_font
+
+	if type(text) == "table" then
+		for _, part in ipairs(text) do
+			if part.text and part.text ~= "" then
+				local s = render.measure_text(active_font, "", part.text)
+				total_width = total_width + s.x
+				text_h = math.max(text_h, s.y)
+			end
+		end
+	else
+		local s = render.measure_text(active_font, "", text)
+		total_width = s.x
+		text_h = s.y
 	end
 
-	local draw_position = vector(position.x - total_width / 2, position.y - text_size.y / 2)
+	local bt_size = nil
+	if bt_text then
+		bt_size = render.measure_text(active_font, "", bt_text)
+		total_width = total_width + bt_size.x
+		text_h = math.max(text_h, bt_size.y)
+	end
+
+	local draw_position = vector(position.x - total_width / 2, position.y - text_h / 2)
 	local shadow_alpha = math.floor(125 * (col.a / 255) * alpha_mult)
 	local final_col = color(col.r, col.g, col.b, math.floor(col.a * alpha_mult))
 
-	render.text(
-		signal_damage_font,
-		vector(draw_position.x + 1, draw_position.y + 1),
-		color(25, 25, 25, shadow_alpha),
-		"",
-		text
-	)
-	render.text(signal_damage_font, draw_position, final_col, "", text)
+	local current_x = draw_position.x
+
+	if type(text) == "table" then
+		for _, part in ipairs(text) do
+			if part.text and part.text ~= "" then
+				local part_col = final_col
+				if part.type == "hitbox" then
+					local hc = signal_color_miss_hitbox:get()
+					part_col = color(hc.r, hc.g, hc.b, math.floor(hc.a * alpha_mult))
+				end
+				
+				render.text(
+					active_font,
+					vector(current_x + 1, draw_position.y + 1),
+					color(25, 25, 25, shadow_alpha),
+					"",
+					part.text
+				)
+				render.text(active_font, vector(current_x, draw_position.y), part_col, "", part.text)
+				current_x = current_x + render.measure_text(active_font, "", part.text).x
+			end
+		end
+	else
+		render.text(
+			active_font,
+			vector(current_x + 1, draw_position.y + 1),
+			color(25, 25, 25, shadow_alpha),
+			"",
+			text
+		)
+		render.text(active_font, vector(current_x, draw_position.y), final_col, "", text)
+		current_x = current_x + render.measure_text(active_font, "", text).x
+	end
 
 	if bt_text then
-		local bt_x = draw_position.x + text_size.x
 		local bt_final_col = color(bt_col.r, bt_col.g, bt_col.b, math.floor(bt_col.a * alpha_mult))
 		render.text(
-			signal_damage_font,
-			vector(bt_x + 1, draw_position.y + 1),
+			active_font,
+			vector(current_x + 1, draw_position.y + 1),
 			color(25, 25, 25, shadow_alpha),
 			"",
 			bt_text
 		)
-		render.text(signal_damage_font, vector(bt_x, draw_position.y), bt_final_col, "", bt_text)
+		render.text(active_font, vector(current_x, draw_position.y), bt_final_col, "", bt_text)
 	end
 end
 
@@ -728,11 +900,14 @@ local function update_impacts()
 end
 
 local function render_impacts()
-	local show_world = signal_impacts:get("3D hitmarker")
-	local show_rage = signal_impacts:get("3D hitmarker (ragebot)")
-	local show_damage = signal_impacts:get("3D damage indicator")
+	local is_dm = enable_dm:get()
+	local is_signal = dm_style:get() == "Signal Hitmarkers"
+	local show_world = is_dm and is_signal and signal_impacts:get("3D hitmarker")
+	local show_rage = is_dm and is_signal and signal_impacts:get("3D hitmarker (ragebot)")
+	local show_damage = is_dm and is_signal and signal_impacts:get("3D damage indicator")
+	local show_miss = enable_miss:get()
 
-	if not show_world and not show_rage and not show_damage then
+	if not show_world and not show_rage and not show_damage and not show_miss then
 		return
 	end
 
@@ -740,13 +915,21 @@ local function render_impacts()
 	local rage_color = signal_color_3d_rage:get()
 	local current_time = globals.curtime
 
+	local active_font = signal_damage_font
+	if dm_style:get() == "Onetap Default" then
+		active_font = hit_font
+	elseif dm_style:get() == "Minimalist" then
+		active_font = 1
+	end
+
 	for index, impact in ipairs(impacts) do
 		local should_draw = (impact.type == "default" and (show_world or show_damage))
 			or (impact.type == "ragebot" and show_rage)
-			or ((impact.type == "miss" or impact.type == "nade") and show_damage)
+			or (impact.type == "miss" and show_miss)
+			or (impact.type == "nade" and show_damage)
 
 		if should_draw then
-			local screen_position = render.world_to_screen(impact.position)
+			local screen_position = impact.screen_only and impact.position or render.world_to_screen(impact.position)
 
 			if screen_position ~= nil then
 				local time_left = eased(impact.life_weight)
@@ -758,7 +941,7 @@ local function render_impacts()
 							draw_cross(screen_position, 10, 5, world_color, alpha)
 						end
 
-						if show_damage then
+						if (impact.type == "default" and show_damage) or (impact.type == "miss" and show_miss) or (impact.type == "nade" and show_damage) then
 							local text = ""
 							if impact.type == "miss" or impact.type == "nade" then
 								text = impact.reason or "Miss"
@@ -778,7 +961,8 @@ local function render_impacts()
 								current_damage_color,
 								alpha,
 								impact.bt_text,
-								signal_color_bt:get()
+								signal_color_bt:get(),
+								active_font
 							)
 						end
 					elseif impact.type == "ragebot" then
@@ -791,7 +975,7 @@ local function render_impacts()
 end
 
 local function signal_on_paint()
-	if not (enable_dm:get() and dm_style:get() == "Signal Hitmarkers") then
+	if not (enable_dm:get() and dm_style:get() == "Signal Hitmarkers") and not enable_miss:get() then
 		return
 	end
 
@@ -947,7 +1131,7 @@ end
 events.aim_fire:set(signal_on_aimbot_shoot)
 
 local function signal_on_aim_ack(e)
-	if not (enable_dm:get() and dm_style:get() == "Signal Hitmarkers") then
+	if not enable_miss:get() then
 		return
 	end
 
@@ -964,13 +1148,17 @@ local function signal_on_aim_ack(e)
 			end
 
 			local reason_str = e.state and (" (" .. e.state .. ")") or ""
-			local full_text = ""
+			local full_text = nil
 			local bt_text = nil
 
 			if miss_style:get() == "Default" then
 				full_text = "Miss"
 			else
-				full_text = string.format("Miss%s%s", hitbox_str, reason_str)
+				full_text = {
+					{ text = "Miss", type = "base" },
+					{ text = hitbox_str, type = "hitbox" },
+					{ text = reason_str, type = "base" }
+				}
 				bt_text = bt_str
 			end
 
@@ -1003,3 +1191,265 @@ local function signal_on_aim_ack(e)
 	end
 end
 events.aim_ack:set(signal_on_aim_ack)
+
+-- MINIMALIST HITMARKERS
+local min_hits = {}
+
+events.player_hurt:set(function(event)
+	if not (enable_dm:get() and dm_style:get() == "Minimalist") then
+		return
+	end
+
+	local local_player = entity.get_local_player()
+	if not local_player then return end
+
+	local attacker = entity.get(event.attacker, true)
+	local victim = entity.get(event.userid, true)
+
+	if attacker ~= local_player or victim == local_player then
+		return
+	end
+
+	local hitbox = event.hitgroup == 1 and 0 or 3
+	local pos = victim:get_hitbox_position(hitbox) or victim:get_origin()
+
+	table.insert(min_hits, {
+		pos = vector(pos.x, pos.y, pos.z),
+		damage = event.dmg_health,
+		is_headshot = event.hitgroup == 1,
+		time = globals.realtime,
+	})
+end)
+
+events.render:set(function()
+	if not (enable_dm:get() and dm_style:get() == "Minimalist") then
+		return
+	end
+
+	local min_font = 1 -- Built-in Console font (matches Chimera)
+	local current_time = globals.realtime
+	local duration = min_duration:get()
+
+	-- Render Screen Marker
+	if min_screen:get() then
+		local newest_time = 0
+		for _, marker in ipairs(min_hits) do
+			if marker.time > newest_time then
+				newest_time = marker.time
+			end
+		end
+
+		local time_elapsed = current_time - newest_time
+		if time_elapsed < duration then
+			local alpha_scale = 1.0 - (time_elapsed / duration)
+			local col = min_screen_color:get()
+			local final_a = math.floor(col.a * alpha_scale)
+			
+			if final_a > 0 then
+				local cx, cy = screen.x / 2, screen.y / 2
+				local gap = 5
+				local len = gap * 2
+				
+				local c_shadow = color(0, 0, 0, math.floor(final_a * 0.5))
+				render.line(vector(cx - len - 1, cy - len - 1), vector(cx - gap + 1, cy - gap + 1), c_shadow)
+				render.line(vector(cx - len - 1, cy + len + 1), vector(cx - gap + 1, cy + gap - 1), c_shadow)
+				render.line(vector(cx + len + 1, cy - len - 1), vector(cx + gap - 1, cy - gap + 1), c_shadow)
+				render.line(vector(cx + len + 1, cy + len + 1), vector(cx + gap - 1, cy + gap - 1), c_shadow)
+
+				local c = color(col.r, col.g, col.b, final_a)
+				render.line(vector(cx - len, cy - len), vector(cx - gap, cy - gap), c)
+				render.line(vector(cx - len, cy + len), vector(cx - gap, cy + gap), c)
+				render.line(vector(cx + len, cy - len), vector(cx + gap, cy - gap), c)
+				render.line(vector(cx + len, cy + len), vector(cx + gap, cy + gap), c)
+			end
+		end
+	end
+
+	-- Render World & Damage Markers
+	for i = #min_hits, 1, -1 do
+		local marker = min_hits[i]
+		local time_elapsed = current_time - marker.time
+
+		if time_elapsed > duration then
+			table.remove(min_hits, i)
+		else
+			local alpha_scale = 1.0 - (time_elapsed / duration)
+			local screen_pos = render.world_to_screen(marker.pos)
+			
+			if screen_pos then
+				if min_world:get() then
+					local col = min_world_color:get()
+					local final_a = math.floor(col.a * alpha_scale)
+					if final_a > 0 then
+						local gap = 3
+						local len = gap * 2
+						
+						local c_shadow = color(0, 0, 0, math.floor(final_a * 0.5))
+						render.line(screen_pos + vector(-len - 1, -len - 1), screen_pos + vector(-gap + 1, -gap + 1), c_shadow)
+						render.line(screen_pos + vector(-len - 1, len + 1), screen_pos + vector(-gap + 1, gap - 1), c_shadow)
+						render.line(screen_pos + vector(len + 1, -len - 1), screen_pos + vector(gap - 1, -gap + 1), c_shadow)
+						render.line(screen_pos + vector(len + 1, len + 1), screen_pos + vector(gap - 1, gap - 1), c_shadow)
+
+						local c = color(col.r, col.g, col.b, final_a)
+						render.line(screen_pos + vector(-len, -len), screen_pos + vector(-gap, -gap), c)
+						render.line(screen_pos + vector(-len, len), screen_pos + vector(-gap, gap), c)
+						render.line(screen_pos + vector(len, -len), screen_pos + vector(gap, -gap), c)
+						render.line(screen_pos + vector(len, len), screen_pos + vector(gap, gap), c)
+					end
+				end
+
+				if min_damage:get() then
+					local col = marker.is_headshot and min_hs_color:get() or min_damage_color:get()
+					local final_a = math.floor(col.a * alpha_scale)
+					if final_a > 0 then
+						local text_pos = screen_pos + vector(0, -15 - (time_elapsed * 20))
+						local c = color(col.r, col.g, col.b, final_a)
+						render.text(min_font, text_pos, c, "c", tostring(marker.damage))
+					end
+				end
+			end
+		end
+	end
+end)
+local ref_hit_chance = ui.find("Aimbot", "Ragebot", "Selection", "Hit Chance")
+local ref_auto_scope = ui.find("Aimbot", "Ragebot", "Accuracy", "Auto Scope")
+
+-- Ideal Tick refs
+local ref_dt         = ui.find("Aimbot", "Ragebot", "Main", "Double Tap")
+local ref_peek       = ui.find("Aimbot", "Ragebot", "Main", "Peek Assist")
+local ref_fs         = ui.find("Aimbot", "Anti Aim", "Angles", "Freestanding", "Body Freestanding")
+local ref_dis_yaw    = ui.find("Aimbot", "Anti Aim", "Angles", "Freestanding", "Disable Yaw Modifiers")
+local ref_ssg_stop   = ui.find("Aimbot", "Ragebot", "Accuracy", "SSG-08", "Auto Stop")
+local ref_ssg_opts   = ui.find("Aimbot", "Ragebot", "Accuracy", "SSG-08", "Auto Stop", "Options")
+
+-- Magic Key refs
+local ref_hitboxes   = ui.find("Aimbot", "Ragebot", "Selection", "Hitboxes")
+local ref_multipoint = ui.find("Aimbot", "Ragebot", "Selection", "Multipoint")
+local ref_body_aim   = ui.find("Aimbot", "Ragebot", "Safety", "Body Aim")
+local ref_safe_pts   = ui.find("Aimbot", "Ragebot", "Safety", "Safe Points")
+local ref_ehs        = ui.find("Aimbot", "Ragebot", "Safety", "Ensure Hitbox Safety")
+
+local function general_on_createmove(cmd)
+	if not enable_general:get() then return end
+	
+	ref_hit_chance:override()
+	ref_auto_scope:override()
+	
+	local me = entity.get_local_player()
+	if not me or not me:is_alive() then return end
+	local weapon = me:get_player_weapon()
+	if not weapon then return end
+	
+	local wpn_type = get_weapon_type(weapon)
+	local in_air = false
+	
+	if inair_mode:get() then
+		if me.m_MoveType ~= 9 then
+			if cmd.in_jump or bit.band(me.m_fFlags, 1) == 0 then
+				in_air = true
+				if inair_disable_strafe:get() and me.m_vecVelocity:length2d() <= 5 then
+					cmd.in_speed = true
+				end
+				if inair_weapons:get(wpn_type) then
+					ref_hit_chance:override(inair_hc:get())
+				end
+			end
+		end
+	end
+	
+	if noscope_mode:get() and not in_air then
+		if not me.m_bIsScoped and noscope_weapons:get(wpn_type) then
+			local dist = noscope_dist:get()
+			local is_inf = (dist == 201)
+			
+			local closest_dist_sqr = math.huge
+			local origin = me:get_origin()
+			
+			for _, player in ipairs(entity.get_players(true)) do
+				if player:is_alive() and not player:is_dormant() then
+					local d_sqr = origin:dist2dsqr(player:get_origin())
+					if d_sqr < closest_dist_sqr then
+						closest_dist_sqr = d_sqr
+					end
+				end
+			end
+			
+			local threshold = dist * 0.1 * 39.37
+			local threshold_sqr = threshold * threshold
+			
+			if not is_inf then
+				ref_auto_scope:override(true)
+			end
+			
+			if is_inf or closest_dist_sqr <= threshold_sqr then
+				ref_hit_chance:override(noscope_hc:get())
+				if not is_inf then
+					ref_auto_scope:override(false)
+				end
+			end
+		end
+	end
+
+	-- Ideal Tick logic (only when switch is active/bound)
+	if ideal_tick:get() then
+		-- Reset exploits overrides each tick first
+		ref_dt:override()
+		ref_peek:override()
+		ref_fs:override()
+		ref_dis_yaw:override()
+		ref_ssg_stop:override()
+		ref_ssg_opts:override()
+
+		if me and me:is_alive() then
+			local weapon = me:get_player_weapon()
+			if ideal_tick_opts:get("Double Tap") then
+				ref_dt:override(true)
+			end
+			if ideal_tick_opts:get("Auto Peek") then
+				ref_peek:override(true)
+			end
+			if ideal_tick_opts:get("Freestanding") then
+				local tgt     = rage.antiaim:get_target()
+				local tgt_inv = rage.antiaim:get_target(true)
+				if tgt and tgt_inv
+					and math.abs(math.normalize_yaw(tgt - tgt_inv)) > 5
+					and bit.band(me.m_fFlags, 1) == 1 then
+					ref_fs:override(true)
+					ref_dis_yaw:override(true)
+					rage.antiaim:inverter(false)
+				end
+			end
+			if ideal_tick_opts:get("Jump Scout") and weapon then
+				if get_weapon_type(weapon) == "SSG 08"
+					and bit.band(me.m_fFlags, 1) ~= 1 then
+					ref_ssg_stop:override(true)
+					ref_ssg_opts:override({"Early", "In Air"})
+				end
+			end
+		end
+	else
+		-- Reset overrides when Ideal Tick is off
+		ref_dt:override()
+		ref_peek:override()
+		ref_fs:override()
+		ref_dis_yaw:override()
+		ref_ssg_stop:override()
+		ref_ssg_opts:override()
+	end
+
+	-- Magic Key logic (HS-only hitbox override)
+	ref_hitboxes:override()
+	ref_multipoint:override()
+	ref_body_aim:override()
+	ref_safe_pts:override()
+	ref_ehs:override()
+	if magic_key_enabled then
+		ref_hitboxes:override({"Head"})
+		ref_multipoint:override({"Head"})
+		ref_body_aim:override("Default")
+		ref_safe_pts:override("Default")
+		ref_ehs:override({})
+	end
+end
+
+events.createmove:set(general_on_createmove)

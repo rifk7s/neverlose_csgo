@@ -1,108 +1,86 @@
 local menu = ui.create("Super Toss")
 local enabled = menu:switch("Enabled", false)
 
-local function lerp(a, b, t)
+local clamp, abs = math.clamp, math.abs
+
+local function interp(a, b, t)
     return a + (b - a) * t
 end
 
-local function calculate_throw_angle(target_angles, throw_velocity, throw_strength, player_velocity)
-    target_angles.x = target_angles.x - 10 + math.abs(target_angles.x) / 9
+local function apply_pitch(x)
+    return x > -10 and x * 0.9 + 9 or x * 1.125 + 11.25
+end
 
-    local forward_vector = vector():angles(target_angles)
-    local adjusted_velocity = player_velocity * 1.25
-    local velocity = math.clamp(throw_velocity * 0.9, 15, 750)
-    local normalized_throw_strength = math.clamp(throw_strength, 0, 1)
-
-    velocity = velocity * lerp(0.3, 1, normalized_throw_strength)
-
-    local new_forward = forward_vector
+local function compute(a, v, s, vel)
+    a.x = a.x - 10 + abs(a.x) / 9
+    local fwd = vector():angles(a)
+    local pvel = vel * 1.25
+    local tv = clamp(v * 0.9, 15, 750) * interp(0.3, 1.0, clamp(s, 0, 1))
+    local dir = fwd
     for _ = 1, 8 do
-        new_forward = (
-            forward_vector * (new_forward * velocity + adjusted_velocity):length()
-            - adjusted_velocity
-        ) / velocity
-        new_forward:normalize()
+        dir = (fwd * (dir * tv + pvel):length() - pvel) / tv
+        dir:normalize()
     end
-
-    local new_angles = new_forward:angles()
-    if new_angles.x > -10 then
-        new_angles.x = 0.9 * new_angles.x + 9
-    else
-        new_angles.x = 1.125 * new_angles.x + 11.25
-    end
-
-    return new_angles
+    local ang = dir:angles()
+    ang.x = apply_pitch(ang.x)
+    return ang
 end
 
-local function super_toss_angles(cmd)
-    local local_player = entity.get_local_player()
-    if not local_player or not local_player:is_alive() then
-        return
-    end
+local function override_view(e)
+    local globals = globals
+    local entity = entity
 
-    local weapon = local_player:get_player_weapon()
-    if not weapon then
-        return
-    end
+    local lp = entity.get_local_player()
+    if not lp or not lp:is_alive() then return end
 
-    local weapon_data = weapon:get_weapon_info()
-    if not weapon_data then
-        return
-    end
+    local w = lp:get_player_weapon()
+    if not w then return end
 
-    cmd.angles = calculate_throw_angle(
-        cmd.angles,
-        weapon_data.throw_velocity,
-        weapon.m_flThrowStrength,
-        cmd.velocity
-    )
+    local wi = w:get_weapon_info()
+    if not wi then return end
+
+    e.angles = compute(e.angles, wi.throw_velocity, w.m_flThrowStrength, e.velocity)
 end
 
-local function super_toss(cmd)
-    local local_player = entity.get_local_player()
-    if not local_player or not local_player:is_alive() then
-        return
-    end
+local function toss_control(cmd)
+    local globals = globals
+    local entity = entity
 
-    if not cmd.jitter_move then
-        return
-    end
+    if not cmd.jitter_move then return end
 
-    local weapon = local_player:get_player_weapon()
-    if not weapon then
-        return
-    end
+    local lp = entity.get_local_player()
+    if not lp or not lp:is_alive() then return end
 
-    local weapon_data = weapon:get_weapon_info()
-    if not weapon_data or weapon_data.weapon_type ~= 9 then
-        return
-    end
+    local w = lp:get_player_weapon()
+    if not w then return end
 
-    if weapon.m_fThrowTime < (globals.curtime - to_time(globals.clock_offset)) then
+    local wi = w:get_weapon_info()
+    if not wi or wi.weapon_type ~= 9 then return end
+
+    local curtime = globals.curtime
+    local to_time_func = to_time or (common and common.to_time) or function(t) return t * globals.tickinterval end
+    local clock_offset = globals.clock_offset or 0
+
+    if w.m_fThrowTime < (curtime - to_time_func(clock_offset)) then
         return
     end
 
     cmd.in_speed = true
 
-    local movement_simulation = local_player:simulate_movement()
-    movement_simulation:think()
+    local ctx = lp:simulate_movement()
+    ctx:think()
 
-    cmd.view_angles = calculate_throw_angle(
-        cmd.view_angles,
-        weapon_data.throw_velocity,
-        weapon.m_flThrowStrength,
-        movement_simulation.velocity
-    )
+    cmd.view_angles = compute(cmd.view_angles, wi.throw_velocity, w.m_flThrowStrength, ctx.velocity)
 end
 
 events.createmove:set(function(cmd)
     if enabled:get() then
-        super_toss(cmd)
+        toss_control(cmd)
     end
 end)
 
-events.grenade_override_view:set(function(cmd)
+events.grenade_override_view:set(function(e)
     if enabled:get() then
-        super_toss_angles(cmd)
+        override_view(e)
     end
 end)

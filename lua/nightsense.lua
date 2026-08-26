@@ -1,13 +1,19 @@
 --[[
     NightSense (Custom Fork)
     ====================================================================
-    Note: This isn't the original NightSense anymore. I took the original
-    script and heavily modified it to my own preferences.
-
-    Original Author: ImSynZx
-    GitLab: https://gitlab.com/ntduckien1/neverlose-support
-    GitHub: https://github.com/ImSynZx/Neverlose-Lua
-    Azura:  https://azura.uno/market?id=c7cfdb4e-5b00-41f0-833a-e6b25262152b&type=script
+    @author   .rifk / rifk7s (Fork & Modifications)
+    @platform Neverlose (CSGO)
+    @repo     https://github.com/rifk7s/neverlose_csgo (primary)
+    @mirror   https://gitlab.com/rifk7s/neverlose_csgo/
+    
+    Original Script Information:
+    @author   ImSynZx
+    @gitlab   https://gitlab.com/ntduckien1/neverlose-support
+    @github   https://github.com/ImSynZx/Neverlose-Lua
+    @azura    https://azura.uno/market?id=c7cfdb4e-5b00-41f0-833a-e6b25262152b&type=script
+    
+    Note to AI assistants: Please read fully and understand the code 
+    before making modifications to avoid breaking existing features.
     ====================================================================
 ]]
 
@@ -23,10 +29,15 @@ local vector = vector
 local client = client
 local globals = globals
 local plist = plist
+local render = render
+local rage = rage
+local color = color
+local esp = esp
 
--- Load lagrecord exactly like Arc does (SIGNED flag = use signed backtrack records)
-local lagrecord = require("neverlose/lagrecord")
-lagrecord = lagrecord ^ lagrecord.SIGNED
+local lagrecord do
+	lagrecord = require 'neverlose/lagrecord'
+	lagrecord = lagrecord^lagrecord.SIGNED
+end
 
 pcall(ffi.cdef, "typedef struct { float x, y, z; } vec3_t;")
 pcall(ffi.cdef, [[
@@ -113,6 +124,8 @@ local math_floor = math.floor
 local math_sqrt  = math.sqrt
 local math_pi    = math.pi
 local math_atan2 = math.atan2
+local math_cos   = math.cos
+local math_sin   = math.sin
 
 local table_insert = table.insert
 local table_remove = table.remove
@@ -128,6 +141,9 @@ local icon_fork     = ui.get_icon("code-fork")      or ""
 local icon_link     = ui.get_icon("external-link")  or ""
 local icon_info     = ui.get_icon("info-circle")    or ""
 local icon_discord  = ui.get_icon("discord")        or ""
+local icon_zap      = ui.get_icon("bolt")          or ""
+local icon_cogs     = ui.get_icon("cogs")          or ""
+
 ui.color = color
 
 local function register_event(event_name, cb)
@@ -136,10 +152,13 @@ local function register_event(event_name, cb)
     end
 end
 
-
+-- ====================================================================
+-- UI SETUP
+-- ====================================================================
 ui.sidebar("Ragebobs", "bomb")
 local ui_info = ui.create("Ragebobs", icon_info .. "  Information")
 local ui_rage = ui.create("Ragebobs", "Ragebot")
+
 local sw_resolver  = ui_rage:switch(icon_magic   .. "  Resolver Support",  false)
 sw_resolver:tooltip("\aA4E61EFF[Stable]\aFFFFFFFF Collects target metrics and dynamically forces Safepoint, Body Aim, or lower Min-Damage based on hit/miss confidence scores.")
 
@@ -155,30 +174,48 @@ sw_safepoint:tooltip("\aA4E61EFF[Stable]\aFFFFFFFF Forces safepoint dynamically 
 local sw_priority  = ui_rage:switch("\aFF6633FF" .. icon_bullseye.. "\aFFFFFFFF  Target Priority",   false)
 sw_priority:tooltip("\aA4E61EFF[Stable]\aFFFFFFFF Tries to pick targets based on a combination of distance, visibility, and threat. \aAAAAAAFFIf disabled, the script will simply grab the enemy closest to your physical position.\aFFFFFFFF")
 
-local is_mindam_active = false
-local active_mindam_target_name = nil
-local active_target_hp = 100
-local active_mindam_val = 0
-local mindam_hold_time = 0
-local mindam_hold_val = -1
+local ui_pred = ui.create("Ragebobs", icon_zap .. "  Prediction")
+local sw_pred_adv = ui_pred:switch(icon_zap .. "  Advanced Motion Predictor", true)
+sw_pred_adv:tooltip("\aA4E61EFF[Enhanced]\aFFFFFFFF Simulates enemy movement tick-by-tick accounting for acceleration, counter-strafing, stopping friction, and air physics.")
 
-local icon_zap      = ui.get_icon("bolt")          or ""
+local sw_pred_peek = ui_pred:switch(icon_bullseye .. "  Fast Peek Corner Exposure", true)
+sw_pred_peek:tooltip("\aA4E61EFF[Enhanced]\aFFFFFFFF Traces multiple future ticks to predict the exact moment an accelerating opponent emerges from cover.")
 
-local ui_pred       = ui.create("Ragebobs", icon_zap .. "  Prediction")
-local sw_it_detect  = ui_pred:switch(icon_zap     .. "  Ideal Tick Detection",  false)
+local sw_pred_col = ui_pred:switch(icon_shield .. "  Collision Correction", true)
+sw_pred_col:tooltip("\aA4E61EFF[Enhanced]\aFFFFFFFF Prevents prediction from clipping through walls or map geometry using world trace bounds.")
+
+local sw_it_detect = ui_pred:switch(icon_zap .. "  Ideal Tick Detection", false)
 sw_it_detect:tooltip("\aA4E61EFF[Stable]\aFFFFFFFF Detects enemies exploiting tickbase bursts to ideal-tick open-peek you. Required for features below.")
-local sw_it_esp     = ui_pred:switch(icon_logo    .. "  Visualize Exploits",     false)
-local gear_it_esp   = sw_it_esp:create()
-local cp_it_esp     = gear_it_esp:color_picker("Color", color(255, 60, 60, 200))
-local sl_it_thick   = gear_it_esp:slider("Thickness", 1, 100, 35)
+
+local sw_it_esp = ui_pred:switch(icon_logo .. "  Visualize Exploits", false)
+local gear_it_esp = sw_it_esp:create()
+local cp_it_esp = gear_it_esp:color_picker("Color", color(255, 60, 60, 200))
+local sl_it_thick = gear_it_esp:slider("Thickness", 1, 100, 35)
 sw_it_esp:tooltip("\aA4E61EFF[Stable]\aFFFFFFFF Displays a 3D box at the location of the last valid history record when the enemy is attempting to invalidate backtrack records (Lag Peek / Defensive).\n\n\a88CCFFFF[Note]\aFFFFFFFF To show the 'IT +Nt' text label, you must enable the \aFFFF7FFFRagebobs IT\aFFFFFFFF element in the Neverlose \a88CCFFFFVisuals > Players > Enemies > Interactive ESP Preview\aFFFFFFFF menu (click \a88CCFFFFManage Elements\aFFFFFFFF).\n\n\aFFFF44FFThis feature requires heavy processing. Enabling this may greatly affect your FPS.\aFFFFFFFF")
-local sw_it_mindam  = ui_pred:switch(icon_bullseye .. "  Auto Min-Dmg on IT",   false)
+
+local sw_it_mindam = ui_pred:switch(icon_bullseye .. "  Auto Min-Dmg on IT", false)
 sw_it_mindam:tooltip("\aFF3333FF[Auto-Sniper Only]\aFFFFFFFF Only applies when holding a \a88CCFFFFSCAR-20\aFFFFFFFF or \aFFB84DFFG3SG1\aFFFFFFFF. Lowers min damage when an ideal-ticking enemy is the current threat, allowing NL to fire earlier in the open-peek window.")
 
-local ui_vis        = ui.create("Ragebobs", icon_logo .. "  Visuals & Indicators")
+local ui_dt = ui.create("Ragebobs", icon_cogs .. "  Double Tap & Exploits")
+local sw_dt_manager = ui_dt:switch(icon_cogs .. "  Optimized DT Manager", true)
+sw_dt_manager:tooltip("\aA4E61EFF[Stable]\aFFFFFFFF Deterministic exploit state machine. Eliminates charge oscillations, coordinates recharge cycles, and synchronizes prediction timing.")
+
+local sw_dt_recharge = ui_dt:switch(icon_zap .. "  Aggressive Recharge Sync", true)
+sw_dt_recharge:tooltip("\aFF3333FF[Unstable]\aFFFFFFFF Triggers instant exploit recharge upon weapon readiness and post-shot recovery. Can be inconsistent depending on the situation.")
+local gear_dt_recharge = sw_dt_recharge:create()
+local cb_dt_recharge_mode = gear_dt_recharge:combo("Mode", {"Instant", "Faster"})
+
+local sw_ambatukam_exploit = ui_dt:switch(icon_zap .. "  Ambatukam Exploit", false)
+sw_ambatukam_exploit:tooltip("\a88CCFFFF[Exploit]\aFFFFFFFF u know what it is")
+
+local ax_send_packet = false
+local ax_fire_time = -1
+
+local ui_vis = ui.create("Ragebobs", icon_logo .. "  Visuals & Indicators")
 local cb_mindam_ind = ui_vis:switch("Center Indicator", false)
 cb_mindam_ind:tooltip("\a88CCFFFF[Visuals]\aFFFFFFFF Displays a comprehensive crosshair indicator showing your active weapon, current target, minimum damage, and exploit status.")
-local gear_ind      = cb_mindam_ind:create()
+local gear_ind = cb_mindam_ind:create()
+local cb_ind_style = gear_ind:combo("Indicator Style", {"v1 (Default)", "v2 (Debug List)"})
 local sw_mindam_glow = gear_ind:switch("Indicator Glow", true)
 local cp_mindam_accent = gear_ind:color_picker("Indicator Color", color(150, 200, 255, 255))
 local sw_mindam_exploit = gear_ind:switch("Show Exploit Name", true)
@@ -189,10 +226,12 @@ sw_mindam_exploit_state:tooltip("\a88CCFFFF[Visuals]\aFFFFFFFF Toggles the explo
 local user_name = common.get_username() or "Player"
 local lbl_welcome = ui_info:label("Welcome back, \aA4E61EFF" .. user_name)
 local lbl_dev = ui_info:label(icon_user .. "  Developer: \a7FFF7FFF.rifk  \aC8C8C8FFat \aB266FFFF" .. icon_discord)
-local lbl_ver = ui_info:label(icon_fork .. "  Version: \aFFFF7FFF7.0.0 (BetaTest Version)")
+local lbl_ver = ui_info:label(icon_fork .. "  Version: \aFFFF7FFF9.0.0 feat. Ambatukam Exploits")
 local lbl_tip = ui_info:label(icon_info .. "  \aAAAAAAFFTip: Hover features to read their tooltips")
 
-
+-- ====================================================================
+-- NATIVE MENU REFERENCES
+-- ====================================================================
 local native_safe, native_baim, native_mindam, native_hitchance, native_dt, native_hs, native_fd
 
 pcall(function() native_safe      = ui.find("Aimbot", "Ragebot", "Safety",    "safe points")      end)
@@ -207,6 +246,14 @@ local last_safe   = nil
 local last_baim   = nil
 local last_mindam = -1
 
+local is_mindam_active = false
+local active_mindam_target_name = nil
+local active_target_hp = 100
+local active_mindam_val = 0
+
+-- ====================================================================
+-- FFI & ENTITY HELPERS
+-- ====================================================================
 local function safeAddr(ptr)
     if not ptr then return nil end
     local ok, raw = pcall(ffi.cast, "uintptr_t", ptr)
@@ -249,18 +296,35 @@ end
 
 local function SafeGetOrigin(ent)
     if not ent then return 0, 0, 0 end
-    local ok, x, y, z = pcall(function()
-        local o = ent:get_origin()
-        return o.x, o.y, o.z
-    end)
-    if ok and x then return x, y, z end
+    local ok, o = pcall(function() return ent:get_origin() end)
+    if ok and o then return o.x, o.y, o.z end
     return 0, 0, 0
 end
 
 local function SafeGetHP(ent)
     if not ent then return 100 end
     local ok, hp = pcall(function() return ent.m_iHealth end)
-    return (ok and hp and hp > 0) and hp or 100
+    if ok and hp and hp > 0 then return hp end
+    local ok2, hp2 = pcall(function() return ent:get_prop("m_iHealth") end)
+    return (ok2 and hp2 and hp2 > 0) and hp2 or 100
+end
+
+local function SafeGetVelocity(ent)
+    if not ent then return vector(0, 0, 0) end
+    local ok, vel = pcall(function() return ent.m_vecVelocity end)
+    if ok and vel then return vector(vel.x, vel.y, vel.z) end
+    local ok2, vel2 = pcall(function() return ent:get_prop("m_vecVelocity") end)
+    if ok2 and vel2 then return vector(vel2.x, vel2.y, vel2.z) end
+    return vector(0, 0, 0)
+end
+
+local function SafeGetSimTime(ent)
+    if not ent then return 0 end
+    local ok, sim = pcall(function() return ent.m_flSimulationTime end)
+    if ok and sim and sim > 0 then return sim end
+    local ok2, sim2 = pcall(function() return ent:get_prop("m_flSimulationTime") end)
+    if ok2 and sim2 and sim2 > 0 then return sim2 end
+    return 0
 end
 
 local function normalizeYaw(yaw)
@@ -273,6 +337,31 @@ end
 
 local function clamp(v, lo, hi)
     return (v < lo and lo) or (v > hi and hi) or v
+end
+
+local function math_normalize_angle(angle)
+    while angle > 180 do angle = angle - 360 end
+    while angle < -180 do angle = angle + 360 end
+    return angle
+end
+
+local function calc_angle(src, dst)
+    local delta_x = dst.x - src.x
+    local delta_y = dst.y - src.y
+    local delta_z = dst.z - src.z
+    local hyp = math_sqrt(delta_x*delta_x + delta_y*delta_y)
+    local pitch = math_atan2(-delta_z, hyp) * (180 / math_pi)
+    local yaw = math_atan2(delta_y, delta_x) * (180 / math_pi)
+    return pitch, yaw
+end
+
+local function get_crosshair_fov(lp_pos, ent_pos)
+    local ok, cam = pcall(function() return render.camera_angles() end)
+    if not ok or not cam then return 180 end
+    local target_pitch, target_yaw = calc_angle(lp_pos, ent_pos)
+    local delta_pitch = math_abs(math_normalize_angle(cam.x - target_pitch))
+    local delta_yaw = math_abs(math_normalize_angle(cam.y - target_yaw))
+    return math_sqrt(delta_pitch*delta_pitch + delta_yaw*delta_yaw)
 end
 
 local function getEntity(idx)
@@ -310,6 +399,9 @@ local function getPlayerByUserid(userid)
     return nil
 end
 
+-- ====================================================================
+-- CONSTANTS & BUFFERS
+-- ====================================================================
 local PAT_STATIC       = 0
 local PAT_MICRO_JIT    = 1
 local PAT_JITTER       = 2
@@ -323,6 +415,7 @@ local PAT_HYBRID       = 9
 
 local YAW_BUF_SIZE = 12
 local SHOT_BUF_SIZE = 32
+local HISTORY_MAX_RECORDS = 16
 
 local table_pool = {}
 local function get_temp_table()
@@ -372,7 +465,7 @@ end
 
 local function getHeadHitrate(p)
     local buf = p.shot_buf
-    if buf.count == 0 then return 50.0 end
+    if not buf or buf.count == 0 then return 50.0 end
     local hits, total = 0, 0
     for i = 1, math_min(buf.count, SHOT_BUF_SIZE) do
         local s = buf[i]
@@ -386,7 +479,7 @@ end
 
 local function getBodyHitrate(p)
     local buf = p.shot_buf
-    if buf.count == 0 then return 50.0 end
+    if not buf or buf.count == 0 then return 50.0 end
     local hits, total = 0, 0
     for i = 1, math_min(buf.count, SHOT_BUF_SIZE) do
         local s = buf[i]
@@ -400,7 +493,8 @@ end
 
 local function getWeightedSideRate(p, side)
     local buf = p.shot_buf
-    local n   = buf.count
+    if not buf then return 50.0 end
+    local n = buf.count
     if n == 0 then return 50.0 end
 
     local w_hits  = 0.0
@@ -431,9 +525,16 @@ local function getTargetState(p)
     return "standing"
 end
 
+-- ====================================================================
+-- SLOT INITIALIZATION & MEMORY DECAY
+-- ====================================================================
+EnemyRecords   = {}
+PredictionData = {}
+
 local function newSlot(idx)
     local ti = globals.tickinterval
     if type(ti) == "function" then ti = ti() end
+    
     ti = ti or 0.015625
 
     local p = {
@@ -471,6 +572,28 @@ local function newSlot(idx)
         on_ground    = true,
         freestand_side = 0,
         shot_buf = newShotBuf(),
+        
+        -- Movement history & prediction structures
+        history = {},
+        is_accelerating = false,
+        is_stopping = false,
+        is_counterstrafing = false,
+        predicted_peek_visible = false,
+        predicted_peek_tick = 0,
+        predicted_peek_pos = nil,
+        predicted_origin = nil,
+        predicted_eye = nil,
+        prediction_confidence = 0.5,
+        
+        -- Objective Accuracy Tracker (Debug / Empirical verification)
+        accuracy_eval = {
+            target_tick = 0,
+            pred_adv_pos = nil,
+            pred_lin_pos = nil,
+            adv_error_sum = 0.0,
+            lin_error_sum = 0.0,
+            samples = 0
+        },
         
         resolver_memory = {
             animation = {
@@ -605,6 +728,7 @@ local function newSlot(idx)
     
     local cur_tick = globals.tickcount
     if type(cur_tick) == "function" then cur_tick = cur_tick() end
+    
     p.last_memory_update_tick = cur_tick or 0
     p.last_freestand_tick = 0
     p.jitter_side_switch_tick = cur_tick or 0
@@ -615,6 +739,7 @@ end
 local function decayMemory(p)
     local cur_tick = globals.tickcount
     if type(cur_tick) == "function" then cur_tick = cur_tick() end
+    
     cur_tick = cur_tick or 0
     local elapsed = cur_tick - (p.last_memory_update_tick or cur_tick)
     p.last_memory_update_tick = cur_tick
@@ -627,6 +752,55 @@ local function decayMemory(p)
         p.resolver_memory.exploit.confidence   = p.resolver_memory.exploit.confidence * decay + 0.5 * (1 - decay)
         p.resolver_memory.shot_outcome.confidence = p.resolver_memory.shot_outcome.confidence * decay + 0.5 * (1 - decay)
     end
+end
+
+-- ====================================================================
+-- RESOLVER AUXILIARY FUNCTIONS
+-- ====================================================================
+local function updateJitterCycle(p, current_side)
+    local cur_tick = globals.tickcount
+    if type(cur_tick) == "function" then cur_tick = cur_tick() end
+    
+    cur_tick = cur_tick or 0
+    
+    if current_side ~= p.jitter_last_side and current_side ~= 0 then
+        local duration = cur_tick - (p.jitter_side_switch_tick or cur_tick)
+        p.jitter_side_switch_tick = cur_tick
+        p.jitter_last_side = current_side
+        
+        if duration >= 1 and duration <= 16 then
+            p.jitter_durations_idx = (p.jitter_durations_idx % 4) + 1
+            p.jitter_durations[p.jitter_durations_idx] = duration
+        end
+    end
+end
+
+local function updateThreatIntel(p, ent)
+    if not ent then return end
+    local lp = entity.get_local_player()
+    if not lp then return end
+    
+    local lx, ly, lz = SafeGetOrigin(lp)
+    local ex, ey, ez = SafeGetOrigin(ent)
+    local dist = math_sqrt((lx-ex)^2 + (ly-ey)^2 + (lz-ez)^2)
+    
+    local speed = p.speed or 0
+    local hits = p.threat_intel.hits_on_us or 0
+    local shots = p.threat_intel.shots_fired or 0
+    
+    local acc = (shots > 0) and (hits / shots * 100) or 50.0
+    p.threat_intel.accuracy = acc
+    
+    local threat = 50.0
+    if dist < 500 then threat = threat + 25.0
+    elseif dist < 1000 then threat = threat + 10.0 end
+    
+    if speed > 180 then threat = threat + 15.0 end
+    if p.exploit_analysis.double_tap or p.exploit_analysis.tickbase_manip then
+        threat = threat + 20.0
+    end
+    
+    p.threat_intel.threat_score = clamp(threat, 10.0, 100.0)
 end
 
 local function performBehaviorClustering(p)
@@ -748,11 +922,12 @@ local function defensiveUpdate(p, sim_time, speed, feet_yaw, prev_feet_yaw)
         end
         
         local ex, ey, ez = SafeGetOrigin(getEntity(p.id))
-        local px, py, pz = p.ox, p.oy, p.oz
+        local px, py, pz = p.ox or ex, p.oy or ey, p.oz or ez
         local dist = math_sqrt((ex - px)^2 + (ey - py)^2 + (ez - pz)^2)
         if dist > 64 and speed > 15 then
             det.lc_broken = true
         end
+        p.ox, p.oy, p.oz = ex, ey, ez
         
         if p.choke > 12 then
             det.fake_lag = true
@@ -798,6 +973,7 @@ end
 local function updateAdvancedFreestand(p, ent)
     local cur_tick = globals.tickcount
     if type(cur_tick) == "function" then cur_tick = cur_tick() end
+    
     cur_tick = cur_tick or 0
     
     local is_threat = (client.current_threat() == p.id)
@@ -809,9 +985,9 @@ local function updateAdvancedFreestand(p, ent)
     local lp = entity.get_local_player()
     if not lp then return end
     
-    local head_pos = ent:get_eye_position()
-    local lp_pos = lp:get_eye_position()
-    if not head_pos or not lp_pos then return end
+    local ok_h, head_pos = pcall(function() return ent:get_eye_position() end)
+    local ok_lp, lp_pos  = pcall(function() return lp:get_eye_position() end)
+    if not ok_h or not head_pos or not ok_lp or not lp_pos then return end
     
     local dir = (head_pos - lp_pos):normalized()
     local left_dir = vector(-dir.y, dir.x, 0)
@@ -822,14 +998,10 @@ local function updateAdvancedFreestand(p, ent)
     
     local left_exposure = 0
     local right_exposure = 0
-    local left_wall_thickness = 0
-    local right_wall_thickness = 0
-    
     local total_traces = 0
     
     for _, height in ipairs(height_offsets) do
         local enemy_center = head_pos + vector(0, 0, height)
-        
         for _, offset in ipairs(test_offsets) do
             local left_pt = enemy_center + left_dir * offset
             local right_pt = enemy_center + right_dir * offset
@@ -837,24 +1009,14 @@ local function updateAdvancedFreestand(p, ent)
             local tr_l = utils.trace_line(lp_pos, left_pt, lp)
             local tr_r = utils.trace_line(lp_pos, right_pt, lp)
             
-            left_exposure = left_exposure + tr_l.fraction
-            right_exposure = right_exposure + tr_r.fraction
-            
-            if tr_l.fraction < 1.0 then
-                local back_tr_l = utils.trace_line(left_pt, lp_pos, ent)
-                left_wall_thickness = left_wall_thickness + (1.0 - back_tr_l.fraction)
-            end
-            if tr_r.fraction < 1.0 then
-                local back_tr_r = utils.trace_line(right_pt, lp_pos, ent)
-                right_wall_thickness = right_wall_thickness + (1.0 - back_tr_r.fraction)
-            end
-            
+            left_exposure = left_exposure + (tr_l and tr_l.fraction or 1.0)
+            right_exposure = right_exposure + (tr_r and tr_r.fraction or 1.0)
             total_traces = total_traces + 1
         end
     end
     
-    local avg_left_exp = left_exposure / total_traces
-    local avg_right_exp = right_exposure / total_traces
+    local avg_left_exp = left_exposure / math_max(1, total_traces)
+    local avg_right_exp = right_exposure / math_max(1, total_traces)
     
     local side = 0
     local conf = 0.5
@@ -898,9 +1060,266 @@ local function updateMarkovTransitions(p, current_side)
     if not prev then return end
     
     p.markov_matrix[prev] = p.markov_matrix[prev] or { [-1] = 0, [0] = 0, [1] = 0 }
-    p.markov_matrix[prev][current_side] = p.markov_matrix[prev][current_side] + 1
+    p.markov_matrix[prev][current_side] = (p.markov_matrix[prev][current_side] or 0) + 1
 end
 
+-- ====================================================================
+-- ADVANCED SOURCE ENGINE MOVEMENT PREDICTION SYSTEM
+-- ====================================================================
+
+-- Simulate player physics tick-by-tick
+local function simulate_player_movement(p, ent, ticks_ahead)
+    local ti = p.tick_interval or 0.015625
+    local hist = p.history
+    local hist_count = #hist
+    
+    if hist_count < 1 then
+        local ox, oy, oz = SafeGetOrigin(ent)
+        local vel = SafeGetVelocity(ent)
+        return vector(ox, oy, oz), vector(ox, oy, oz + (p.duck > 0.5 and 46 or 64)), 0.3
+    end
+    
+    local latest = hist[hist_count]
+    local cur_pos = vector(latest.pos.x, latest.pos.y, latest.pos.z)
+    local cur_vel = vector(latest.vel.x, latest.vel.y, latest.vel.z)
+    local on_ground = latest.on_ground
+    local is_ducking = latest.duck > 0.5
+    local view_z = is_ducking and 46 or 64
+    
+    local accel = latest.accel or vector(0, 0, 0)
+    local is_stopping = p.is_stopping or p.is_counterstrafing
+    
+    local confidence = 0.85
+    if is_stopping then
+        confidence = 0.55
+    elseif p.is_accelerating then
+        confidence = 0.75
+    end
+    if not on_ground then
+        confidence = confidence * 0.80
+    end
+    
+    local sim_pos = vector(cur_pos.x, cur_pos.y, cur_pos.z)
+    local sim_vel = vector(cur_vel.x, cur_vel.y, cur_vel.z)
+    
+    local max_speed = is_ducking and 85.0 or 250.0
+    local GRAVITY = 800.0
+    local FRICTION = 5.2
+    local STOP_SPEED = 100.0
+    
+    for t = 1, ticks_ahead do
+        local speed_2d = math_sqrt(sim_vel.x^2 + sim_vel.y^2)
+        
+        if on_ground then
+            if is_stopping then
+                -- Source Engine Ground Friction Deceleration
+                local control = (speed_2d < STOP_SPEED) and STOP_SPEED or speed_2d
+                local drop = control * FRICTION * ti
+                local newspeed = math_max(0, speed_2d - drop)
+                if speed_2d > 0 then
+                    local frac = newspeed / speed_2d
+                    sim_vel.x = sim_vel.x * frac
+                    sim_vel.y = sim_vel.y * frac
+                else
+                    sim_vel.x = 0
+                    sim_vel.y = 0
+                end
+                sim_vel.z = 0
+            else
+                -- Apply estimated acceleration smoothly
+                sim_vel.x = sim_vel.x + accel.x * ti
+                sim_vel.y = sim_vel.y + accel.y * ti
+                sim_vel.z = 0
+                
+                local new_speed_2d = math_sqrt(sim_vel.x^2 + sim_vel.y^2)
+                if new_speed_2d > max_speed then
+                    local scale = max_speed / new_speed_2d
+                    sim_vel.x = sim_vel.x * scale
+                    sim_vel.y = sim_vel.y * scale
+                end
+            end
+        else
+            -- Air movement: apply CS:GO gravity
+            sim_vel.z = sim_vel.z - (GRAVITY * ti)
+        end
+        
+        local next_pos = sim_pos + sim_vel * ti
+        
+        -- World Collision Geometry Check
+        if sw_pred_col:get() and (speed_2d > 10 or not on_ground) then
+            local tr = utils.trace_line(sim_pos, next_pos, ent)
+            if tr and tr.fraction < 1.0 then
+                -- Hit world geometry: clamp to collision plane
+                sim_pos = sim_pos + (next_pos - sim_pos) * tr.fraction
+                -- Stop velocity along collision normal
+                sim_vel.x = 0
+                sim_vel.y = 0
+                confidence = confidence * 0.6
+                break
+            else
+                sim_pos = next_pos
+            end
+        else
+            sim_pos = next_pos
+        end
+    end
+    
+    local eye_pos = vector(sim_pos.x, sim_pos.y, sim_pos.z + view_z)
+    return sim_pos, eye_pos, clamp(confidence, 0.1, 1.0)
+end
+
+-- Core prediction update invoked every network tick per enemy
+local function predictTargetMovement(p, ent)
+    local lp = entity.get_local_player()
+    if not lp then return end
+    
+    local ox, oy, oz = SafeGetOrigin(ent)
+    local vel = SafeGetVelocity(ent)
+    local sim_time = SafeGetSimTime(ent)
+    local ti = p.tick_interval or 0.015625
+    
+    local cur_tick = globals.tickcount
+    if type(cur_tick) == "function" then cur_tick = cur_tick() end
+    
+    cur_tick = cur_tick or 0
+    
+    -- 1. Validate Accuracy of Previous Prediction (Objective Accuracy Evaluation)
+    local eval = p.accuracy_eval
+    if eval.target_tick > 0 and cur_tick >= eval.target_tick then
+        if eval.pred_adv_pos and eval.pred_lin_pos then
+            local act_pos = vector(ox, oy, oz)
+            local err_adv = (act_pos - eval.pred_adv_pos):length()
+            local err_lin = (act_pos - eval.pred_lin_pos):length()
+            
+            eval.adv_error_sum = eval.adv_error_sum + err_adv
+            eval.lin_error_sum = eval.lin_error_sum + err_lin
+            eval.samples = eval.samples + 1
+        end
+        eval.target_tick = 0
+    end
+    
+    -- 2. Bounded Movement Record Ingestion & Duplicate Rejection
+    local hist = p.history
+    if #hist > 0 then
+        local last_rec = hist[#hist]
+        -- Reject identical simulation times
+        if sim_time > 0 and last_rec.sim_time == sim_time then
+            return
+        end
+    end
+    
+    local cur_speed_2d = math_sqrt(vel.x^2 + vel.y^2)
+    local cur_yaw = (vel.x ~= 0 or vel.y ~= 0) and (math_atan2(vel.y, vel.x) * (180 / math_pi)) or 0
+    
+    local accel = vector(0, 0, 0)
+    if #hist >= 1 then
+        local prev_rec = hist[#hist]
+        local dt = (sim_time > 0 and prev_rec.sim_time > 0) and (sim_time - prev_rec.sim_time) or ti
+        if dt <= 0 or dt > (ti * 8) then dt = ti end
+        
+        local dvx = vel.x - prev_rec.vel.x
+        local dvy = vel.y - prev_rec.vel.y
+        local dvz = vel.z - prev_rec.vel.z
+        
+        local ax = dvx / dt
+        local ay = dvy / dt
+        local az = dvz / dt
+        
+        -- Clamp acceleration to realistic CS:GO limits (max ~5500 u/s^2)
+        local accel_2d = math_sqrt(ax^2 + ay^2)
+        if accel_2d > 5500 then
+            local scale = 5500 / accel_2d
+            ax = ax * scale
+            ay = ay * scale
+        end
+        accel = vector(ax, ay, az)
+    end
+    
+    table_insert(hist, {
+        pos = { x = ox, y = oy, z = oz },
+        vel = { x = vel.x, y = vel.y, z = vel.z },
+        accel = accel,
+        speed_2d = cur_speed_2d,
+        sim_time = sim_time,
+        tick = cur_tick,
+        on_ground = p.on_ground,
+        duck = p.duck,
+        yaw = cur_yaw
+    })
+    
+    if #hist > HISTORY_MAX_RECORDS then
+        table_remove(hist, 1)
+    end
+    
+    if #hist < 2 then
+        p.is_accelerating = false
+        p.is_stopping = false
+        p.is_counterstrafing = false
+        p.predicted_peek_visible = false
+        p.prediction_confidence = 0.5
+        return
+    end
+    
+    -- 3. Velocity Filtering, Acceleration & Counter-Strafe Detection
+    local cur_rec = hist[#hist]
+    local prev_rec = hist[#hist - 1]
+    
+    local speed_delta = cur_rec.speed_2d - prev_rec.speed_2d
+    local dir_dot = (cur_rec.vel.x * prev_rec.vel.x + cur_rec.vel.y * prev_rec.vel.y)
+    
+    p.is_accelerating = (speed_delta > 15.0) and (dir_dot > 0)
+    p.is_stopping = (speed_delta < -25.0)
+    p.is_counterstrafing = (dir_dot < -0.1 and prev_rec.speed_2d > 50.0) or (speed_delta < -70.0)
+    
+    -- 4. Calculate Multi-Tick Horizon (Dynamic Horizon Selection)
+    local prediction_ticks = 4
+    if p.is_counterstrafing or p.is_stopping then
+        prediction_ticks = 1 -- Shorten horizon on abrupt braking to avoid overshoot
+    elseif p.is_accelerating then
+        prediction_ticks = 6 -- Extend horizon for fast peeks
+    elseif p.speed > 150 then
+        prediction_ticks = 4
+    else
+        prediction_ticks = 2
+    end
+    
+    -- 5. Multi-Tick Physics Simulation
+    local pred_pos, pred_eye, conf = simulate_player_movement(p, ent, prediction_ticks)
+    p.predicted_origin = pred_pos
+    p.predicted_eye = pred_eye
+    p.prediction_confidence = conf
+    
+    -- 6. Setup Future Accuracy Tracking Sample
+    local naive_linear_pos = vector(ox + vel.x * (prediction_ticks * ti), oy + vel.y * (prediction_ticks * ti), oz)
+    eval.target_tick = cur_tick + prediction_ticks
+    eval.pred_adv_pos = pred_pos
+    eval.pred_lin_pos = naive_linear_pos
+    
+    -- 7. Fast Peek Corner Exposure Detector
+    p.predicted_peek_visible = false
+    p.predicted_peek_tick = 0
+    p.predicted_peek_pos = nil
+    
+    if sw_pred_peek:get() and cur_rec.speed_2d > 40 then
+        local lp_pos = lp:get_eye_position()
+        if lp_pos then
+            for step = 1, 10 do
+                local peek_pos, peek_eye = simulate_player_movement(p, ent, step)
+                local tr = utils.trace_line(lp_pos, peek_eye, lp)
+                if tr and tr.fraction > 0.97 then
+                    p.predicted_peek_visible = true
+                    p.predicted_peek_tick = step
+                    p.predicted_peek_pos = peek_pos
+                    break
+                end
+            end
+        end
+    end
+end
+
+-- ====================================================================
+-- PLAYER UPDATE PIPELINE
+-- ====================================================================
 local function updatePlayer(p, ent)
     local ok_alive, alive = pcall(function() return ent:is_alive()   end)
     if not ok_alive or not alive then return end
@@ -915,7 +1334,7 @@ local function updatePlayer(p, ent)
     local ok_sp,  speed     = pcall(function() return anim.m_flSpeed2D     end)
     local ok_gd,  on_ground = pcall(function() return anim.m_bOnGround     end)
     local ok_dk,  duck      = pcall(function() return anim.m_flDuckAmount  end)
-    local ok_sim, sim_time  = pcall(function() return ent.m_flSimulationTime end)
+    local sim_time          = SafeGetSimTime(ent)
 
     if not ok_ey or not eye_yaw then return end
 
@@ -923,7 +1342,6 @@ local function updatePlayer(p, ent)
     speed     = (ok_sp  and speed)     or 0
     on_ground = (ok_gd  and on_ground) or true
     duck      = (ok_dk  and duck)      or 0
-    sim_time  = (ok_sim and sim_time)  or 0
     
     local new_tick = (sim_time > p.curr_sim_time)
     if new_tick then
@@ -947,8 +1365,7 @@ local function updatePlayer(p, ent)
     p.on_ground  = on_ground
     p.desync_limit = getDesyncLimit(speed, duck, on_ground)
 
-    local layers = SafeGetAnimLayers(ent)
-
+    decayMemory(p)
     updateAdvancedFreestand(p, ent)
     updateDesyncModel(p, ent)
     
@@ -960,9 +1377,136 @@ local function updatePlayer(p, ent)
     updateThreatIntel(p, ent)
     
     p.prev_feet_yaw = p.original_feet_yaw
-    predictTargetMovement(p, ent)
+    
+    if sw_pred_adv:get() then
+        pcall(predictTargetMovement, p, ent)
+    end
 end
 
+-- ====================================================================
+-- DOUBLE TAP & EXPLOIT STATE CONTROLLER
+-- ====================================================================
+local DT_STATE_DISABLED   = 0
+local DT_STATE_CHARGING   = 1
+local DT_STATE_READY      = 2
+local DT_STATE_FIRING     = 3
+local DT_STATE_RECHARGING = 4
+
+local dt_controller = {
+    state = DT_STATE_DISABLED,
+    last_charge = 0.0,
+    last_fire_tick = 0,
+    last_weapon_idx = -1,
+    is_eligible_weapon = true,
+    recharge_forced = false,
+    recharge_tick = 0
+}
+
+local function is_weapon_dt_eligible(wpn_name)
+    if not wpn_name or wpn_name == "none" then return false end
+    local ln = wpn_name:lower():gsub(" ", ""):gsub("-", "")
+    if ln:find("knife") or ln:find("grenade") or ln:find("flash") or ln:find("molotov") or ln:find("decoy") or ln:find("taser") then
+        return false
+    end
+    return true
+end
+
+local function update_double_tap_state(lp)
+    if not sw_dt_manager:get() then return end
+    if not lp or not lp:is_alive() then
+        dt_controller.state = DT_STATE_DISABLED
+        dt_controller.recharge_forced = false
+        return
+    end
+    
+    local dt_enabled = false
+    if native_dt then
+        local ok, val = pcall(function() return native_dt:get() end)
+        if ok and val then dt_enabled = true end
+    end
+    
+    if not dt_enabled then
+        dt_controller.state = DT_STATE_DISABLED
+        dt_controller.recharge_forced = false
+        return
+    end
+    
+    local wpn = lp:get_player_weapon()
+    if not wpn then
+        dt_controller.state = DT_STATE_DISABLED
+        dt_controller.recharge_forced = false
+        return
+    end
+    
+    local ok_widx, widx = pcall(function() return wpn:get_index() end)
+    if ok_widx and widx ~= dt_controller.last_weapon_idx then
+        dt_controller.last_weapon_idx = widx
+        dt_controller.state = DT_STATE_CHARGING
+        dt_controller.recharge_forced = false
+    end
+    
+    local ok_name, wpn_name = pcall(function() return wpn:get_classname() end)
+    dt_controller.is_eligible_weapon = ok_name and is_weapon_dt_eligible(wpn_name) or false
+    if not dt_controller.is_eligible_weapon then
+        dt_controller.state = DT_STATE_DISABLED
+        dt_controller.recharge_forced = false
+        return
+    end
+    
+    local charge = 0.0
+    if rage and rage.exploit then
+        local ok, f = pcall(function() return rage.exploit:get() end)
+        if ok and f then charge = f end
+    end
+    dt_controller.last_charge = charge
+    
+    local cur_tick = globals.tickcount
+    if type(cur_tick) == "function" then cur_tick = cur_tick() end
+    
+    cur_tick = cur_tick or 0
+    
+    -- State transitions
+    if cur_tick - dt_controller.last_fire_tick < 3 then
+        dt_controller.state = DT_STATE_FIRING
+    elseif charge < 0.99 then
+        dt_controller.state = (cur_tick - dt_controller.last_fire_tick < 20) and DT_STATE_RECHARGING or DT_STATE_CHARGING
+        -- Optimize recharge cycle if permitted
+        if sw_dt_recharge:get() and charge < 0.95 then
+            local mode = cb_dt_recharge_mode:get()
+            if mode == 1 or mode == "Instant" then
+                if not dt_controller.recharge_forced then
+                    pcall(function()
+                        if rage.exploit.force_charge then
+                            rage.exploit:force_charge()
+                        elseif rage.exploit.charge then
+                            rage.exploit:charge()
+                        end
+                    end)
+                    dt_controller.recharge_forced = true
+                end
+            else
+                if not dt_controller.recharge_forced or (cur_tick - dt_controller.recharge_tick > 64) then
+                    pcall(function()
+                        if rage.exploit.force_charge then
+                            rage.exploit:force_charge()
+                        elseif rage.exploit.charge then
+                            rage.exploit:charge()
+                        end
+                    end)
+                    dt_controller.recharge_forced = true
+                    dt_controller.recharge_tick = cur_tick
+                end
+            end
+        end
+    else
+        dt_controller.state = DT_STATE_READY
+        dt_controller.recharge_forced = false
+    end
+end
+
+-- ====================================================================
+-- RAGEBOT OVERRIDE EVALUATION
+-- ====================================================================
 local function shouldForceBAIM(p, hp)
     if not sw_lethal:get() then return false end
     if not p then return false end
@@ -996,33 +1540,6 @@ local function shouldPreferSafe(p)
     return false
 end
 
-local function math_normalize_angle(angle)
-    while angle > 180 do angle = angle - 360 end
-    while angle < -180 do angle = angle + 360 end
-    return angle
-end
-
-local function calc_angle(src, dst)
-    local delta_x = dst.x - src.x
-    local delta_y = dst.y - src.y
-    local delta_z = dst.z - src.z
-    local hyp = math_sqrt(delta_x*delta_x + delta_y*delta_y)
-    local pitch = math_atan2(-delta_z, hyp) * (180 / math_pi)
-    local yaw = math_atan2(delta_y, delta_x) * (180 / math_pi)
-    return pitch, yaw
-end
-
-local function get_crosshair_fov(lp_pos, ent_pos)
-    local ok, cam = pcall(function() return render.camera_angles() end)
-    if not ok or not cam then return 180 end
-    
-    local target_pitch, target_yaw = calc_angle(lp_pos, ent_pos)
-    local delta_pitch = math_abs(math_normalize_angle(cam.x - target_pitch))
-    local delta_yaw = math_abs(math_normalize_angle(cam.y - target_yaw))
-    
-    return math_sqrt(delta_pitch*delta_pitch + delta_yaw*delta_yaw)
-end
-
 local function getBestTarget(enemies)
     local lp = entity.get_local_player()
     if not lp then return nil end
@@ -1030,7 +1547,6 @@ local function getBestTarget(enemies)
     if not ok_lp or not lp_eye then return nil end
     
     local lx, ly, lz = SafeGetOrigin(lp)
-    
     local best_ent, best_score = nil, -math.huge
 
     for i = 1, #enemies do
@@ -1047,14 +1563,17 @@ local function getBestTarget(enemies)
                 if ok_e and e_eye then
                     local dist = math_sqrt((lx-ex)^2 + (ly-ey)^2 + (lz-ez)^2)
                     local dist_score = math.max(0, 100 - (dist / 20.0))
-                    
                     local fov = get_crosshair_fov(lp_eye, e_eye)
                     local fov_score = math.max(0, 100 - fov)
-                    
                     local hp_score = math.max(0, 100 - hp)
                     
-                    -- Weight: FOV 50%, Dist 30%, HP 20%
                     local final_score = (fov_score * 0.50) + (dist_score * 0.30) + (hp_score * 0.20)
+                    
+                    local eid = e:get_index()
+                    local prec = EnemyRecords[eid]
+                    if prec and prec.predicted_peek_visible then
+                        final_score = final_score + 25.0
+                    end
                     
                     if final_score > best_score then
                         best_score = final_score
@@ -1079,9 +1598,9 @@ local function getBestTarget(enemies)
     return best_ent
 end
 
-EnemyRecords  = {}
-PredictionData = {}   -- ideal-tick state per entity index
-
+-- ====================================================================
+-- IDEAL TICK DETECTION & VISUAL EXPLOITS (ARC COMPATIBLE)
+-- ====================================================================
 local it_status_name  = ""
 local it_status_ticks = 0
 local it_any_active   = false
@@ -1089,13 +1608,14 @@ local it_any_active   = false
 local function updateIdealTickDetect(id, ent)
     local ok_sim, sim_t = pcall(function() return ent:get_simulation_time() end)
     if not ok_sim or not sim_t then return end
-
+    
     local cur = sim_t.current
     local old = sim_t.old
     if not cur or not old then return end
 
     local ti = globals.tickinterval
     if type(ti) == "function" then ti = ti() end
+    
     ti = ti or 0.015625
 
     local delta     = cur - old
@@ -1103,17 +1623,21 @@ local function updateIdealTickDetect(id, ent)
     local is_it     = (tick_lead >= 2) and (tick_lead <= 16)
 
     if not PredictionData[id] then
-        PredictionData[id] = { is_it = false, tick_lead = 0, predicted_origin = nil, name = "" }
+        PredictionData[id] = { is_it = false, tick_lead = 0, predicted_origin = nil, name = "", last_it = 0 }
     end
 
     local pd      = PredictionData[id]
-    pd.is_it      = is_it
-    pd.tick_lead  = is_it and tick_lead or 0
+    local rt = globals.realtime
+    if type(rt) == "function" then rt = rt() end
+    
 
     if is_it then
-        -- Try simulate_movement first
-        local foot_orig = nil  -- ground-level, for 3D box projection
-        local eye_orig  = nil  -- eye-level, for visibility pre-check
+        pd.is_it      = true
+        pd.tick_lead  = tick_lead
+        pd.last_it    = rt
+        
+        local foot_orig = nil
+        local eye_orig  = nil
         local ok_sim2, sim2 = pcall(function() return ent:simulate_movement() end)
         if ok_sim2 and sim2 then
             local ok_res, res = pcall(function() return sim2:think(tick_lead) end)
@@ -1123,107 +1647,26 @@ local function updateIdealTickDetect(id, ent)
                 eye_orig  = vector(res.origin.x, res.origin.y, res.origin.z + view_z)
             end
         end
-        -- Fallback to current positions if sim failed
         if not foot_orig then
-            local ok_o, o = pcall(function() return ent:get_origin() end)
-            if ok_o and o then foot_orig = o end
+            local ox, oy, oz = SafeGetOrigin(ent)
+            foot_orig = vector(ox, oy, oz)
         end
         if not eye_orig then
             local ok_e, e = pcall(function() return ent:get_eye_position() end)
-            if ok_e and e then eye_orig = e end
+            eye_orig = (ok_e and e) and e or vector(foot_orig.x, foot_orig.y, foot_orig.z + 64)
         end
         pd.predicted_foot   = foot_orig
         pd.predicted_origin = eye_orig
         local ok_name, ename = pcall(function() return ent:get_name() end)
         pd.name = (ok_name and ename) and ename or ""
-    else
+    elseif rt - (pd.last_it or 0) > 0.5 then
+        pd.is_it            = false
+        pd.tick_lead        = 0
         pd.predicted_foot   = nil
         pd.predicted_origin = nil
         pd.name             = ""
     end
 end
-
-register_event("net_update_start", function()
-    local resolver_on = sw_resolver:get()
-    local it_on       = sw_it_detect:get()
-    if not resolver_on and not it_on then return end
-
-    local lp      = entity.get_local_player()
-    if not lp then return end
-    local enemies = entity.get_players(true, false)
-    if not enemies then return end
-
-    it_any_active = false
-
-    for i = 1, #enemies do
-        local ent = enemies[i]
-        if ent ~= lp then
-            local ok_id, id = pcall(function() return ent:get_index() end)
-            if ok_id and id then
-                local ok_a, a = pcall(function() return ent:is_alive()   end)
-                local ok_d, d = pcall(function() return ent:is_dormant() end)
-
-                if (ok_a and a) and not (ok_d and d) then
-                    if resolver_on then
-                        if not EnemyRecords[id] then
-                            EnemyRecords[id] = newSlot(id)
-                        end
-                        pcall(updatePlayer, EnemyRecords[id], ent)
-                    end
-                    if it_on then
-                        pcall(updateIdealTickDetect, id, ent)
-                        local pd = PredictionData[id]
-                        if pd and pd.is_it then
-                            it_any_active   = true
-                            it_status_name  = pd.name
-                            it_status_ticks = pd.tick_lead
-                        end
-                    end
-                else
-                    EnemyRecords[id]  = nil
-                    PredictionData[id] = nil
-                end
-            end
-        end
-    end
-end)
-
-register_event("pre_render", function()
-    if not sw_resolver:get() then return end
-
-    local lp      = entity.get_local_player()
-    local enemies = entity.get_players(true, false)
-    if not enemies then return end
-
-    for i = 1, #enemies do
-        local ent = enemies[i]
-        if ent ~= lp then
-            local ok_id, id = pcall(function() return ent:get_index() end)
-            if ok_id then
-                local p = EnemyRecords[id]
-                if p then
-                    pcall(function()
-                        local ok_a, a = pcall(function() return ent:is_alive()   end)
-                        local ok_d, d = pcall(function() return ent:is_dormant() end)
-                        if (ok_a and a) and not (ok_d and d) then
-                            local anim = SafeGetAnimState(ent)
-                            if anim then
-                                local ok_ey, eye_yaw = pcall(function() return anim.m_flEyeYaw end)
-                            end
-                        end
-                    end)
-                end
-            end
-        end
-    end
-end)
-
-local it_font = render.load_font("Verdana", 11, "bo")
-local ind_font = render.load_font("Verdana", 11, "bda")
-
--- ============================================================
--- Arc Visualize Exploits (Exact 1:1 Decompiled Copy)
--- ============================================================
 
 local v919 = {
     [1] = { [1] = 0, [2] = 1 }, 
@@ -1246,33 +1689,31 @@ local v919 = {
 local function v931(v920, v921, v922, v923, v924)
     if v920 == nil or v921 == nil or v922 == nil then
         return
-    else
-        if not v923 then v923 = color() end
-        if not v924 then v924 = 0.15 end
-        local v925 = {
-            [1] = v922[1] + v921, 
-            [2] = v922[2] + v921
-        }
-        local v926 = {
-            vector(v925[1].x, v925[1].y, v925[1].z), 
-            vector(v925[1].x, v925[2].y, v925[1].z), 
-            vector(v925[2].x, v925[2].y, v925[1].z), 
-            vector(v925[2].x, v925[1].y, v925[1].z), 
-            vector(v925[1].x, v925[1].y, v925[2].z), 
-            vector(v925[1].x, v925[2].y, v925[2].z), 
-            vector(v925[2].x, v925[2].y, v925[2].z), 
-            vector(v925[2].x, v925[1].y, v925[2].z)
-        }
-        for _, v928 in ipairs(v919) do
-            if v926[v928[1]] ~= nil and v926[v928[2]] ~= nil then
-                local v929 = v926[v928[1]]
-                local v930 = v926[v928[2]]
-                if v929:length2dsqr() > 0 and v930:length2dsqr() > 0 then
-                    v920:render(v929, v930, v924, "lgw", v923)
-                end
+    end
+    if not v923 then v923 = color() end
+    if not v924 then v924 = 0.15 end
+    local v925 = {
+        [1] = v922[1] + v921, 
+        [2] = v922[2] + v921
+    }
+    local v926 = {
+        vector(v925[1].x, v925[1].y, v925[1].z), 
+        vector(v925[1].x, v925[2].y, v925[1].z), 
+        vector(v925[2].x, v925[2].y, v925[1].z), 
+        vector(v925[2].x, v925[1].y, v925[1].z), 
+        vector(v925[1].x, v925[1].y, v925[2].z), 
+        vector(v925[1].x, v925[2].y, v925[2].z), 
+        vector(v925[2].x, v925[2].y, v925[2].z), 
+        vector(v925[2].x, v925[1].y, v925[2].z)
+    }
+    for _, v928 in ipairs(v919) do
+        if v926[v928[1]] ~= nil and v926[v928[2]] ~= nil then
+            local v929 = v926[v928[1]]
+            local v930 = v926[v928[2]]
+            if v929:length2dsqr() > 0 and v930:length2dsqr() > 0 then
+                v920:render(v929, v930, v924, "lgw", v923)
             end
         end
-        return
     end
 end
 
@@ -1281,33 +1722,28 @@ local function v939(v932)
     local v933 = entity.get_local_player()
     if v933 == nil or lagrecord == nil then
         return
-    else
-        entity.get_players(true, false, function(v934)
-            local bbox = v934:get_bbox()
-            if bbox == nil or bbox.pos1 == nil then
-                return
-            else
-                local v935 = lagrecord.get_snapshot(v934)
-                if v935 == nil then
-                    return
-                else
-                    local l_no_entry_0 = v935.command.no_entry
-                    if l_no_entry_0.y > 0 then
-                        local v937 = true
-                        if v933.m_hObserverTarget == v934 and v933.m_iObserverMode == 5 then
-                            v937 = false
-                        end
-                        if v937 then
-                            local l_origin_0 = v935.origin
-                            v931(v932, v934:get_origin(), l_origin_0.volume, cp_it_esp:get(), (sl_it_thick:get() * 0.01) * 0.35 * (l_no_entry_0.x / l_no_entry_0.y))
-                        end
-                    end
-                    return
-                end
-            end
-        end)
-        return
     end
+    entity.get_players(true, false, function(v934)
+        local bbox = v934:get_bbox()
+        if bbox == nil or bbox.pos1 == nil then
+            return
+        end
+        local v935 = lagrecord.get_snapshot(v934)
+        if v935 == nil then
+            return
+        end
+        local l_no_entry_0 = v935.command.no_entry
+        if l_no_entry_0 and l_no_entry_0.y > 0 then
+            local v937 = true
+            if v933.m_hObserverTarget == v934 and v933.m_iObserverMode == 5 then
+                v937 = false
+            end
+            if v937 then
+                local l_origin_0 = v935.origin
+                v931(v932, v934:get_origin(), l_origin_0.volume, cp_it_esp:get(), (sl_it_thick:get() * 0.01) * 0.35 * (l_no_entry_0.x / l_no_entry_0.y))
+            end
+        end
+    end)
 end
 
 local function v941(v940)
@@ -1327,13 +1763,8 @@ local function it_esp_set_active(enabled)
     end
 end
 
-register_event("createmove", function()
-    it_esp_set_active(sw_it_esp:get() and sw_it_detect:get())
-end)
-
 local it_esp_element = esp.enemy:new_text("Ragebobs IT", "IT +12t", function(ent)
-    if not sw_it_esp:get() or not sw_it_detect:get() then return nil end
-    
+    if not sw_it_detect:get() then return nil end
     local lp = entity.get_local_player()
     if not lp then return nil end
     if lp.m_hObserverTarget == ent and lp.m_iObserverMode == 5 then return nil end
@@ -1346,6 +1777,13 @@ local it_esp_element = esp.enemy:new_text("Ragebobs IT", "IT +12t", function(ent
 end)
 it_esp_element:create()
 
+-- ====================================================================
+-- HUD & CROSSHAIR INDICATORS
+-- ====================================================================
+local it_font = render.load_font("Verdana", 11, "bo")
+local ind_font = render.load_font("Verdana", 11, "bda")
+local v2_value_cache = {}
+
 local auto_anim_x = nil
 local auto_anim_a = 0
 local scout_anim_x = nil
@@ -1355,12 +1793,309 @@ local awp_anim_a = 0
 local other_anim_x = nil
 local other_anim_a = 0
 
+local function get_aa_condition(lp)
+    if not lp then return "nil" end
+    local vel = lp.m_vecVelocity:length2dsqr()
+    if lp.m_fFlags and bit.band(lp.m_fFlags, 1) == 0 then return "in air" end
+    if lp.m_bIsScoped then return "scoped" end
+    if lp.in_duck then return "crouching" end
+    if vel > 5 then return "moving" else return "standing" end
+end
+
+local function get_lowest_ping()
+    -- Use net_channel like OT INTERFACES for accurate latency
+    local ok_net, net = pcall(function() return utils.net_channel() end)
+    if ok_net and net and net.avg_latency then
+        local ok_lat, latency = pcall(function() return net.avg_latency[1] end)
+        if ok_lat and type(latency) == "number" then
+            local ok_ur, updaterate = pcall(function() return cvar.cl_updaterate:float() end)
+            if ok_ur and updaterate and updaterate > 0.001 then
+                latency = latency - (0.5 / updaterate)
+            end
+            return tostring(math.max(0, math.floor(latency * 1000)))
+        end
+    end
+    -- Fallback: scan players for m_iPing
+    local min_ping = 999
+    local players = entity.get_players(true)
+    if players then
+        for i=1, #players do
+            local p = players[i]
+            local ok, ping = pcall(function() return p:get_resource("m_iPing") end)
+            if ok and type(ping) == "number" and ping > 0 and ping < min_ping then min_ping = ping end
+        end
+    end
+    return min_ping == 999 and "0" or tostring(min_ping)
+end
+
+local v2_font = render.load_font("Verdana", 12, "ado")
+
 register_event("render", function()
     if cb_mindam_ind:get() and it_font then
         local ss = render.screen_size()
         local c = cp_mindam_accent:get()
         
         local lp = entity.get_local_player()
+        if cb_ind_style and cb_ind_style:get() == "v2 (Debug List)" then
+            local active_target = entity.get_threat()
+            -- Key EnemyRecords by integer index (NOT the entity object)
+            local tgt_idx = active_target and (pcall(function() return active_target:get_index() end) and active_target:get_index() or nil) or nil
+            local target_record = tgt_idx and EnemyRecords[tgt_idx] or nil
+
+            -- Get target name directly from entity (not gated by sw_resolver)
+            local tgt_display_name = active_mindam_target_name
+            if not tgt_display_name and active_target then
+                local ok_n, n = pcall(function() return active_target:get_name() end)
+                if ok_n and n and n ~= "" then tgt_display_name = n end
+            end
+            
+            local wpn_name = "none"
+            if lp and lp:is_alive() then
+                local wpn = lp:get_player_weapon()
+                if wpn then
+                    local ok_c, c_name = pcall(function() return wpn:get_classname() end)
+                    if ok_c and c_name then wpn_name = c_name end
+                end
+            end
+            local is_lethal = (active_mindam_target_name and (active_target_hp <= (active_mindam_val or 100)))
+            local exploit_str = dt_controller.state ~= 0 and "DOUBLETAP" or "OFF"
+
+            local elapsed = (ax_fire_time and ax_fire_time >= 0) and (globals.realtime - ax_fire_time) or math.huge
+            local fired = elapsed <= 0.6
+            
+            local has_tgt = active_target ~= nil
+            
+            local roll = 0
+            if has_tgt then
+                local ok, ang = pcall(function() return active_target:get_prop("m_angEyeAngles") end)
+                if ok and ang and type(ang.z) == "number" then roll = ang.z end
+            end
+            
+            local f_roll = math.abs(roll) > 5.0
+            local f_roll_side = f_roll and (roll > 0 and "Right" or "Left") or "nil"
+            
+            local c_ticks = target_record and target_record.choke or 0
+            local res_side = target_record and target_record.resolved_side or 0
+            
+            local f_left = res_side == 1
+            local f_right = res_side == -1
+            local f_back = res_side == 0 and has_tgt
+            local f_free = target_record and target_record.pattern == 0 or false
+            
+            local tbl_1 = target_record and tostring(target_record) or tostring(EnemyRecords)
+            
+            local tbl_2 = (target_record and target_record.miss_analysis) and tostring(target_record.miss_analysis) or tostring(dt_controller)
+            
+            -- Pull PredictionData for active target
+            local tgt_id = active_target and active_target:get_index() or nil
+            local pd_tgt = tgt_id and PredictionData[tgt_id] or nil
+
+            -- ── Resolved side ─────────────────────────────────────────────
+            -- Prefer target_record resolver data, fall back to raw entity choke/simtime
+            local res_side_str = "center"
+            if target_record then
+                local rs = target_record.resolved_side or 0
+                if rs == 1 then res_side_str = "left"
+                elseif rs == -1 then res_side_str = "right"
+                else res_side_str = "center" end
+            elseif not active_target then
+                res_side_str = "none"
+            end
+
+            -- ── Pattern name ───────────────────────────────────────────────
+            local PAT_NAMES = {"static","micro_jit","jitter","delayed_jit","random_jit","flick","fake_flick","spin","defensive","hybrid"}
+            local pat_str
+            if target_record then
+                pat_str = PAT_NAMES[(target_record.pattern or 0) + 1] or "static"
+            else
+                pat_str = active_target and "static" or "none"
+            end
+
+            -- ── Exploit analysis ───────────────────────────────────────────
+            local ea = target_record and target_record.exploit_analysis or {}
+            local exploit_flags = {}
+            if ea.double_tap     then exploit_flags[#exploit_flags+1] = "DT" end
+            if ea.hide_shots     then exploit_flags[#exploit_flags+1] = "HS" end
+            if ea.fake_lag       then exploit_flags[#exploit_flags+1] = "FL" end
+            if ea.tickbase_manip then exploit_flags[#exploit_flags+1] = "TB" end
+            local exploit_flags_str = #exploit_flags > 0 and table.concat(exploit_flags, "+") or "none"
+
+            -- ── Miss breakdown ─────────────────────────────────────────────
+            local ma = target_record and target_record.miss_analysis or {}
+            local miss_str = string.format("r:%d sp:%d pr:%d oc:%d",
+                ma.resolver_misses or 0, ma.spread_misses or 0,
+                ma.prediction_misses or 0, ma.occlusion_misses or 0)
+
+            -- ── Resolver confidence ────────────────────────────────────────
+            local conf_str = target_record
+                and string.format("%d%%", math.floor(target_record.confidence or 50))
+                or (active_target and "50%" or "0%")  -- default 50 when target exists but no record
+
+            -- ── Resolver lock ──────────────────────────────────────────────
+            local rl = target_record and target_record.resolver_lock or {}
+            local lock_str = rl.locked
+                and ("locked:" .. (rl.locked_side == 1 and "L" or rl.locked_side == -1 and "R" or "C"))
+                or "free"
+
+            -- ── Freestand side ─────────────────────────────────────────────
+            -- Fall back to rage.antiaim freestand detection if no record
+            local fs_side_str = "none"
+            if target_record then
+                local fs = target_record.freestand_side or 0
+                if fs == 1 then fs_side_str = "left"
+                elseif fs == -1 then fs_side_str = "right"
+                else fs_side_str = "center" end
+            elseif active_target then
+                -- Try rage.antiaim freestand target as proxy
+                local ok_t, t  = pcall(function() return rage.antiaim:get_target()       end)
+                local ok_i, ti = pcall(function() return rage.antiaim:get_target(true)   end)
+                if ok_t and ok_i and t and ti then
+                    local diff = math.abs(((t - ti + 540) % 360) - 180)
+                    fs_side_str = diff > 5 and "active" or "center"
+                else
+                    fs_side_str = "center"
+                end
+            end
+
+            -- ── Choke ticks ────────────────────────────────────────────────
+            -- target_record.choke OR derive from simtime delta
+            local choke_val = 0
+            if target_record then
+                choke_val = target_record.choke or 0
+            elseif active_target then
+                local ok_s, sim = pcall(function() return active_target.m_flSimulationTime end)
+                if ok_s and sim and sim > 0 then
+                    local ti = globals.tickinterval or 0.015625
+                    local expected_sim = globals.curtime or 0
+                    local raw_delta = expected_sim - sim
+                    if raw_delta > 0 then
+                        choke_val = math.max(0, math.floor(raw_delta / ti + 0.5) - 1)
+                    end
+                end
+            end
+            local choke_str = string.format("%dt", choke_val)
+
+            -- ── Prediction / IT ────────────────────────────────────────────
+            local it_phase_str, it_lead_str, it_source_str
+            if pd_tgt and pd_tgt.is_it then
+                it_phase_str  = "armed"
+                it_lead_str   = tostring(pd_tgt.tick_lead) .. "t"
+                it_source_str = "ideal_tick"
+            elseif target_record and target_record.predicted_peek_visible then
+                it_phase_str  = "peek"
+                it_lead_str   = tostring(target_record.predicted_peek_tick or 0) .. "t"
+                it_source_str = "extrapolate"
+            else
+                it_phase_str  = "none"
+                it_lead_str   = "0t"
+                it_source_str = "none"
+            end
+
+            -- Real prediction confidence
+            local pred_conf_str = target_record
+                and string.format("%d%%", math.floor((target_record.prediction_confidence or 0.5) * 100))
+                or (active_target and "50%" or "0%")
+
+            -- ── Target speed (direct entity read) ─────────────────────────
+            local tgt_speed_str = "0"
+            if active_target then
+                local ok_v, v = pcall(function() return active_target.m_vecVelocity end)
+                if ok_v and v then
+                    tgt_speed_str = string.format("%.0f", math.sqrt(v.x*v.x + v.y*v.y))
+                end
+            end
+
+            -- ── Roll detection ─────────────────────────────────────────────
+            local roll_val = roll ~= 0
+                and string.format("%.1f %s", math.abs(roll), roll > 0 and "R" or "L")
+                or "0"
+
+            -- ── DT controller state name ───────────────────────────────────
+            local DT_STATE_NAMES = {"off","ready","fired","recharge"}
+            local dt_state_name = DT_STATE_NAMES[math.max(1, (dt_controller.state or 0) + 1)] or "off"
+
+            -- ── Consecutive misses ─────────────────────────────────────────
+            local consec_str = tostring(target_record and target_record.consecutive_misses or 0)
+
+            local vars = {
+                -- Target info
+                {"target",          tgt_display_name or "none"},
+                {"target_speed",    tgt_speed_str .. " u/s"},
+                {"target_hp",       tostring(active_target_hp)},
+                {"no_choke",        fired and "FIRED" or "idle",
+                                    fired and color(80, 255, 100, 255) or color(160, 160, 160, 255)},
+                {"anti_aim_cond",   get_aa_condition(lp)},
+                {""},
+                -- Resolver
+                {"resolved_side",   res_side_str},
+                {"resolver_conf",   conf_str},
+                {"resolver_lock",   lock_str},
+                {"pattern",         pat_str},
+                {"consec_misses",   consec_str},
+                {"miss_detail",     miss_str},
+                {""},
+                -- Exploit analysis
+                {"exploits_active", exploit_flags_str},
+                {"dt_state",        dt_state_name},
+                {"dangerous",       tostring(target_record and target_record.is_dangerous or false)},
+                {"choke_ticks",     choke_str},
+                {"teleporting",     tostring(c_ticks > 14)},
+                {""},
+                -- Anti-aim read
+                {"desync_side",     res_side_str},
+                {"roll_angle",      roll_val},
+                {"freestand_side",  fs_side_str},
+                {""},
+                -- Prediction / IT
+                {"pred_source",     it_source_str},
+                {"pred_confidence", pred_conf_str},
+                {"it_phase",        it_phase_str},
+                {"it_lead",         it_lead_str},
+                {"prediction_miss", tostring(ma.prediction_misses or 0)},
+                {"occlusion_miss",  tostring(ma.occlusion_misses or 0)},
+                {""},
+                -- Own AA
+                {"lp_aa_cond",      get_aa_condition(lp)},
+                {"lowest_ping",     get_lowest_ping() .. "ms"},
+            }
+            
+            local text_x = ss.x * 0.70
+            local text_y = ss.y * 0.40
+            local cur_rt = globals.realtime
+            
+            for i=1, #vars do
+                if vars[i][1] == "" then
+                    text_y = text_y + 12
+                else
+                    local key = vars[i][1]
+                    local val = vars[i][2]
+                    
+                    if not v2_value_cache[key] then
+                        v2_value_cache[key] = {v = val, t = cur_rt}
+                    elseif v2_value_cache[key].v ~= val then
+                        v2_value_cache[key].v = val
+                        v2_value_cache[key].t = cur_rt
+                    end
+                    
+                    local time_since = cur_rt - v2_value_cache[key].t
+                    local rgb = 255
+                    local a = 255
+                    
+                    if time_since > 0.1 then
+                        local fade = math.min(1.0, (time_since - 0.1) / 1.0)
+                        rgb = 255 - (105 * fade) -- fades down to 150
+                        a = 255 - (105 * fade)   -- fades down to 150
+                    end
+                    
+                    local line_text = key .. ": " .. val
+                    local line_color = vars[i][3] or color(math.floor(rgb), math.floor(rgb), math.floor(rgb), math.floor(a))
+                    render.text(1, vector(text_x, text_y), line_color, nil, line_text)
+                    text_y = text_y + 12
+                end
+            end
+            
+            return
+        end
         local is_scoped = false
         local wpn_name = "none"
         
@@ -1392,17 +2127,12 @@ register_event("render", function()
             end
         end
         
-        render.text(1, vector(10, 500), color(255, 255, 255, 255), nil, "DEBUG WPN: " .. (wpn_name or "none"):upper() .. " | AUTO: " .. tostring(is_autosniper) .. " | SCOUT: " .. tostring(is_scout) .. " | AWP: " .. tostring(is_awp) .. " | OTHER: " .. tostring(is_other))
+        auto_anim_a = math_floor(auto_anim_a + ((is_autosniper and 255 or 0) - auto_anim_a) * globals.frametime * 12)
+        scout_anim_a = math_floor(scout_anim_a + ((is_scout and 255 or 0) - scout_anim_a) * globals.frametime * 12)
+        awp_anim_a = math_floor(awp_anim_a + ((is_awp and 255 or 0) - awp_anim_a) * globals.frametime * 12)
+        other_anim_a = math_floor(other_anim_a + ((is_other and 255 or 0) - other_anim_a) * globals.frametime * 12)
         
-        auto_anim_a = math.floor(auto_anim_a + ((is_autosniper and 255 or 0) - auto_anim_a) * globals.frametime * 12)
-        scout_anim_a = math.floor(scout_anim_a + ((is_scout and 255 or 0) - scout_anim_a) * globals.frametime * 12)
-        awp_anim_a = math.floor(awp_anim_a + ((is_awp and 255 or 0) - awp_anim_a) * globals.frametime * 12)
-        other_anim_a = math.floor(other_anim_a + ((is_other and 255 or 0) - other_anim_a) * globals.frametime * 12)
-        
-        -- Color variables
-        local c = cp_mindam_accent:get()
-        
-        -- Exploit State Logic
+        -- Exploit State Calculation
         local hs_on = false
         if native_hs then
             local ok, val = pcall(function() return native_hs:get() end)
@@ -1418,44 +2148,29 @@ register_event("render", function()
             local ok, val = pcall(function() return native_dt:get() end)
             if ok and val then dt_on = true end
         end
-        local charge_val = 0
-        if rage and rage.exploit then
-            local ok, f = pcall(function() return rage.exploit:get() end)
-            if ok and f then charge_val = f end
-        end
+        local charge_val = dt_controller.last_charge
+        
         local is_reloading = false
         if lp and lp:is_alive() then
             local wpn = lp:get_player_weapon()
             if wpn then
-                -- FFI memory read for weapon animation state (bulletproof)
                 local ok_l, layers = pcall(SafeGetAnimLayers, lp)
                 if ok_l and layers then
                     local l1 = layers[1]
-                    -- Layer 1 is weapon action (reload, draw, silencer).
-                    -- Draw animations are ~1.0s (Rate ~1.0). Rechambering is ~1.2-1.4s (Rate ~0.7-0.8).
-                    -- Real reloads are > 2.0s (Rate < 0.6).
-                    -- Therefore, if playback rate is < 0.6, it is mathematically guaranteed to be a reload, NOT drawing!
                     if l1.m_flWeight > 0.1 and l1.m_flPlaybackRate > 0 and l1.m_flPlaybackRate < 0.6 then
                         is_reloading = true
                     end
                 end
-                
-                -- Fallback for Shotguns (their reload rate is fast per shell, but the engine reliably sets m_bInReload for them)
                 if not is_reloading then
                     local ok_inr, in_reload = pcall(function() return wpn:get_prop("m_bInReload") end)
                     if ok_inr and (in_reload == true or in_reload == 1) then
                         is_reloading = true
                     end
                 end
-                
-                -- Ultimate fallback: if clip is 0 and it's a firearm, you are forced into reload state
                 if not is_reloading then
                     local ok_clip, clip = pcall(function() return wpn:get_prop("m_iClip1") end)
-                    if ok_clip and clip == 0 then
-                        -- Exclude knives and grenades
-                        if wpn_name ~= "knife" and wpn_name ~= "hegrenade" and wpn_name ~= "molotov" and wpn_name ~= "incgrenade" and wpn_name ~= "smokegrenade" and wpn_name ~= "flashbang" and wpn_name ~= "decoy" and wpn_name ~= "taser" then
-                            is_reloading = true
-                        end
+                    if ok_clip and clip == 0 and is_weapon_dt_eligible(wpn_name) then
+                        is_reloading = true
                     end
                 end
             end
@@ -1464,23 +2179,50 @@ register_event("render", function()
         local function draw_exploit_state(center_x, y_offset, anim_a)
             if not sw_mindam_exploit_state:get() then return y_offset end
             
+            if sw_ambatukam_exploit:get() then
+                local elapsed = (ax_fire_time >= 0) and (globals.realtime - ax_fire_time) or math.huge
+                local fired = elapsed <= 0.6
+                local text_no_choke = "no_choke: " .. (fired and "FIRED" or "idle")
+                local nc_size = render.measure_text(1, nil, text_no_choke)
+                local nc_color = fired and color(80, 255, 100, anim_a) or color(160, 160, 160, anim_a)
+                render.text(1, vector(center_x - (nc_size.x / 2), y_offset), nc_color, nil, text_no_choke)
+                y_offset = y_offset + 12
+            end
+
             local exploits = {}
             
-            -- If DT is recharging, that takes absolute priority (prevents false reload triggers from tickbase animation freezes)
-            if dt_on and charge_val ~= 1 then
-                exploits[#exploits+1] = {text="RECHARGING", color=color(255, 150, 50, anim_a)}
-            elseif is_reloading then
-                exploits[#exploits+1] = {text="RELOADING", color=color(255, 100, 100, anim_a)}
-            else
-                if dt_on and charge_val == 1 then
+            if fd_on then
+                exploits[#exploits+1] = {text="FD ACTIVE", color=color(255, 200, 50, anim_a)}
+            end
+            if hs_on then
+                exploits[#exploits+1] = {text="HS READY", color=color(50, 255, 50, anim_a)}
+            end
+            
+            if dt_on and dt_controller.state ~= 0 then
+                if fd_on then
+                    exploits[#exploits+1] = {text="HOLDING", color=color(255, 150, 50, anim_a)}
+                elseif charge_val < 0.99 then
+                    exploits[#exploits+1] = {text="RECHARGING", color=color(255, 150, 50, anim_a)}
+                else
                     exploits[#exploits+1] = {text="DOUBLETAP", color=color(50, 255, 50, anim_a)}
                 end
-                if hs_on then
-                    exploits[#exploits+1] = {text="HS READY", color=color(50, 255, 50, anim_a)}
+                
+                if not fd_on and sw_dt_recharge:get() then
+                    local mode = cb_dt_recharge_mode:get()
+                    if mode == 1 or mode == "Instant" then
+                        exploits[#exploits+1] = {text="INSTANT", color=color(50, 255, 255, anim_a)}
+                    else
+                        exploits[#exploits+1] = {text="FASTER", color=color(50, 255, 255, anim_a)}
+                    end
                 end
-                if fd_on then
-                    exploits[#exploits+1] = {text="FD ACTIVE", color=color(255, 200, 50, anim_a)}
-                end
+            end
+            
+            if sw_ambatukam_exploit:get() then
+                exploits[#exploits+1] = {text="AX", color=color(200, 100, 255, anim_a)}
+            end
+            
+            if is_reloading then
+                exploits[#exploits+1] = {text="RELOADING", color=color(255, 100, 100, anim_a)}
             end
             
             if #exploits == 0 then
@@ -1501,11 +2243,10 @@ register_event("render", function()
             end
         end
         
-        -- RENDERING AUTOSNIPER BLOCK
+        -- AUTOSNIPER BLOCK
         if auto_anim_a >= 1 then
             local text_main = "suprise+"
             local text_size = render.measure_text(ind_font, nil, text_main)
-            
             local target_x = is_scoped and (ss.x / 2 + 15) or (ss.x / 2 - text_size.x / 2)
             if not auto_anim_x then auto_anim_x = target_x end
             auto_anim_x = auto_anim_x + (target_x - auto_anim_x) * globals.frametime * 15
@@ -1517,11 +2258,11 @@ register_event("render", function()
             if sw_mindam_glow:get() then
                 render.shadow(vector(start_x, y_offset + 7), vector(start_x + text_size.x, y_offset + 7), color(c.r, c.g, c.b, auto_anim_a), 80, 0)
             end
-            
             if sw_mindam_exploit:get() then
                 render.text(ind_font, vector(start_x, y_offset), color(c.r, c.g, c.b, auto_anim_a), nil, text_main)
                 y_offset = y_offset + 12
             end
+            
             local text_wpn = "wpn: " .. wpn_name
             local wpn_size = render.measure_text(1, nil, text_wpn)
             render.text(1, vector(center_x - (wpn_size.x / 2), y_offset), color(255, 255, 255, auto_anim_a), nil, text_wpn)
@@ -1540,11 +2281,10 @@ register_event("render", function()
             y_offset = draw_exploit_state(center_x, y_offset, auto_anim_a)
         end
         
-        -- RENDERING SCOUT BLOCK
+        -- SCOUT BLOCK
         if scout_anim_a >= 1 then
             local text_main = "idealtickers+"
             local text_size = render.measure_text(ind_font, nil, text_main)
-            
             local target_x = is_scoped and (ss.x / 2 + 15) or (ss.x / 2 - text_size.x / 2)
             if not scout_anim_x then scout_anim_x = target_x end
             scout_anim_x = scout_anim_x + (target_x - scout_anim_x) * globals.frametime * 15
@@ -1556,11 +2296,11 @@ register_event("render", function()
             if sw_mindam_glow:get() then
                 render.shadow(vector(start_x, y_offset + 7), vector(start_x + text_size.x, y_offset + 7), color(c.r, c.g, c.b, scout_anim_a), 80, 0)
             end
-            
             if sw_mindam_exploit:get() then
                 render.text(ind_font, vector(start_x, y_offset), color(c.r, c.g, c.b, scout_anim_a), nil, text_main)
                 y_offset = y_offset + 12
             end
+            
             local text_wpn = "wpn: " .. wpn_name
             local wpn_size = render.measure_text(1, nil, text_wpn)
             render.text(1, vector(center_x - (wpn_size.x / 2), y_offset), color(255, 255, 255, scout_anim_a), nil, text_wpn)
@@ -1582,11 +2322,10 @@ register_event("render", function()
             y_offset = draw_exploit_state(center_x, y_offset, scout_anim_a)
         end
         
-        -- RENDERING AWP BLOCK
+        -- AWP BLOCK
         if awp_anim_a >= 1 then
             local text_main = "heavymachines+"
             local text_size = render.measure_text(ind_font, nil, text_main)
-            
             local target_x = is_scoped and (ss.x / 2 + 15) or (ss.x / 2 - text_size.x / 2)
             if not awp_anim_x then awp_anim_x = target_x end
             awp_anim_x = awp_anim_x + (target_x - awp_anim_x) * globals.frametime * 15
@@ -1598,11 +2337,11 @@ register_event("render", function()
             if sw_mindam_glow:get() then
                 render.shadow(vector(start_x, y_offset + 7), vector(start_x + text_size.x, y_offset + 7), color(c.r, c.g, c.b, awp_anim_a), 80, 0)
             end
-            
             if sw_mindam_exploit:get() then
                 render.text(ind_font, vector(start_x, y_offset), color(c.r, c.g, c.b, awp_anim_a), nil, text_main)
                 y_offset = y_offset + 12
             end
+            
             local text_wpn = "wpn: " .. wpn_name
             local wpn_size = render.measure_text(1, nil, text_wpn)
             render.text(1, vector(center_x - (wpn_size.x / 2), y_offset), color(255, 255, 255, awp_anim_a), nil, text_wpn)
@@ -1624,11 +2363,10 @@ register_event("render", function()
             y_offset = draw_exploit_state(center_x, y_offset, awp_anim_a)
         end
         
-        -- RENDERING OTHER WEAPON BLOCK
+        -- OTHER WEAPONS BLOCK
         if other_anim_a >= 1 then
             local text_main = "unaffected+"
             local text_size = render.measure_text(ind_font, nil, text_main)
-            
             local target_x = is_scoped and (ss.x / 2 + 15) or (ss.x / 2 - text_size.x / 2)
             if not other_anim_x then other_anim_x = target_x end
             other_anim_x = other_anim_x + (target_x - other_anim_x) * globals.frametime * 15
@@ -1640,11 +2378,11 @@ register_event("render", function()
             if sw_mindam_glow:get() then
                 render.shadow(vector(start_x, y_offset + 7), vector(start_x + text_size.x, y_offset + 7), color(c.r, c.g, c.b, other_anim_a), 80, 0)
             end
-            
             if sw_mindam_exploit:get() then
                 render.text(ind_font, vector(start_x, y_offset), color(c.r, c.g, c.b, other_anim_a), nil, text_main)
                 y_offset = y_offset + 12
             end
+            
             local text_wpn = "wpn: " .. wpn_name
             local wpn_size = render.measure_text(1, nil, text_wpn)
             render.text(1, vector(center_x - (wpn_size.x / 2), y_offset), color(255, 255, 255, other_anim_a), nil, text_wpn)
@@ -1668,7 +2406,9 @@ register_event("render", function()
     end
 end)
 
-
+-- ====================================================================
+-- SHOT STATISTICS & MATRIX
+-- ====================================================================
 local shot_matrix = {}
 
 local function recordShot(steamid, state, choke, resolver_confidence, defensive_confidence, lc_state, archetype, hitgroup, result)
@@ -1713,62 +2453,70 @@ local function recordShot(steamid, state, choke, resolver_confidence, defensive_
     end
 end
 
-local function getShotMatrixAccuracy(steamid, state)
-    local data = shot_matrix[steamid]
-    if not data then return 0.50, 0 end
-    local stats = data.stats[state]
-    if not stats or stats.shots == 0 then return 0.50, 0 end
-    return stats.accuracy, stats.shots
-end
+-- ====================================================================
+-- EVENT HANDLERS
+-- ====================================================================
+register_event("net_update_start", function()
+    local resolver_on = sw_resolver:get()
+    local it_on       = sw_it_detect:get()
+    local pred_on     = sw_pred_adv:get()
+    if not resolver_on and not it_on and not pred_on then return end
 
-local function predictTargetMovement(p, ent)
-    local lp = entity_get_local_player()
+    local lp = entity.get_local_player()
     if not lp then return end
-    
-    local ox, oy, oz = SafeGetOrigin(ent)
-    local vx, vy, vz = 0, 0, 0
-    local vel = ent.m_vecVelocity
-    if vel then
-        vx, vy, vz = vel.x, vel.y, vel.z
+    local enemies = entity.get_players(true, false)
+    if not enemies then return end
+
+    it_any_active = false
+
+    for i = 1, #enemies do
+        local ent = enemies[i]
+        if ent ~= lp then
+            local ok_id, id = pcall(function() return ent:get_index() end)
+            if ok_id and id then
+                local ok_a, a = pcall(function() return ent:is_alive()   end)
+                local ok_d, d = pcall(function() return ent:is_dormant() end)
+
+                if (ok_a and a) and not (ok_d and d) then
+                    if not EnemyRecords[id] then
+                        EnemyRecords[id] = newSlot(id)
+                    end
+                    
+                    if resolver_on or pred_on then
+                        pcall(updatePlayer, EnemyRecords[id], ent)
+                    end
+                    
+                    if it_on then
+                        pcall(updateIdealTickDetect, id, ent)
+                        local pd = PredictionData[id]
+                        if pd and pd.is_it then
+                            it_any_active   = true
+                            it_status_name  = pd.name
+                            it_status_ticks = pd.tick_lead
+                        end
+                    end
+                else
+                    EnemyRecords[id]  = nil
+                    PredictionData[id] = nil
+                end
+            end
+        end
     end
-    
-    table_insert(p.history, {
-        pos = { x = ox, y = oy, z = oz },
-        vel = { x = vx, y = vy, z = vz }
-    })
-    if #p.history > 16 then
-        table_remove(p.history, 1)
-    end
-    
-    if #p.history < 2 then
-        p.is_accelerating = false
-        p.predicted_peek_visible = false
-        return
-    end
-    
-    local cur = p.history[#p.history]
-    local prev = p.history[#p.history - 1]
-    
-    local cur_vel_len = math_sqrt(cur.vel.x^2 + cur.vel.y^2)
-    local prev_vel_len = math_sqrt(prev.vel.x^2 + prev.vel.y^2)
-    p.is_accelerating = (cur_vel_len - prev_vel_len) > 25.0
-    
-    local lp_pos = lp:get_eye_position()
-    if not lp_pos then return end
-    
-    local ti = p.tick_interval or 0.015625
-    local time_step = 6 * ti
-    
-    local pred_x = cur.pos.x + cur.vel.x * time_step
-    local pred_y = cur.pos.y + cur.vel.y * time_step
-    local pred_z = cur.pos.z + cur.vel.z * time_step + 64
-    
-    local frac, trace_ent = utils_trace_line(lp_pos, vector(pred_x, pred_y, pred_z), lp)
-    p.predicted_peek_visible = (frac > 0.97)
-end
+end)
 
 register_event("aim_fire", function(e)
     if not e then return end
+    
+    if sw_ambatukam_exploit:get() then
+        ax_send_packet = true
+        ax_fire_time = globals.realtime
+    end
+    
+    local cur_tick = globals.tickcount
+    if type(cur_tick) == "function" then cur_tick = cur_tick() end
+    
+    dt_controller.last_fire_tick = cur_tick or 0
+    
     local p = EnemyRecords[e.target]
     if not p then return end
     
@@ -1778,9 +2526,9 @@ register_event("aim_fire", function(e)
         state = getTargetState(p),
         choke = p.choke or 0,
         resolver_confidence = p.resolver_confidence or 0.50,
-        defensive_confidence = p.defensive_confidence or 0.0,
+        defensive_confidence = p.resolver_memory.defensive.confidence or 0.0,
         lc_state = p.lc_broken and "broken" or "valid",
-        archetype = p.archetype or 0
+        archetype = p.pattern or 0
     }
 end)
 
@@ -1800,8 +2548,7 @@ register_event("aim_ack", function(e)
     if shot.state == "moving" then confidence_gain = 0.25 end
     if shot.hitgroup == 1 then confidence_gain = 0.35 end
     
-    p.resolver_confidence = (p.resolver_confidence or 0.50)
-    p.resolver_confidence = p.resolver_confidence + confidence_gain
+    p.resolver_confidence = (p.resolver_confidence or 0.50) + confidence_gain
     if p.resolver_confidence > 1.0 then p.resolver_confidence = 1.0 end
     
     recordShot(shot.target, shot.state, shot.choke, shot.resolver_confidence, shot.defensive_confidence, shot.lc_state, shot.archetype, shot.hitgroup, "hit")
@@ -1869,8 +2616,18 @@ register_event("weapon_fire", function(e)
     end
 end)
 
+-- Unified Centralized Createmove Handler (Eliminates callback overwrite conflicts)
 register_event("createmove", function(cmd)
-    if not sw_resolver:get() then
+    if sw_ambatukam_exploit:get() and ax_send_packet then
+        cmd.no_choke = true
+        ax_send_packet = false
+    end
+
+    -- 1. Exploit Visual Glow Activation
+    it_esp_set_active(sw_it_esp:get() and sw_it_detect:get())
+
+    local lp = entity.get_local_player()
+    if not lp or not lp:is_alive() then
         if last_baim   ~= nil then if native_baim   then native_baim:override()   end; last_baim   = nil  end
         if last_safe   ~= nil then if native_safe   then native_safe:override()   end; last_safe   = nil  end
         if last_mindam ~= -1  then if native_mindam then native_mindam:override() end; last_mindam = -1   end
@@ -1881,10 +2638,20 @@ register_event("createmove", function(cmd)
         return
     end
 
-    local lp = entity.get_local_player()
-    if not lp then return end
-    local ok_lp_alive, lp_alive = pcall(function() return lp:is_alive() end)
-    if not ok_lp_alive or not lp_alive then return end
+    -- 2. Update Double Tap & Exploit State Controller
+    update_double_tap_state(lp)
+
+    -- 3. Ragebot & Resolver Overrides
+    if not sw_resolver:get() then
+        if last_baim   ~= nil then if native_baim   then native_baim:override()   end; last_baim   = nil  end
+        if last_safe   ~= nil then if native_safe   then native_safe:override()   end; last_safe   = nil  end
+        if last_mindam ~= -1  then if native_mindam then native_mindam:override() end; last_mindam = -1   end
+        is_mindam_active = false
+        active_mindam_target_name = nil
+        active_target_hp = 100
+        active_mindam_val = 0
+        return
+    end
 
     local enemies = entity.get_players(true, false)
     if not enemies or #enemies == 0 then
@@ -1900,8 +2667,6 @@ register_event("createmove", function(cmd)
 
     local best = getBestTarget(enemies)
     
-    local wpn_is_auto = false
-    local target_md = -1
     is_mindam_active = false
     active_mindam_target_name = nil
     active_target_hp = 100
@@ -1919,17 +2684,13 @@ register_event("createmove", function(cmd)
         if last_baim   ~= nil then if native_baim   then native_baim:override()   end; last_baim   = nil end
         if last_safe   ~= nil then if native_safe   then native_safe:override()   end; last_safe   = nil end
         if last_mindam ~= -1  then if native_mindam then native_mindam:override() end; last_mindam = -1  end
-        is_mindam_active = false
-        active_mindam_target_name = nil
-        active_target_hp = 100
-        active_mindam_val = 0
         return
     end
 
     local ok_bid, bid = pcall(function() return best:get_index() end)
     if not ok_bid then return end
 
-    local p  = EnemyRecords[bid]
+    local p = EnemyRecords[bid]
     if not p then
         if last_baim   ~= nil then if native_baim   then native_baim:override()   end; last_baim   = nil end
         if last_safe   ~= nil then if native_safe   then native_safe:override()   end; last_safe   = nil end
@@ -1939,6 +2700,7 @@ register_event("createmove", function(cmd)
 
     local hp = SafeGetHP(best)
 
+    -- BAIM Override
     local want_baim = shouldForceBAIM(p, hp)
     if want_baim then
         if last_baim ~= "force" then
@@ -1952,6 +2714,7 @@ register_event("createmove", function(cmd)
         end
     end
 
+    -- Safepoint Override
     local want_safe = shouldPreferSafe(p)
     if want_safe then
         local mode = (p.consecutive_resolver_misses >= 2) and "force" or "prefer"
@@ -1966,21 +2729,28 @@ register_event("createmove", function(cmd)
         end
     end
 
+    -- Minimum Damage Override with DT & Fast Peek Awareness
     local target_md = -1
     local ok_vis, vis = pcall(function() return best:is_visible() end)
+    
     if sw_lethal:get() and ok_vis and vis and hp < 50 then
         target_md = math_min(hp + 1, 100)
-        if native_dt then
-            local ok_dt, dt_on = pcall(function() return native_dt:get() end)
-            if ok_dt and dt_on then
-                local ok_md, base_md = pcall(function() return native_mindam:get() end)
-                if ok_md and base_md then
-                    target_md = math_max(1, math_floor(base_md * 0.6))
-                end
+        if dt_controller.state == DT_STATE_READY then
+            local ok_md, base_md = pcall(function() return native_mindam:get() end)
+            if ok_md and base_md then
+                target_md = math_max(1, math_floor(base_md * 0.6))
             end
         end
         active_mindam_val = target_md
         is_mindam_active = true
+    elseif p.predicted_peek_visible and sw_it_mindam:get() then
+        -- Fast Peek open-angle engagement: lower damage slightly so ragebot triggers on emergence
+        local ok_md, base_md = pcall(function() return native_mindam:get() end)
+        if ok_md and base_md then
+            target_md = math_min(math_max(1, math_floor(base_md * 0.7)), hp + 1)
+            active_mindam_val = target_md
+            is_mindam_active = true
+        end
     elseif p.consecutive_resolver_misses >= 1 then
         local ok_md, base_md = pcall(function() return native_mindam:get() end)
         if ok_md and base_md then
@@ -1991,23 +2761,57 @@ register_event("createmove", function(cmd)
         end
     end
 
+    local is_it = false
+    if not p.md_last_trigger then p.md_last_trigger = 0 end
     
-    -- IT min-damage override: when idealtick detected on this target, halve min damage
-    if p.is_idealtick and sw_it_mindam:get() then
-        local hp = SafeGetHP(best)
-        local base_md = native_mindam and native_mindam:get() or 100
-        target_md = math.min(math.floor(base_md * 0.5), hp + 1)
+    local ok_sim, sim_t = pcall(function() return best:get_simulation_time() end)
+    if ok_sim and sim_t and sim_t.current and sim_t.old then
+        local delta = sim_t.current - sim_t.old
+        local ti = globals.tickinterval
+    if type(ti) == "function" then ti = ti() end
+        
+        local tick_lead = math_floor(delta / (ti or 0.015625) + 0.5) - 1
+        if tick_lead >= 2 and tick_lead <= 16 then
+            local rt = globals.realtime
+    if type(rt) == "function" then rt = rt() end
+            p.md_last_trigger = type(rt) == "function" and rt() or rt
+        end
+    end
+    
+    local cur_t = globals.realtime
+    if type(cur_t) == "function" then cur_t = cur_t() end
+    
+    is_it = (cur_t - p.md_last_trigger) < 0.5
+
+    local is_auto = false
+    local wpn = lp and lp:get_player_weapon()
+    if wpn then
+        local ok_w, w_name = pcall(function() return wpn:get_classname() end)
+        if ok_w and w_name then
+            local ln = w_name:lower()
+            if ln:find("scar") or ln:find("g3sg1") then
+                is_auto = true
+            end
+        end
+    end
+
+    if is_it and sw_it_mindam:get() and is_auto then
+        local base_md = (native_mindam and native_mindam:get()) or 100
+        
+        -- Fully dynamic IT min-damage scaling based on HP and confidence
+        local hp_factor = (hp / 100) * 0.6
+        local dynamic_factor = math_max(0.30, math_min(0.5, math_min(hp_factor, (p.resolver_confidence or 0.50))))
+        
+        target_md = math_min(math_floor(base_md * dynamic_factor), hp + 1)
         active_mindam_val = target_md
         is_mindam_active = true
     elseif sw_resolver:get() and (p.resolver_confidence or 0.50) < 0.50 then
-        local hp = SafeGetHP(best)
-        local base_md = native_mindam and native_mindam:get() or 100
-        local reduction_factor = math.max(0.4, (p.resolver_confidence or 0.50) * 1.5)
-        target_md = math.min(math.floor(base_md * reduction_factor), hp + 1)
+        local base_md = (native_mindam and native_mindam:get()) or 100
+        local reduction_factor = math_max(0.4, (p.resolver_confidence or 0.50) * 1.5)
+        target_md = math_min(math_floor(base_md * reduction_factor), hp + 1)
         active_mindam_val = target_md
         is_mindam_active = true
     end
-
 
     if target_md ~= -1 then
         if last_mindam ~= target_md then
@@ -2022,6 +2826,9 @@ register_event("createmove", function(cmd)
     end
 end)
 
+-- ====================================================================
+-- CLEANUP & RESET
+-- ====================================================================
 register_event("round_start", function()
     EnemyRecords   = {}
     aimbot_data    = {}
@@ -2030,6 +2837,12 @@ register_event("round_start", function()
     last_baim      = nil
     last_safe      = nil
     last_mindam    = -1
+    dt_controller.state = DT_STATE_DISABLED
+    dt_controller.last_charge = 0.0
+    dt_controller.last_fire_tick = 0
+    dt_controller.last_weapon_idx = -1
+    dt_controller.recharge_forced = false
+    
     if native_baim   then pcall(function() native_baim:override()   end) end
     if native_safe   then pcall(function() native_safe:override()   end) end
     if native_mindam then pcall(function() native_mindam:override() end) end
@@ -2040,8 +2853,10 @@ register_event("shutdown", function()
     if native_safe      then pcall(function() native_safe:override()      end) end
     if native_mindam    then pcall(function() native_mindam:override()    end) end
     if native_hitchance then pcall(function() native_hitchance:override() end) end
+    
     EnemyRecords   = {}
     aimbot_data    = {}
     PredictionData = {}
     it_any_active  = false
+    it_esp_set_active(false)
 end)
